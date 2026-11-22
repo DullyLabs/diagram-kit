@@ -1,0 +1,5 @@
+{
+  "name": "dullylabs",
+  "owner": { "name": "Dully Labs" },
+  "plugins": [{ "name": "diagram-kit", "source": "./", "description": "Animated, hover-to-reveal explainer diagrams." }]
+}

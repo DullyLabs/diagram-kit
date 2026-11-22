@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<style>
+:root{color-scheme:light dark;--paper:#f5f2ea;--card:#fffdf7;--ink:#292c27;--muted:#64685f;--line:#cfcec2;--accent:#356454;--wash:#e4ece4;--shadow:#292c2710}
+@media(prefers-color-scheme:dark){:root{--paper:#191d1a;--card:#222823;--ink:#eeeade;--muted:#a8afa3;--line:#434c43;--accent:#9bc7ad;--wash:#303e34;--shadow:#0002}}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,sans-serif}main{max-width:1240px;margin:auto;padding:52px 40px 32px}header{border-top:3px solid var(--ink);padding-top:20px;margin-bottom:50px}.eyebrow,.lane h2,.caption,footer,.tech{font:11px/1.6 ui-monospace,monospace;letter-spacing:.06em}.eyebrow{color:var(--accent);text-transform:uppercase}h1{font:normal clamp(32px,5vw,58px)/1.1 Georgia,serif;margin:16px 0}h2{font:normal 28px/1.2 Georgia,serif}p{margin:8px 0}.caption{color:var(--muted)}.exhibit{position:relative}.board{position:relative;display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:72px;min-height:360px;padding:0 0 24px}.lane{min-width:0}.lane h2{text-transform:uppercase;color:var(--muted);margin:0 0 28px;border-bottom:1px solid var(--line);padding-bottom:12px}.stack{display:grid;gap:42px}.node{position:relative;z-index:2;display:block;width:100%;min-height:66px;padding:18px 14px;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer;overflow-wrap:anywhere;transition:background .2s,border-color .2s;animation:arrive .5s both}.node:hover,.node.selected,.node.highlight{border-color:var(--accent);background:var(--wash)}button:focus-visible,a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--accent);outline-offset:4px}.system{border:1px solid var(--accent);padding:12px;background:var(--shadow)}.system>.node{font-family:Georgia,serif;font-size:22px;min-height:106px;border-color:var(--accent)}.internals{display:grid;gap:48px;padding:34px 12px 12px}.internals[hidden],[hidden]{display:none!important}.internals .node{font-size:14px;min-height:54px}.wires{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible;pointer-events:none}.wire{fill:none;stroke:var(--accent);stroke-width:1.4;animation:arrive .3s}.hit{fill:none;stroke:transparent;stroke-width:24;pointer-events:stroke;cursor:pointer}.flow{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:1 24;animation:flow 4s linear infinite;pointer-events:none}.edge-label{font:10px ui-monospace,monospace;fill:var(--accent);paint-order:stroke;stroke:var(--paper);stroke-width:6px;stroke-linejoin:round;pointer-events:auto;cursor:pointer}.details{position:relative;border-top:1px solid var(--accent);padding:22px 52px 24px 0;margin:8px 0 30px;display:grid;grid-template-columns:1fr 1fr;gap:30px;animation:arrive .2s}.details h3{font:normal 23px Georgia,serif;margin:0 0 10px}.details p,.details li{font-size:14px}.details ul{padding-left:18px;margin:0}.relevance{color:var(--muted)}.close{position:absolute;right:0;top:14px;background:transparent;border:1px solid var(--line);color:var(--ink);min-height:44px;padding:8px;cursor:pointer}.plan{border-top:1px solid var(--line);margin-top:24px;padding-top:16px}.plan ol{list-style:none;counter-reset:step;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 36px}.plan li{counter-increment:step;border-bottom:1px solid var(--line)}.step{width:100%;text-align:left;background:none;border:0;color:var(--ink);font:inherit;padding:20px 0;cursor:pointer;display:flex;gap:18px}.step:before{content:counter(step,decimal-leading-zero);font:12px ui-monospace,monospace;color:var(--accent);padding-top:5px}.step:hover{color:var(--accent)}footer{margin-top:34px;display:flex;flex-wrap:wrap;gap:12px 24px;color:var(--muted)}a{color:inherit;text-underline-offset:4px}@keyframes arrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@keyframes flow{to{stroke-dashoffset:-100}}
+@media(max-width:700px){main{padding:28px 20px}header{margin-bottom:34px}.board{grid-template-columns:1fr;gap:36px;padding-left:28px}.lane h2{margin-bottom:18px}.stack{gap:34px}.system{padding:10px}.internals{padding-left:20px;padding-right:20px}.details{grid-template-columns:1fr;gap:12px}.plan ol{grid-template-columns:1fr}.edge-label{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<!-- EDIT ONLY THIS JSON. Text is plain text, never HTML. Keep names/labels 2–5 words.
+ title, eyebrow, lanes [upstream, system, downstream], planTitle and ui are visible text.
+ nodes: {id, lane: upstream|system|downstream|internal, name, what, tech?, does:[3 short bullets], relevance}.
+ Exactly one system node; all internal nodes belong to it. IDs must be unique.
+ edges: {from:nodeId, to:nodeId, label, detail:1–3 short lines}. Internal edges use internal IDs.
+ steps: {text, boxes?:[nodeId]}. caption and footnote are optional dry jokes.
+ sources?:[{label,url}] for example references. Escape any closing script tag as <\/script>.
+-->
+<script id="diagram-data" type="application/json">
+{
+ "title":"Counting a country",
+ "eyebrow":"System plan / Census of 1890",
+ "lanes":["Upstream","Our system","Downstream"],
+ "caption":"Condition: awaiting several million cards.",
+ "footnote":"No software updates required.",
+ "planTitle":"What we need to do",
+ "ui":{"close":"Close","relevance":"Why it matters","connections":"Connections"},
+ "nodes":[
+  {"id":"schedules","lane":"upstream","name":"Enumerators’ paper schedules","what":"Handwritten answers collected from households.","does":["Record each person","Capture household answers","Supply the source records"],"relevance":"Card entries start here."},
+  {"id":"office","lane":"upstream","name":"The Census Office","what":"The office responsible for the national count.","does":["Set counting rules","Organize the work","Review the results"],"relevance":"Defines what must be counted."},
+  {"id":"stock","lane":"upstream","name":"Punch-card stock supplier","what":"The source of blank cards for this plan.","does":["Supply blank cards","Keep dimensions consistent","Replenish the stock"],"relevance":"The machines need cards that fit."},
+  {"id":"system","lane":"system","name":"Hollerith’s electric tabulating system","what":"Herman Hollerith’s equipment for counting punched records.","tech":"Electric circuits and hand-operated machinery","does":["Turn answers into holes","Count recorded answers","Group cards for recounting"],"relevance":"The processing work sits here."},
+  {"id":"punch","lane":"internal","name":"Card punches","what":"Operators copy answers into holes on cards.","does":["Position each card","Punch recorded answers","Prepare cards for reading"],"relevance":"A wrong hole becomes a wrong count."},
+  {"id":"reader","lane":"internal","name":"Mercury-cup tabulator","what":"Pins pass through holes and touch mercury to close circuits.","tech":"Electrical contacts","does":["Read punched holes","Send counting signals","Signal a sorting compartment"],"relevance":"Turns holes into electrical signals."},
+  {"id":"sort","lane":"internal","name":"The sorting box","what":"Compartments hold cards placed there by an operator.","does":["Indicate a compartment","Separate card groups","Prepare another counting pass"],"relevance":"Grouped cards can be counted again."},
+  {"id":"dials","lane":"internal","name":"Dial counters","what":"Dials advance when the reader completes a circuit.","does":["Register each signal","Accumulate counts","Show totals to operators"],"relevance":"Operators copy these totals for review."},
+  {"id":"congress","lane":"downstream","name":"Congressional seat apportionment","what":"Congress uses population totals to allocate House seats.","does":["Receive population totals","Determine seat allocation","Set representation by state"],"relevance":"The count affects representation."},
+  {"id":"reports","lane":"downstream","name":"Published census reports","what":"Printed tables make the results available for use.","does":["Collect reviewed totals","Organize statistical tables","Publish the findings"],"relevance":"This is the public record."},
+  {"id":"news","lane":"downstream","name":"Newspaper coverage","what":"Newspapers bring census results to their readers.","does":["Read released figures","Explain population changes","Report the findings"],"relevance":"Results reach a wider audience."}
+ ],
+ "edges":[
+  {"from":"schedules","to":"system","label":"Recorded answers","detail":"Operators copy schedule answers onto cards."},
+  {"from":"office","to":"system","label":"Counting rules","detail":"The office specifies the totals it needs."},
+  {"from":"stock","to":"system","label":"Blank cards","detail":"Cards must fit the punches and reader."},
+  {"from":"system","to":"congress","label":"Population totals","detail":"Reviewed totals inform the allocation of House seats."},
+  {"from":"system","to":"reports","label":"Reviewed tables","detail":"Staff prepare the counted results for publication."},
+  {"from":"system","to":"news","label":"Released figures","detail":"Published results give newspapers figures to report."},
+  {"from":"punch","to":"reader","label":"Punched cards","detail":"Each card carries a person’s recorded answers."},
+  {"from":"reader","to":"sort","label":"Sorting signal","detail":"A compartment opens. An operator places the card inside."},
+  {"from":"reader","to":"dials","label":"Counting signals","detail":"Closed circuits advance the appropriate counters."},
+  {"from":"sort","to":"reader","label":"Another pass","detail":"Sorted groups return to the reader for further counts."}
+ ],
+ "steps":[
+  {"text":"Punch cards from schedules.","boxes":["schedules","stock","punch"]},
+  {"text":"Tabulate the punched answers.","boxes":["reader","sort","dials"]},
+  {"text":"Verify counts against records.","boxes":["office","schedules","dials"]},
+  {"text":"Publish the reviewed results.","boxes":["reports","congress","news"]}
+ ],
+ "sources":[
+  {"label":"Census Bureau · the machine","url":"https://www.census.gov/about/history/bureau-history/census-innovations/technology/hollerith-machine.html"},
+  {"label":"Smithsonian · the equipment","url":"https://www.si.edu/object/nmah_694410"},
+  {"label":"Library of Congress · the reader","url":"https://www.loc.gov/item/mcc.023/"}
+ ]
+}
+</script>
+<script>
+(()=>{
+'use strict';
+const data=JSON.parse(document.getElementById('diagram-data').textContent);
+const el=(tag,cls,text,parent)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;if(parent)parent.append(n);return n};
+const main=el('main','',null,document.body);document.title=data.title;
+const header=el('header','',null,main);el('div','eyebrow',data.eyebrow,header);el('h1','',data.title,header);if(data.caption)el('p','caption',data.caption,header);
+const exhibit=el('section','exhibit',null,main),board=el('div','board',null,exhibit),buttons=new Map();
+const ns='http://www.w3.org/2000/svg';const svg=(tag,attrs,parent)=>{const n=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,v);parent.append(n);return n};
+const wires=svg('svg',{class:'wires','aria-label':data.ui.connections},board);
+let active=null,pinned=false,expanded=false,origin=null,timer,internal;
+function node(n,parent){const b=el('button','node',n.name,parent);b.type='button';b.setAttribute('aria-controls','detail-panel');b.setAttribute('aria-expanded','false');buttons.set(n.id,b);b.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'&&!pinned)activate(n,b,false)});b.addEventListener('focus',()=>{if(!pinned)activate(n,b,false)});b.addEventListener('click',()=>activate(n,b,true));}
+['upstream','system','downstream'].forEach((lane,i)=>{const section=el('section','lane',null,board);el('h2','',data.lanes[i],section);const stack=el('div','stack',null,section);data.nodes.filter(n=>n.lane===lane).forEach(n=>{if(lane==='system'){const shell=el('div','system',null,stack);node(n,shell);internal=el('div','internals',null,shell);internal.hidden=true;data.nodes.filter(x=>x.lane==='internal').forEach(x=>node(x,internal));}else node(n,stack)})});
+const panel=el('aside','details',null,exhibit);panel.id='detail-panel';panel.hidden=true;panel.setAttribute('aria-live','polite');
+function showDetails(item){panel.replaceChildren();panel.hidden=false;const first=el('div','',null,panel);el('h3','',item.name||item.label,first);el('p','',item.what||item.detail,first);if(item.tech)el('p','tech',item.tech,first);if(item.does){const second=el('div','',null,panel),list=el('ul','',null,second);item.does.forEach(t=>el('li','',t,list));el('p','relevance',data.ui.relevance+': '+item.relevance,second)}const close=el('button','close',data.ui.close,panel);close.type='button';close.onclick=()=>reset(true);}
+function activate(n,b,pin){clearTimeout(timer);active=n;origin=b;pinned=pin;expanded=n.lane==='system'||n.lane==='internal';internal.hidden=!expanded;buttons.forEach((button,id)=>{button.classList.toggle('selected',id===n.id);button.setAttribute('aria-expanded',String(id===n.id))});showDetails(n);draw();}
+function reset(restore=false){clearTimeout(timer);const target=origin;pinned=false;active=null;expanded=false;internal.hidden=true;panel.hidden=true;wires.replaceChildren();buttons.forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-expanded','false')});if(restore&&target){target.focus({preventScroll:true});active=null;internal.hidden=true;panel.hidden=true;wires.replaceChildren();buttons.forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-expanded','false')})}}
+function draw(){wires.replaceChildren();if(!active)return;const bounds=board.getBoundingClientRect();wires.setAttribute('viewBox',`0 0 ${bounds.width} ${bounds.height}`);const defs=svg('defs',{},wires),marker=svg('marker',{id:'arrow',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},defs);svg('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:'var(--accent)'},marker);
+const inside=id=>data.nodes.find(n=>n.id===id)?.lane==='internal';
+const edges=data.edges.filter(e=>e.from===active.id||e.to===active.id||(active.lane==='system'&&inside(e.from)&&inside(e.to)));
+edges.forEach((edge,index)=>{const a=buttons.get(edge.from),b=buttons.get(edge.to);if(!a||!b||!a.getClientRects().length||!b.getClientRects().length)return;const r=a.getBoundingClientRect(),s=b.getBoundingClientRect();let path,lx,ly;
+if(Math.abs(r.x-s.x)<35||innerWidth<=700){const side=innerWidth>700&&inside(edge.from)&&inside(edge.to)&&s.top>r.top?Math.max(r.right,s.right)-bounds.left+10:12;const ax=side===12?r.left-bounds.left:r.right-bounds.left,bx=side===12?s.left-bounds.left:s.right-bounds.left,ay=r.top+r.height/2-bounds.top,by=s.top+s.height/2-bounds.top;path=`M ${ax} ${ay} C ${side} ${ay}, ${side} ${by}, ${bx} ${by}`;lx=(ax+bx)/2;ly=(ay+by)/2-7;if(Math.abs(ay-by)>110){lx=side;ly=(ay+by)/2}}
+else{const forward=s.x>r.x,ax=(forward?r.right:r.left)-bounds.left,bx=(forward?s.left:s.right)-bounds.left,ay=r.top+r.height/2-bounds.top,by=s.top+s.height/2-bounds.top;const mid=(ax+bx)/2;path=`M ${ax} ${ay} C ${mid} ${ay}, ${mid} ${by}, ${bx} ${by}`;lx=mid;ly=(ay+by)/2-8}
+const g=svg('g',{},wires);svg('path',{d:path,class:'wire','marker-end':'url(#arrow)'},g);svg('path',{d:path,class:'flow'},g);const hit=svg('path',{d:path,class:'hit',tabindex:0,role:'button','aria-label':edge.label},g);const label=svg('text',{x:innerWidth<=700?4:lx,y:ly,class:'edge-label','text-anchor':innerWidth<=700?'start':(lx>bounds.width-100?'end':'middle')},g);label.textContent=edge.label;
+const reveal=pin=>{clearTimeout(timer);if(pinned&&!pin)return;if(pin)pinned=true;showDetails(edge)};hit.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')reveal(false)});label.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')reveal(false)});hit.addEventListener('focus',()=>reveal(false));[hit,label].forEach(n=>n.addEventListener('click',()=>reveal(true)));hit.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();reveal(true)}});
+});}
+exhibit.addEventListener('pointerenter',()=>clearTimeout(timer));exhibit.addEventListener('pointerleave',()=>{if(!pinned)timer=setTimeout(()=>reset(),250)});exhibit.addEventListener('focusout',e=>{if(!pinned&&!exhibit.contains(e.relatedTarget))reset()});document.addEventListener('keydown',e=>{if(e.key==='Escape')reset(true)});new ResizeObserver(()=>draw()).observe(board);
+const plan=el('section','plan',null,main);el('h2','',data.planTitle,plan);const list=el('ol','',null,plan);
+function highlight(ids,on){buttons.forEach((b,id)=>b.classList.toggle('highlight',on&&ids.includes(id)));if(on&&ids.some(id=>data.nodes.find(n=>n.id===id)?.lane==='internal')){internal.hidden=false}else if(!expanded)internal.hidden=true;draw()}
+data.steps.forEach(step=>{const li=el('li','',null,list),b=el('button','step',step.text,li);b.type='button';const ids=step.boxes||[];b.addEventListener('pointerenter',()=>highlight(ids,true));b.addEventListener('pointerleave',()=>highlight(ids,false));b.addEventListener('focus',()=>highlight(ids,true));b.addEventListener('blur',()=>highlight(ids,false));b.addEventListener('click',()=>highlight(ids,true))});
+const footer=el('footer','',null,main);if(data.footnote)el('span','',data.footnote,footer);(data.sources||[]).forEach(source=>{const a=el('a','',source.label,footer);if(/^https:\/\//.test(source.url))a.href=source.url});
+})();
+</script>
+</body>
+</html>

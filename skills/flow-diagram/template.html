@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+<style>
+:root{color-scheme:light dark;--paper:#f4f1e9;--ink:#262923;--muted:#696d62;--line:#c9cabe;--accent:#a34226;--card:#fcfaf5;--wash:#eae6db}
+@media(prefers-color-scheme:dark){:root{--paper:#1d211d;--ink:#eeeee3;--muted:#b1b6a7;--line:#4b5147;--accent:#ef9875;--card:#252b25;--wash:#323a30}}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,sans-serif}main{max-width:860px;margin:auto;padding:48px 32px 30px}header{border-top:3px solid var(--ink);padding-top:18px}.eyebrow,footer,.hint,.number,.tag{font:11px/1.5 ui-monospace,monospace;letter-spacing:.08em}.eyebrow{color:var(--accent);text-transform:uppercase}h1{font:normal clamp(36px,7vw,64px)/1.05 Georgia,serif;margin:20px 0 12px;letter-spacing:-.04em}.meta{color:var(--muted);font:14px/1.5 ui-monospace,monospace}.hint{color:var(--muted);margin:26px 0}.flow{max-width:540px;margin:36px auto 46px}.row{position:relative;animation:arrive .6s both;animation-delay:var(--delay)}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:5px}.step{display:flex;align-items:center;gap:22px;width:100%;min-height:76px;text-align:left;background:var(--card);border:1px solid var(--line);padding:18px 24px;position:relative}.step:hover,.step[aria-expanded=true]{border-color:var(--accent)}.number{color:var(--accent);flex:none}.label{font:23px/1.2 Georgia,serif;overflow-wrap:anywhere}.step::after{content:'+';margin-left:auto;color:var(--accent);font:20px monospace}.step[aria-expanded=true]::after{content:'−'}.decision{border-left:4px solid var(--accent)}.connector{border:0;background:transparent;display:flex;align-items:center;gap:20px;padding:0 24px;width:100%;min-height:66px;text-align:left;color:var(--muted);font:11px/1.4 ui-monospace,monospace}.connector:hover,.connector[aria-expanded=true]{color:var(--accent)}.shaft{height:66px;width:18px;position:relative;flex:none}.shaft::before{content:'';position:absolute;left:8px;top:0;bottom:9px;border-left:1px solid var(--accent)}.shaft::after{content:'';position:absolute;left:5px;bottom:8px;width:6px;height:6px;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:rotate(45deg)}.dot{position:absolute;left:6px;top:0;width:5px;height:5px;border-radius:50%;background:var(--accent);animation:flow 3.2s linear infinite;animation-delay:var(--delay)}.branch{margin:0 0 18px 32px;padding-left:22px;border-left:1px dashed var(--line)}.branch .step{min-height:60px;background:var(--wash)}.branch .label{font-size:19px}.branch .connector{padding-left:12px}.branch .number{display:none}footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted)}footer p{margin:0}a{color:inherit;text-underline-offset:4px}.sources{display:flex;gap:16px;flex-wrap:wrap}.popover{position:fixed;z-index:10;width:min(340px,calc(100vw - 24px));padding:22px;background:var(--ink);color:var(--paper);box-shadow:0 10px 32px #0002;border:1px solid var(--muted)}.popover[hidden]{display:none}.popover h2{font:23px/1.2 Georgia,serif;margin:8px 28px 12px 0}.popover p{font:14px/1.55 Arial,sans-serif;margin:0;white-space:pre-line}.close{position:absolute;right:10px;top:10px;border:0;background:transparent;color:inherit;font-size:24px;width:32px;height:32px}.tag{opacity:.7}.caption{margin:12px 0 0;color:var(--muted);font:11px/1.5 ui-monospace,monospace}@keyframes arrive{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}@keyframes flow{0%{transform:translateY(0);opacity:0}15%,75%{opacity:1}100%{transform:translateY(52px);opacity:0}}@media(max-width:480px){main{padding:28px 20px}.flow{margin-top:28px}.step{padding:17px 18px;gap:16px}.label{font-size:21px}.connector{padding-left:18px}.branch{margin-left:26px;padding-left:14px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}.dot{display:none}}
+</style>
+</head>
+<body>
+<!-- EDIT ONLY THIS JSON. All visible copy lives here; use plain text, not HTML.
+ title, eyebrow, date: short exhibit headings. caption and footnote: optional dry jokes.
+ ui: short interface labels. sources: optional [{label,url}] references.
+ steps: 4–8 items, each {label,detail,arrow?}; labels 2–5 words, details 1–3 short lines.
+ arrow: {label,detail}, describes the transition to the NEXT step; omit on the last.
+ Optional branch on ONE step: {label,detail,arrow:{label,detail}}. This is an alternative
+ terminal outcome, shown indented off the continuing route; the step becomes a decision.
+ To use literal less-than signs in JSON strings, encode them as \u003c.
+-->
+<script id="diagram-data" type="application/json">
+{
+  "eyebrow": "Flight exhibit / 011",
+  "title": "A landing, in six moves",
+  "date": "Apollo 11 · 20 July 1969",
+  "caption": "Condition: no longer in orbit.",
+  "footnote": "Parking was not reserved.",
+  "ui": {"hint":"Hover to inspect · tap to pin", "close":"Close details", "step":"Step", "connection":"Transition", "branch":"Alternative", "flow":"Landing sequence"},
+  "sources": [
+    {"label":"NASA · landing record","url":"https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.landing.html"},
+    {"label":"NASA · mission figures","url":"https://www.nasa.gov/wp-content/uploads/2023/04/sp-4029.pdf"}
+  ],
+  "steps": [
+    {"label":"Eagle undocks", "detail":"Eagle separates from Columbia.\nThe landing craft begins its own flight around the Moon.", "arrow":{"label":"Separate and check", "detail":"The crew checks Eagle before firing its engine to lower the orbit."}},
+    {"label":"Lower the orbit", "detail":"A short engine burn lowers the closest point of Eagle's orbit.\nThis sets up the approach to the surface.", "arrow":{"label":"Reach descent position", "detail":"Eagle reaches the point where a long engine burn can begin slowing it toward a landing."}},
+    {"label":"Powered descent begins", "detail":"The engine fires to slow Eagle.\nThe computer guides the craft toward the landing area.", "arrow":{"label":"Computer workload rises", "detail":"During descent, extra radar work overloads the computer.\nIt signals that it cannot finish every task."}},
+    {"label":"1202 / 1201 alarms", "detail":"The computer drops less urgent work and keeps guiding Eagle.\nMission Control checks the alarms and approves continuing.", "arrow":{"label":"Continue the landing", "detail":"Guidance is still working.\nAs Eagle turns upright, the crew can see the landing area."}},
+    {"label":"Armstrong takes control", "detail":"The approach leads toward a crater and boulders.\nArmstrong steers beyond them to find clearer ground.", "arrow":{"label":"Clear ground appears", "detail":"Eagle moves beyond the rocks and descends.\nFuel warnings leave little time to choose a spot."}},
+    {"label":"Eagle touches down", "detail":"Eagle lands in the Sea of Tranquility.\nPostflight analysis found about 45 seconds of usable fuel remained."}
+  ]
+}
+</script>
+<script>
+'use strict';
+const data=JSON.parse(document.getElementById('diagram-data').textContent);
+document.title=data.title;
+const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
+const main=el('main'),header=el('header');document.body.append(main);
+header.append(el('div','eyebrow',data.eyebrow),el('h1','',data.title),el('div','meta',data.date));
+if(data.caption)header.append(el('p','caption',data.caption));main.append(header,el('p','hint',data.ui.hint));
+const flow=el('section','flow');flow.setAttribute('aria-label',data.ui.flow);main.append(flow);
+const popup=el('aside','popover');popup.id='detail-panel';popup.hidden=true;popup.setAttribute('role','dialog');popup.setAttribute('aria-labelledby','detail-title');
+const tag=el('div','tag'),title=el('h2'),body=el('p'),close=el('button','close','×');title.id='detail-title';body.id='detail-body';popup.setAttribute('aria-describedby',body.id);close.type='button';close.setAttribute('aria-label',data.ui.close);popup.append(tag,title,body,close);document.body.append(popup);
+let active=null,pinned=false,timer,restoring=false;
+function position(){if(!active)return;const r=active.getBoundingClientRect(),h=popup.offsetHeight,w=popup.offsetWidth;popup.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left))+'px';popup.style.top=Math.max(12,Math.min(innerHeight-h-12,r.bottom+8))+'px'}
+function hide(restore=false){clearTimeout(timer);const old=active;if(old)old.setAttribute('aria-expanded','false');popup.hidden=true;active=null;pinned=false;if(restore&&old){restoring=true;old.focus();restoring=false}}
+function show(button,item,kind,pin){clearTimeout(timer);if(pinned&&!pin)return;if(active)active.setAttribute('aria-expanded','false');active=button;pinned=pin;tag.textContent=kind;title.textContent=item.label;body.textContent=item.detail;popup.hidden=false;button.setAttribute('aria-expanded','true');position()}
+function delayedHide(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned)hide()},180)}
+function interactive(button,item,kind){button.type='button';button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls',popup.id);button.setAttribute('aria-haspopup','dialog');button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show(button,item,kind,false)});button.addEventListener('pointerleave',delayedHide);button.addEventListener('focus',()=>{if(!restoring)show(button,item,kind,false)});button.addEventListener('blur',()=>{if(!pinned)delayedHide()});button.addEventListener('click',()=>{if(active===button&&pinned)hide();else show(button,item,kind,true)});return button}
+function step(item,index,kind){const b=el('button','step');b.append(el('span','number',String(index+1).padStart(2,'0')),el('span','label',item.label));return interactive(b,item,kind)}
+function arrow(item){const b=el('button','connector'),shaft=el('span','shaft');shaft.setAttribute('aria-hidden','true');shaft.append(el('span','dot'));b.append(shaft,el('span','',item.label));return interactive(b,item,data.ui.connection)}
+data.steps.forEach((item,i)=>{const row=el('div','row');row.style.setProperty('--delay',i*70+'ms');const node=step(item,i,data.ui.step+' '+(i+1));if(item.branch)node.classList.add('decision');row.append(node);if(item.branch){const branch=el('div','branch');branch.append(arrow(item.branch.arrow),step(item.branch,i,data.ui.branch));row.append(branch)}if(i<data.steps.length-1&&item.arrow)row.append(arrow(item.arrow));flow.append(row)});
+const footer=el('footer');if(data.footnote)footer.append(el('p','',data.footnote));const sources=el('div','sources');(data.sources||[]).forEach(s=>{const a=el('a','',s.label);try{const url=new URL(s.url);if(url.protocol!=='https:'&&url.protocol!=='http:')return;a.href=url.href}catch{return}sources.append(a)});footer.append(sources);main.append(footer);
+close.addEventListener('click',()=>hide(true));popup.addEventListener('pointerenter',()=>clearTimeout(timer));popup.addEventListener('pointerleave',delayedHide);popup.addEventListener('focusin',()=>clearTimeout(timer));popup.addEventListener('focusout',e=>{if(!popup.contains(e.relatedTarget))delayedHide()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();hide(true)}});document.addEventListener('pointerdown',e=>{if(active&&!popup.contains(e.target)&&!active.contains(e.target))hide()});window.addEventListener('resize',position);window.addEventListener('scroll',position,{passive:true});
+</script>
+</body>
+</html>
