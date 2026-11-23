@@ -10,6 +10,8 @@ Each skill copies one self-contained HTML template and fills only its JSON block
 | `before-after` | What a big epic or migration changed | Mac moves from Intel to Apple silicon, 2020 |
 | `pr-explainer` | Someone else's data-heavy PR | A 1998 bank's Y2K fix |
 | `system-plan` | Upstream → your system → downstream, plus the plan | 1890 US Census tabulator |
+| `join-explainer` | Why a join gained, lost or repeated rows | PostgreSQL tutorial: where did Hayward go? |
+| `grain-map` | What one row means, and whether combining tables doubles counts | PostgreSQL tutorial: a city is not an observation |
 
 ## Install
 
@@ -31,6 +33,8 @@ Then ask: "explain this PR as a diagram".
 ![Before and after](pr-assets/templates/before-after.png)
 ![PR explainer](pr-assets/templates/pr-explainer.png)
 ![System plan](pr-assets/templates/system-plan.png)
+![Join explainer](pr-assets/templates/join-explainer.png)
+![Grain map](pr-assets/templates/grain-map.png)
 
 To change a template, edit `src/` and run `python3 src/build.py`; checks are in `test/`.
 

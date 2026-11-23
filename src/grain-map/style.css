@@ -1,0 +1,7 @@
+.grain-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:24px}
+.grain-card{border:1px solid var(--line);padding:16px;background:var(--card);position:relative;box-shadow:4px 4px 0 var(--paper),5px 5px 0 var(--line)}
+.grain-card h2{margin:0 0 16px}.grain-card .box{margin-top:12px;background:var(--card);border:0;border-left:2px solid var(--e)}
+.relations-title{margin:36px 0 12px}.relation{display:grid;grid-template-columns:minmax(140px,1fr) 190px 2fr;gap:16px;align-items:center;padding:16px 0;border-top:1px solid var(--line)}
+.endpoints{font:13px/1.5 var(--mono);margin:0}.relation .box{background:var(--card)}.relation .box:nth-child(2) .label{font:20px/1.25 var(--mono)}
+@media(max-width:600px){.relation{grid-template-columns:100px 1fr;gap:12px}.endpoints{grid-column:1/-1}}
+

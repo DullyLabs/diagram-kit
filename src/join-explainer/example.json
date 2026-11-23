@@ -1,0 +1,31 @@
+{
+  "title": "Where did Hayward go?",
+  "eyebrow": "PostgreSQL tutorial · sample rows",
+  "caption": "Hayward left without saying goodbye.",
+  "left": "weather",
+  "right": "cities",
+  "join": "inner",
+  "condition": "weather.city = cities.name",
+  "groups": [
+    {
+      "label": "San Francisco",
+      "left": 2,
+      "right": 1,
+      "detail": "Two weather observations, dated 1994-11-27 and 1994-11-29, match one city row."
+    },
+    {
+      "label": "Hayward",
+      "left": 1,
+      "right": 0,
+      "detail": "This weather row has no city to match, so it disappears.\nSet \"join\" to \"left\" to keep it."
+    }
+  ],
+  "footnote": "Counts come from the tutorial sample, not a live database.",
+  "sources": [
+    {
+      "label": "PostgreSQL · joins tutorial",
+      "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+    }
+  ],
+  "summary": "Combining weather with cities keeps San Francisco twice and drops Hayward, because Hayward has no city row."
+}

@@ -1,0 +1,47 @@
+{
+  "title": "A city is not an observation",
+  "eyebrow": "PostgreSQL tutorial · grain review",
+  "caption": "The same city can have several weather observations.",
+  "tables": [
+    {
+      "id": "cities",
+      "label": "cities",
+      "grain": "One city",
+      "key": "name",
+      "keyDetail": "The tutorial does not enforce this; two cities with the same name would break it.",
+      "detail": "San Francisco has one city row in the tutorial sample."
+    },
+    {
+      "id": "weather",
+      "label": "weather",
+      "grain": "One city observation",
+      "key": "city + date",
+      "keyDetail": "Holds for this sample; two readings on one day would break it.",
+      "detail": "San Francisco appears on two dates; Hayward appears once."
+    }
+  ],
+  "links": [
+    {
+      "from": "cities",
+      "to": "weather",
+      "label": "name = city",
+      "matches": "many",
+      "detail": "The San Francisco city row pairs with two observations, repeating its location."
+    },
+    {
+      "from": "weather",
+      "to": "cities",
+      "label": "city = name",
+      "matches": "one",
+      "detail": "Each reading finds at most one city. Hayward finds none.\nCheck city names are unique before relying on this."
+    }
+  ],
+  "footnote": "Based on the tutorial sample; nothing here checks the real tables.",
+  "sources": [
+    {
+      "label": "PostgreSQL · joins tutorial",
+      "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+    }
+  ],
+  "summary": "A weather row is one reading for one city on one day; joining to cities is safe, joining the other way repeats city rows."
+}

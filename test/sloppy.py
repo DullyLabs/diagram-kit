@@ -7,6 +7,8 @@ minimal = {
   "before-after": {"title": "T", "themes": [{"name": "One"}]},
   "pr-explainer": {"title": "T", "flow": [{"label": "One"}]},
   "system-plan": {"title": "T", "nodes": [{"id": "a", "lane": "mine", "label": "Mine"}]},
+  "join-explainer": {"title": "T", "groups": [{"label": "x", "left": "2"}]},
+  "grain-map": {"title": "T", "tables": ["orders"]},
 }
 for t in minimal:
   src = (root / f"{t}.html").read_text()
@@ -19,7 +21,7 @@ for t in minimal:
   put("minimal", json.dumps(minimal[t]))
   put("empty", "{}")
   long = json.loads(json.dumps(good))
-  for k in ("steps", "themes", "flow", "nodes", "plan"):
+  for k in ("steps", "themes", "flow", "nodes", "plan", "groups", "tables"):
     for item in long.get(k, []):
       for f in ("label", "name"):
         if f in item: item[f] = LONG
