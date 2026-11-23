@@ -1,8 +1,0 @@
-{
-  "name": "diagram-kit",
-  "description": "Animated, hover-to-reveal explainer diagrams: flows, before/after, PR explainers and system plans.",
-  "version": "0.1.0",
-  "author": { "name": "Dully Labs" },
-  "repository": "https://github.com/DullyLabs/diagram-kit",
-  "license": "MIT"
-}

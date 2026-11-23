@@ -6,7 +6,7 @@ description: Use when asked to explain someone else's pull request, especially b
 # PR explainer
 
 1. Read the whole PR diff, plus enough of the code around it to know where the data comes from and goes.
-2. Copy `template.html` from this skill's base directory to the path the user names, else `./pr-<number>-explained.html`.
+2. Copy `template.html` from the folder this SKILL.md is in to the path the user names, else `./pr-<number>-explained.html`.
 3. Replace only the JSON in `<script id="diagram-data">`. Its schema is in the comment above it. Touch nothing else.
 4. Open the file in a browser.
 
