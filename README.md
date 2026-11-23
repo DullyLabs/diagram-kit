@@ -2,7 +2,7 @@
 
 Explainer diagrams for any coding agent that stay quiet until you ask. At rest you see short labels; hover or tap a box or arrow for the plain-language detail.
 
-Each skill copies one self-contained HTML template and fills only its JSON block, so even a small model produces a tidy diagram.
+Each skill copies one self-contained HTML template and fills only its JSON block, so even a small model with no tools produces a tidy diagram. Colours, layout and popover placement live in the template; broken or partial JSON still renders or says what to fix.
 
 | Skill | Use it for | Example inside |
 |---|---|---|
@@ -31,5 +31,7 @@ Then ask: "explain this PR as a diagram".
 ![Before and after](pr-assets/templates/before-after.png)
 ![PR explainer](pr-assets/templates/pr-explainer.png)
 ![System plan](pr-assets/templates/system-plan.png)
+
+To change a template, edit `src/` and run `python3 src/build.py`; checks are in `test/`.
 
 MIT licence. Please do not press the exhibits. Actually, do: that's how they work.
