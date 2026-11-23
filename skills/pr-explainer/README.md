@@ -2,7 +2,7 @@
 
 **Use it when** asked to explain someone else's pull request, especially one that changes SQL, tables or data pipelines.
 
-**[Open the live example](https://dullylabs.com/diagram-kit/skills/pr-explainer/example.html)**: hover or tap any box or arrow.
+**[Open the live example](https://dullylabs.com/diagram-kit/skills/pr-explainer/example.html)**
 
 ![pr-explainer, with one detail open](screenshot.png)
 

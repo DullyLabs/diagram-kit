@@ -2,7 +2,7 @@
 
 **Use it when** asked what one row of a table means, whether combining tables will repeat or double-count rows, or for a grain or cardinality check.
 
-**[Open the live example](https://dullylabs.com/diagram-kit/skills/grain-map/example.html)**: hover or tap any box or arrow.
+**[Open the live example](https://dullylabs.com/diagram-kit/skills/grain-map/example.html)**
 
 ![grain-map, with one detail open](screenshot.png)
 

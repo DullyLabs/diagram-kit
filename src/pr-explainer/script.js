@@ -36,7 +36,7 @@ boot('flow',data=>{
       });
       wrap.append(table);tables.append(wrap);
     });
-    main.append(heading('What a row looks like'),legend([['slate','■','Changed cell, before'],['green','■','Changed cell, after']]),tables);
+    main.append(heading('What a row looks like'),tables);
   }
 
   const checks=list(data.checks).map(c=>{

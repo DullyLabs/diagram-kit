@@ -58,11 +58,10 @@ function show(btn,it,pin){
   btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-describedby','detail');
   popTitle.textContent=it.label;popBody.textContent=it.detail;popBody.hidden=!it.detail;
   pop.classList.toggle('pinned',pin);pop.hidden=false;place();onShow(btn);
-  if(btn.dataset.n){btn.classList.add('seen');seen();if(pin)history.replaceState(null,'','#item-'+btn.dataset.n)} // read marks; pinned item becomes a link
+  if(btn.dataset.n){btn.classList.add('seen');if(pin)history.replaceState(null,'','#item-'+btn.dataset.n)} // read marks; pinned item becomes a link
 }
 function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!keepOpen())hide()},200)}
-const tips=[],progress=el('p','hint progress');
-const seen=()=>{const n=tips.filter(t=>t.btn.classList.contains('seen')).length;progress.textContent=n+' of '+tips.length+' read'};
+const tips=[];
 function tip(btn,it){
   if(!btn.classList.contains('wire-label')){tips.push({btn,it});btn.dataset.n=tips.length} // no id, so the browser's own #jump never hides the title
   btn.type='button';btn.setAttribute('aria-expanded','false');btn.dataset.tip='';
@@ -124,17 +123,17 @@ function boot(key,render){
   if(!list(data[key]).length)return card(title,['This diagram is empty. Add items to "'+key+'" in the JSON block, as SKILL.md shows.'],'','amber');
   try{
     document.title=title;
-    const bar=el('div','bar'),h1=el('h1',title.length>40?'long':'',title),all=el('button','toggle','Show all details');
+    const bar=el('div','bar'),h1=el('h1',title.length>40?'long':'',title),all=el('button','toggle','≡');all.title=all.ariaLabel='Show all details';
     all.type='button';all.setAttribute('aria-pressed','false');
     all.addEventListener('click',()=>all.setAttribute('aria-pressed',document.body.classList.toggle('all')));
-    const copy=el('button','toggle','Copy as Markdown');copy.type='button';
+    const copy=el('button','toggle','⧉');copy.type='button';copy.title=copy.ariaLabel='Copy as Markdown';
     copy.addEventListener('click',()=>{
       const md='# '+title+'\n\n'+tips.map(({it},i)=>(i+1)+'. **'+it.label+'**'+(it.detail?' — '+it.detail.replace(/\n+/g,' '):'')).join('\n')+'\n';
-      const done=()=>{copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy as Markdown',1500)};
+      const done=()=>{copy.textContent='✓';setTimeout(()=>copy.textContent='⧉',1500)};
       navigator.clipboard?.writeText(md).then(done,()=>fallback(md,done))??fallback(md,done);
     });
-    const tools=el('div','tools');tools.append(progress,all,copy);
-    bar.append(el('p','eyebrow',txt(data.eyebrow)),el('p','hint','Hover or tab to inspect · tap to pin'),tools);
+    const tools=el('div','tools');tools.append(all,copy);
+    bar.append(el('p','eyebrow',txt(data.eyebrow)),tools);
     header.append(bar,h1);
     if(txt(data.caption))header.append(el('p','caption',txt(data.caption)));
     if(txt(data.footnote))footer.append(el('span','',txt(data.footnote)));
@@ -142,7 +141,6 @@ function boot(key,render){
     main.append(header);render(data);main.append(footer);
     document.body.append(main,pop);
     main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
-    seen();
     const linked=tips[(/^#item-(\d+)$/.exec(location.hash)?.[1]||0)-1]?.btn; // deep link: open that item
     if(linked)setTimeout(()=>{const r=linked.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)linked.scrollIntoView({block:'center'});linked.click()},700);
   }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}

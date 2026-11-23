@@ -2,7 +2,7 @@
 
 **Use it when** asked why a join, merge or lookup gained, lost or repeated rows, or how two tables combine.
 
-**[Open the live example](https://dullylabs.com/diagram-kit/skills/join-explainer/example.html)**: hover or tap any box or arrow.
+**[Open the live example](https://dullylabs.com/diagram-kit/skills/join-explainer/example.html)**
 
 ![join-explainer, with one detail open](screenshot.png)
 
