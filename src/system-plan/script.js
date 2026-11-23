@@ -1,8 +1,7 @@
 const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream'};
 const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum'};
-const STATUS={new:['','● New'],changed:['','◇ Changed'],unsure:['','? Guess']};
+const STATUS={new:'● New',changed:'◇ Changed',unsure:'? Guess'};
 const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
-const slug=s=>txt(s).toLowerCase().replace(/[^a-z0-9]+/g,'-');
 boot('nodes',data=>{
   const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts stack'),boxes={},lanes={system:shell,internal:parts};
   [['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream']].forEach(([key,name])=>{
@@ -14,7 +13,7 @@ boot('nodes',data=>{
   if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
   nodes.forEach(n=>{
     const lane=pick(n.lane,LANE,'upstream'),k=pick(n.status,STATUSES,''),id=slug(n.id||n.label);
-    const b=box(n,STATUS[k]?.[1],LANE_ROLE[lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
+    const b=box(n,STATUS[k],LANE_ROLE[lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
     b.dataset.id=id;b.dataset.lane=lane;boxes[id]=b;lanes[lane].append(b);
   });
   shell.append(parts); // system box first, its parts below
@@ -29,7 +28,8 @@ boot('nodes',data=>{
   wires.setAttribute('class','wires');wires.setAttribute('aria-hidden','true');
   wires.innerHTML=['blue','green','plum'].map(r=>`<marker id="head-${r}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" style="fill:var(--${r}-e)"/></marker>`).join('')+'<g/>';
   board.append(wires);
-  let current=null,lit=[];
+  let current=null,lit=[],placed=[];
+  const opts={gap:2,pull:60,obstacles:'.box,.wire-label,.lane>h2,h1,.detail'};
   function draw(){
     wires.lastChild.replaceChildren();
     board.querySelectorAll('.wire-label').forEach(n=>n.remove());
@@ -53,15 +53,19 @@ boot('nodes',data=>{
       path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
       path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
       // Anchor the label at the curve's midpoint (in page coordinates) so it sits on its own line.
-      const mx=o.left+(ax+bx)/2+(bend-(ax+bx)/2)*.75,my=o.top+(ay+by)/2,mid={getBoundingClientRect:()=>new DOMRect(mx,my,0,0)};
+      const mx=(ax+bx)/2+(bend-(ax+bx)/2)*.75,my=(ay+by)/2,mid={getBoundingClientRect:()=>{const r=board.getBoundingClientRect();return new DOMRect(r.left+mx,r.top+my,0,0)}};
       wires.lastChild.append(path);labels.push([label,mid]);
     });
-    labels.forEach(([label,far])=>{boxes[current].after(label);nestle(label,far,{gap:2,pull:60,obstacles:'.box,.wire-label,.lane>h2,h1,.detail'})}); // labels repel boxes, each other and the popover
+    placed=labels;
+    labels.forEach(([label,mid])=>{boxes[current].after(label);nestle(label,mid,opts)}); // labels repel boxes, each other and the popover
   }
   onShow=btn=>{if(btn.classList.contains('wire-label'))return;current=btn.dataset.id||null;lit=btn.lit||[];draw()};
   onHide=()=>{current=null;lit=[];draw()};
   keepOpen=()=>board.matches(':hover');
   board.addEventListener('pointerleave',later);
-  new ResizeObserver(draw).observe(board);addEventListener('scroll',()=>{if(current)draw()},{passive:true});
-  main.append(board,plan);
+  new ResizeObserver(draw).observe(board);addEventListener('scroll',()=>placed.forEach(([l,m])=>nestle(l,m,opts)),{passive:true}); // move labels, don't rebuild them
+  // Connections in words, for show-all, print and copy.
+  const notes=el('ul','notes'),name=id=>boxes[id]?.querySelector('.label').textContent||id;
+  edges.forEach(e=>notes.append(el('li','',name(e.from)+' → '+name(e.to)+': '+e.label+(e.detail?' — '+e.detail:''))));
+  main.append(board,plan);if(edges.length)main.append(notes);
 });

@@ -1,14 +1,15 @@
 'use strict';
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
 // Forgive sloppy JSON: anything outside the outer { } (code fences, prose), trailing commas, HTML, markdown, wrong types.
-const txt=v=>v==null||v===false?'':Array.isArray(v)?v.map(txt).filter(Boolean).join('\n'):typeof v==='object'?txt(v.label??v.text??v.name??v.title):String(v).replace(/<\/?[a-z][^>]*>/gi,'').replace(/\*\*|__|`/g,'').trim();
+const txt=v=>v==null||v===false?'':Array.isArray(v)?v.map(txt).filter(Boolean).join('\n'):typeof v==='object'?txt(v.label??v.text??v.name??v.title):String(v).replace(/<\/?(?:a|b|i|u|em|strong|code|pre|p|br|div|span|ul|ol|li|h[1-6]|img|script|style|table|tr|td|th|font|small|sup|sub)\b[^>]*>/gi,'').replace(/(^|[^\w])(\*\*|__)(\S(?:.*?\S)?)\2(?!\w)/g,'$1$3').replace(/`/g,'').trim();
 const list=v=>Array.isArray(v)?v.filter(x=>x!=null&&x!==''):v==null||v===''||v===false?[]:typeof v==='object'?Object.values(v):String(v).split(/\s*[;\n]\s*|,\s+/).filter(Boolean);
 const item=v=>{
   if(v==null||typeof v!=='object'||Array.isArray(v))return{label:txt(v),detail:''};
   const detail=txt(v.detail??v.details??v.description??v.desc??v.note);
   return{...v,label:txt(v.label??v.name??v.title??v.text??v.id)||detail.slice(0,40),detail};
 };
-const pick=(v,map,dflt)=>map[txt(v).toLowerCase()]??dflt;
+const pick=(v,map,dflt)=>{const k=txt(v).toLowerCase();return Object.hasOwn(map,k)?map[k]:dflt};
+const slug=s=>txt(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-'); // ids: case, spaces and punctuation don't matter
 const yes=v=>v===true||/^(true|yes|y|1)$/i.test(txt(v));
 
 let onShow=()=>{},onHide=()=>{},keepOpen=()=>false;
@@ -19,17 +20,19 @@ pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-l
 let active=null,pinned=false,timer,quiet=false;
 // Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
 function nestle(el,target,opts={}){ // target: an element, or any object with getBoundingClientRect()
-  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,.callout,.caption,.legend,[data-obstacle]'}=opts;
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,h2,.tools,.callout,.caption,.legend,[data-obstacle]'}=opts;
   const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
   const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
   const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
   const rects=[...document.querySelectorAll(obstacles)].filter(o=>!(target instanceof Node&&(o.contains(target)||target.contains(o)))&&!el.contains(o)&&o!==el).map(o=>o.getBoundingClientRect());
   // Candidates per axis: beside the target, aligned with it, centred on it, or against a viewport edge. Order breaks ties: below, right, left, above.
-  const xs=[t.left,t.right+gap,t.left-w-gap,t.right-w,t.left+(t.width-w)/2,0,innerWidth].map(v=>fit(v,w,innerWidth));
-  const ys=[t.bottom+gap,t.top,t.top-h-gap,t.bottom-h,t.top+(t.height-h)/2,0,innerHeight].map(v=>fit(v,h,innerHeight));
+  // Also try just past each nearby obstacle, which finds gaps like the space under a short column.
+  const near=rects.filter(r=>Math.abs(r.top-t.top)<2*h+t.height&&Math.abs(r.left-t.left)<2*w+t.width);
+  const xs=[t.left,t.right+gap,t.left-w-gap,t.right-w,t.left+(t.width-w)/2,0,innerWidth,...near.flatMap(r=>[r.left,r.right+gap])].map(v=>fit(v,w,innerWidth));
+  const ys=[t.bottom+gap,t.top,t.top-h-gap,t.bottom-h,t.top+(t.height-h)/2,0,innerHeight,...near.flatMap(r=>[r.top,r.bottom+gap])].map(v=>fit(v,h,innerHeight));
   let best,low=Infinity;
   ys.forEach((y,j)=>xs.forEach((x,i)=>{
-    const k=j*7+i,away=Math.hypot(Math.max(t.left-x-w,x-t.right,0),Math.max(t.top-y-h,y-t.bottom,0));
+    const k=x+','+y,away=Math.hypot(Math.max(t.left-x-w,x-t.right,0),Math.max(t.top-y-h,y-t.bottom,0));
     const score=rects.reduce((s,r)=>s+cover(x,y,r),4*cover(x,y,t))+pull*away-(last.target===target&&last.k===k?stick:0); // stick: no side-hopping on scroll
     if(score<low){low=score;best={x,y,k}}
   }));
@@ -57,8 +60,8 @@ function show(btn,it,pin){
   active=btn;pinned=pin;
   btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-describedby','detail');
   popTitle.textContent=it.label;popBody.textContent=it.detail;popBody.hidden=!it.detail;
-  pop.classList.toggle('pinned',pin);pop.hidden=false;place();onShow(btn);
-  if(btn.dataset.n){btn.classList.add('seen');if(pin)history.replaceState(null,'','#item-'+btn.dataset.n)} // read marks; pinned item becomes a link
+  pop.classList.toggle('pinned',pin);pop.hidden=false;onShow(btn);place(); // after onShow, so the popover also avoids anything onShow drew
+  if(pin&&btn.dataset.n)history.replaceState(null,'','#item-'+btn.dataset.n); // a pinned item becomes a link
 }
 function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!keepOpen())hide()},200)}
 const tips=[];
@@ -90,7 +93,7 @@ document.addEventListener('keydown',e=>{
   const step={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key],here=document.activeElement;
   if(!step||!here?.matches('[data-tip]:not(.wire-label)'))return;
   const all=[...main.querySelectorAll('[data-tip]:not(.wire-label)')].filter(n=>n.offsetParent),next=all[all.indexOf(here)+step];
-  if(next){e.preventDefault();next.focus()}
+  if(next){e.preventDefault();next.focus();if(pinned)next.click()}
 });
 document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[aria-expanded]'))hide()});
 addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
@@ -128,7 +131,10 @@ function boot(key,render){
     all.addEventListener('click',()=>all.setAttribute('aria-pressed',document.body.classList.toggle('all')));
     const copy=el('button','toggle','⧉');copy.type='button';copy.title=copy.ariaLabel='Copy as Markdown';
     copy.addEventListener('click',()=>{
-      const md='# '+title+'\n\n'+tips.map(({it},i)=>(i+1)+'. **'+it.label+'**'+(it.detail?' — '+it.detail.replace(/\n+/g,' '):'')).join('\n')+'\n';
+      const one=s=>s.replace(/\s*\n+\s*/g,' ').trim(),tag=b=>b.querySelector('.tag')?.textContent;
+      const md=['# '+title,...[...header.querySelectorAll('.callout')].map(c=>'> '+one(c.lastChild.textContent)),
+        tips.map(({btn,it},i)=>(i+1)+'. **'+(tag(btn)?tag(btn)+': ':'')+it.label+'**'+(it.detail?' — '+one(it.detail):'')).join('\n'),
+        ...[...main.querySelectorAll('.checks li,.same .chip,.notes li')].map(n=>'- '+one(n.textContent))].join('\n\n')+'\n'; // tags, summary, checks and connections keep their context
       const done=()=>{copy.textContent='✓';setTimeout(()=>copy.textContent='⧉',1500)};
       navigator.clipboard?.writeText(md).then(done,()=>fallback(md,done))??fallback(md,done);
     });

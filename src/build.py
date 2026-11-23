@@ -55,9 +55,8 @@ for i, name in enumerate(names):
   desc = re.search(r"^description: (.*)$", (skill / "SKILL.md").read_text(), re.M).group(1).split(". Fills")[0]
   (skill / "README.md").write_text(f"# {name}\n\n**Use it when** {desc.removeprefix('Use when ')}.\n\n**[Open the live example](https://dullylabs.com/diagram-kit/skills/{name}/example.html)**\n\n![{name}, with one detail open](screenshot.png)\n\nThe model copies `template.html` and fills its JSON block as [SKILL.md](SKILL.md) shows; `example.html` is that template filled in.\n")
   md = skill / "SKILL.md"
-  if md.exists():
-    s = md.read_text()
-    block = "<!-- example -->\n```json\n" + json.dumps(json.loads(example), indent=2, ensure_ascii=False) + "\n```\n<!-- /example -->"
-    s = re.sub(r"<!-- example -->.*?<!-- /example -->", lambda m: block, s, flags=re.S)
-    md.write_text(s)
+  s = md.read_text()
+  block = "<!-- example -->\n```json\n" + json.dumps(json.loads(example), indent=2, ensure_ascii=False) + "\n```\n<!-- /example -->"
+  s = re.sub(r"<!-- example -->.*?<!-- /example -->", lambda m: block, s, flags=re.S)
+  md.write_text(s)
 print("built", ", ".join(names), "->", out or "skills/")

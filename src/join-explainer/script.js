@@ -1,5 +1,5 @@
 boot('groups',data=>{
-  const mode=pick(data.join,{__proto__:null,inner:'inner',left:'left',right:'right',full:'full'},'inner');
+  const mode=pick(data.join,{inner:'inner',left:'left',right:'right',full:'full'},'inner');
   const count=v=>{const n=typeof v==='number'?v:/^\s*\d+\s*$/.test(txt(v))?+txt(v):NaN;return Number.isSafeInteger(n)&&n>=0?n:null}; // "2" counts too
   const L=txt(data.left)||'Left table',R=txt(data.right)||'Right table';
   const rule={inner:'Keep only rows that match',left:'Keep every '+L+' row',right:'Keep every '+R+' row',full:'Keep every row from both'}[mode];

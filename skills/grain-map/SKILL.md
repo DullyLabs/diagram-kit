@@ -8,11 +8,12 @@ description: Use when asked what one row of a table means, whether combining tab
 1. For each table (2–5), work out what one row stands for and which columns make a row unique. Then list how the tables match up.
 2. Copy the template with one shell command. Never retype or rewrite it:
    `cp ~/.config/opencode/skills/grain-map/template.html ./<topic>-grain.html`
-   (If your skills live elsewhere, use that folder. No shell? Ask the user to run the command.)
+   (If your skills live elsewhere, use that folder.)
+   No shell or file tools? Reply with only your JSON and tell the user to paste it over `{"title":"REPLACE_ME"}` in a copy of `template.html`.
 3. In the copy, replace `{"title":"REPLACE_ME"}` with your JSON, shaped exactly like the example below. Change nothing else in the file.
 4. Check before you finish:
    - valid JSON: double quotes, no trailing commas, no comments;
-   - every item has a `label` (40 characters at most) and a `detail` (200 at most, split lines with `\n`);
+   - every box and arrow has a `label` (40 characters at most) and a `detail` (200 at most, split lines with `\n`);
    - plain text only: no HTML, no markdown, no backticks;
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
@@ -25,7 +26,7 @@ Write for a reader who is new to this: every word must help them understand the 
 |---|---|
 | `title` | The finding, in under 8 words ("A city is not an observation") |
 | `summary` | One sentence: which combination is safe and which repeats rows |
-| `tables` | 2–5 items `{id, label, grain, key, keyDetail, detail}`: `id` is one lowercase word; `grain` finishes "one row is…" ("one order line"); `key` is the columns that make a row unique ("order_id + line_no") |
+| `tables` | 2–5 items `{id, label, grain, key, keyDetail, detail}`: `id` is one lowercase word; `grain` finishes "one row is…" ("one order line"); `key` is the columns that make a row unique ("order_id + line_no"); `keyDetail` says how sure that is ("not enforced by the database") |
 | `links` | `{from, to, label, matches, detail}`: `from`/`to` are table ids; `label` is the match ("orders.id = lines.order_id"); `matches` is `one` or `many` partners per `from` row, or leave it out if unsure |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
 

@@ -8,11 +8,12 @@ description: Use when asked to explain someone else's pull request, especially o
 1. Read the PR's diff and description until you can say in one sentence what changes for the data.
 2. Copy the template with one shell command. Never retype or rewrite it:
    `cp ~/.config/opencode/skills/pr-explainer/template.html ./pr-<number>-explained.html`
-   (If your skills live elsewhere, use that folder. No shell? Ask the user to run the command.)
+   (If your skills live elsewhere, use that folder.)
+   No shell or file tools? Reply with only your JSON and tell the user to paste it over `{"title":"REPLACE_ME"}` in a copy of `template.html`.
 3. In the copy, replace `{"title":"REPLACE_ME"}` with your JSON, shaped exactly like the example below. Change nothing else in the file.
 4. Check before you finish:
    - valid JSON: double quotes, no trailing commas, no comments;
-   - every item has a `label` (40 characters at most) and a `detail` (200 at most, split lines with `\n`);
+   - every box and arrow has a `label` (40 characters at most) and a `detail` (200 at most, split lines with `\n`);
    - plain text only: no HTML, no markdown, no backticks;
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
