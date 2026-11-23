@@ -1,22 +1,38 @@
 ---
 name: system-plan
-description: Use when planning a large epic that reads from some systems, changes or builds one, and serves others, or when asked for a system context diagram. Fills a clean HTML diagram that shows connections only on hover, with a plain-language plan below.
+description: Use when planning a large epic that reads from some systems, changes or builds one, and serves others, or when asked for a system context diagram. Fills an HTML diagram that shows connections only on hover, with a plain-language plan below.
 ---
 
 # System plan
 
-1. Find out the systems that feed ours (upstream), what ours is made of, and who uses its output (downstream). Ask the user for any you can't find; mark guesses as guesses.
-2. Copy `template.html` from the folder this SKILL.md is in to the path the user names, else `./<epic>-plan.html`.
-3. Replace only the JSON in `<script id="diagram-data">`. Its schema is in the comment above it. Touch nothing else.
-4. Open the file in a browser.
+1. List the systems that feed ours (upstream), the parts of ours, and who uses its output (downstream).
+2. Copy the template with one shell command. Never retype or rewrite it:
+   `cp ~/.config/opencode/skills/system-plan/template.html ./<epic>-plan.html`
+   (If your skills live elsewhere, use that folder. No shell? Ask the user to run the command.)
+3. In the copy, replace `{"title":"REPLACE_ME"}` with your JSON, shaped exactly like the example below. Change nothing else in the file.
+4. Check before you finish:
+   - valid JSON: double quotes, no trailing commas, no comments;
+   - every item has a `label` (40 characters at most) and a `detail` (200 at most, split lines with `\n`);
+   - plain text only: no HTML, no markdown, no backticks;
+   - a name you are not sure of ends with `(guess)`.
+5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-## Writing rules
+## Fields
 
-- Box labels are the system's everyday name, 2–4 words.
-- A box's details: what it is in one line, what it's written in only if it matters, three short bullets on what it does, and whether it matters for this epic.
-- Connection labels say what moves: "orders, every hour", "customer lookups".
-- The plan is 3–7 numbered steps in plain language, in the order they must happen. Link each step to the boxes it touches.
-- Plain words, not jargon:
+| Field | What to write |
+|---|---|
+| `title` | The epic, in under 8 words |
+| `summary` | One sentence: what the epic changes and for whom |
+| `nodes` | `{id, lane, label, detail}`; `id` is one lowercase word; at most 4 per lane |
+| `nodes[].lane` | One of `upstream`, `system` (exactly one node), `internal` (parts of the system), `downstream` |
+| `nodes[].status` | One of `new`, `changed`, `unsure`. Leave it out for existing systems |
+| `edges` | `{from, to, label, detail}` using node ids; `label` says what moves ("orders, every hour") |
+| `plan` | 3–5 steps in the order they must happen: `{label, detail, boxes}`; `boxes` lists the node ids the step touches |
+| `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+
+## Words
+
+Plain words, not jargon:
 
 | Say | Not |
 |---|---|
@@ -27,4 +43,190 @@ description: Use when planning a large epic that reads from some systems, change
 | owned by | stewarded by |
 | not sure yet | TBD |
 
-- Optional `caption`/`footnote`: one dry museum wall-label joke at most, or leave them out.
+## Example
+
+<!-- example -->
+```json
+{
+  "title": "Counting a country",
+  "eyebrow": "US Census · 1890",
+  "caption": "Storage medium: cardboard.",
+  "footnote": "Please do not fold, spindle or mutilate the exhibit.",
+  "sources": [
+    {
+      "label": "Census Bureau · the machine",
+      "url": "https://www.census.gov/about/history/bureau-history/census-innovations/technology/hollerith-machine.html"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "schedules",
+      "lane": "upstream",
+      "label": "Census schedules",
+      "detail": "Paper forms filled in door to door."
+    },
+    {
+      "id": "office",
+      "lane": "upstream",
+      "label": "Census Office",
+      "detail": "Decides which totals to count."
+    },
+    {
+      "id": "stock",
+      "lane": "upstream",
+      "label": "Blank cards",
+      "detail": "Card stock cut to fit the punch and the reader."
+    },
+    {
+      "id": "system",
+      "lane": "system",
+      "label": "Hollerith tabulating system",
+      "detail": "Counts people by reading holes in cards with electricity."
+    },
+    {
+      "id": "punch",
+      "lane": "internal",
+      "label": "Pantograph punch",
+      "detail": "A clerk turns one person's answers into holes in one card."
+    },
+    {
+      "id": "reader",
+      "lane": "internal",
+      "label": "Card reader",
+      "detail": "Pins drop through the holes into cups of mercury.\nEach one closes a circuit."
+    },
+    {
+      "id": "dials",
+      "lane": "internal",
+      "label": "Dial counters",
+      "detail": "Each closed circuit moves a dial forward by one."
+    },
+    {
+      "id": "sort",
+      "lane": "internal",
+      "label": "Sorting box",
+      "detail": "A lid pops open.\nThe clerk drops the card in by hand.",
+      "status": "new"
+    },
+    {
+      "id": "congress",
+      "lane": "downstream",
+      "label": "House seats",
+      "detail": "Congress divides seats among the states by population."
+    },
+    {
+      "id": "reports",
+      "lane": "downstream",
+      "label": "Census reports",
+      "detail": "Printed volumes of tables."
+    },
+    {
+      "id": "news",
+      "lane": "downstream",
+      "label": "Newspapers",
+      "detail": "Print the totals for everyone else.",
+      "status": "unsure"
+    }
+  ],
+  "edges": [
+    {
+      "from": "schedules",
+      "to": "system",
+      "label": "Written answers",
+      "detail": "Each person's answers are copied onto one card."
+    },
+    {
+      "from": "office",
+      "to": "system",
+      "label": "What to count",
+      "detail": "The office names the totals it needs."
+    },
+    {
+      "from": "stock",
+      "to": "system",
+      "label": "Blank cards",
+      "detail": "One card per person: about 63 million."
+    },
+    {
+      "from": "system",
+      "to": "congress",
+      "label": "State totals",
+      "detail": "Population by state decides each state's seats."
+    },
+    {
+      "from": "system",
+      "to": "reports",
+      "label": "Finished tables",
+      "detail": "Clerks copy the dial readings into tables for print."
+    },
+    {
+      "from": "system",
+      "to": "news",
+      "label": "Released figures",
+      "detail": "Papers print the totals as they come out."
+    },
+    {
+      "from": "punch",
+      "to": "reader",
+      "label": "Punched cards",
+      "detail": "Fed in by hand, one at a time."
+    },
+    {
+      "from": "reader",
+      "to": "dials",
+      "label": "Electric pulses",
+      "detail": "One pulse for each hole read."
+    },
+    {
+      "from": "reader",
+      "to": "sort",
+      "label": "Which lid",
+      "detail": "The circuit picks the lid that opens."
+    },
+    {
+      "from": "sort",
+      "to": "reader",
+      "label": "Second pass",
+      "detail": "Sorted piles go through again for finer counts."
+    }
+  ],
+  "plan": [
+    {
+      "label": "Punch the cards",
+      "detail": "Copy every person on the schedules onto a card.",
+      "boxes": [
+        "schedules",
+        "stock",
+        "punch"
+      ]
+    },
+    {
+      "label": "Count the holes",
+      "detail": "Feed the cards through. The dials add up.",
+      "boxes": [
+        "reader",
+        "dials"
+      ]
+    },
+    {
+      "label": "Sort and recount",
+      "detail": "Regroup the cards to count combinations, such as age by state.",
+      "boxes": [
+        "sort",
+        "reader"
+      ]
+    },
+    {
+      "label": "Publish the totals",
+      "detail": "Copy the dial readings into tables and send them to print.",
+      "boxes": [
+        "office",
+        "reports",
+        "congress",
+        "news"
+      ]
+    }
+  ]
+}
+```
+<!-- /example -->

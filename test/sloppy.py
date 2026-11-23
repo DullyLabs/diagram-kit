@@ -1,4 +1,4 @@
-"""Write sloppy-JSON copies of each template to OUT for browser checks."""
+"""Write sloppy-JSON copies of each built example (from src/build.py --example DIR) to OUT."""
 import json, pathlib, re, sys
 root = pathlib.Path(sys.argv[1]); out = pathlib.Path(sys.argv[2]); out.mkdir(exist_ok=True)
 LONG = "An extremely long label that a careless model wrote without reading the limits at all " * 2
@@ -9,7 +9,7 @@ minimal = {
   "system-plan": {"title": "T", "nodes": [{"id": "a", "lane": "mine", "label": "Mine"}]},
 }
 for t in minimal:
-  src = (root / "skills" / t / "template.html").read_text()
+  src = (root / f"{t}.html").read_text()
   block = re.search(r'(<script id="diagram-data" type="application/json">)(.*?)(</script>)', src, re.S)
   good = json.loads(block.group(2))
   def put(name, text):

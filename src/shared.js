@@ -143,7 +143,7 @@ function boot(key,render){
     document.body.append(main,pop);
     main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
     seen();
-    const linked=location.hash&&document.getElementById(location.hash.slice(1)); // deep link: open that item
-    if(linked?.dataset.tip!=null)setTimeout(()=>{linked.scrollIntoView({block:'center'});linked.click()},700);
+    const linked=location.hash?document.getElementById(location.hash.slice(1)):null; // deep link: open that item
+    if(linked&&'tip' in linked.dataset)setTimeout(()=>{linked.scrollIntoView({block:'center'});linked.click()},700);
   }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
 }

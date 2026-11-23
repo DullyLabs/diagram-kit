@@ -10,7 +10,6 @@ boot('nodes',data=>{
     lane.append(el('h2','tag',name));board.append(lane);
     if(lanes[key])lane.append(shell);else lanes[key]=lane;
   });
-  shell.append(parts);
   const nodes=list(data.nodes).map(item);
   if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
   nodes.forEach(n=>{
@@ -18,6 +17,7 @@ boot('nodes',data=>{
     const b=box(n,STATUS[k]?.[1],LANE_ROLE[lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
     b.dataset.id=id;b.dataset.lane=lane;boxes[id]=b;lanes[lane].append(b);
   });
+  shell.append(parts); // system box first, its parts below
   plan.append(el('h2','tag','The plan'));
   list(data.plan).map(item).forEach((s,i)=>{
     const b=box(s,String(i+1).padStart(2,'0'));b.lit=list(s.boxes).map(slug);plan.append(b);

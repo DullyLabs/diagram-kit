@@ -36,7 +36,8 @@ button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-hig
 .tools{display:flex;align-items:center;gap:8px}
 .box.seen .tag::after{content:' ✓';color:var(--accent)}
 .toggle[aria-pressed=true]{color:var(--accent);border-color:var(--accent)}
-.box{--e:var(--line);--t:var(--card);display:block;width:100%;padding:14px var(--pad);background:var(--t);border:1px solid var(--e);border-radius:var(--radius);font:18px/1.25 var(--serif);transition:border-color var(--fast),background var(--fast),box-shadow var(--fast)}
+.box:not([data-role]){--e:var(--line);--t:var(--card)}
+.box{display:block;width:100%;padding:14px var(--pad);background:var(--t);border:1px solid var(--e);border-radius:var(--radius);font:18px/1.25 var(--serif);transition:border-color var(--fast),background var(--fast),box-shadow var(--fast)}
 .box .label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
 .box[data-role] .tag{color:var(--e)}
 .box[data-role=slate]{border-style:dashed}

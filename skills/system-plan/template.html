@@ -3,127 +3,129 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title></title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%232f6452'/%3E%3Cpath d='M5 9h6v14H5zM13 6h6v20h-6zM21 9h6v14h-6z' fill='none' stroke='%23f5f2ea' stroke-width='2.5'/%3E%3C/svg%3E">
+<title>system-plan</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%275%27%20fill%3D%27%23a63d2a%27/%3E%3Cpath%20d%3D%27M5%209h6v14H5zM13%206h6v20h-6zM21%209h6v14h-6z%27%20fill%3D%27none%27%20stroke%3D%27%23f5f2ea%27%20stroke-width%3D%272.5%27/%3E%3C/svg%3E">
 <style>
-/* Shared tokens and base: identical in all four diagram-kit templates. */
-:root{color-scheme:light dark;--paper:#f5f2ea;--card:#fdfbf5;--ink:#272b26;--muted:#656a60;--line:#cecfc3;--accent:#2f6452;--wash:#e6ede4;--shadow:#272b2622;--serif:Georgia,serif;--sans:system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--gap:16px;--pad:20px;--radius:2px;--fast:.18s;--slow:.5s}
-@media(prefers-color-scheme:dark){:root{--paper:#191d1a;--card:#212722;--ink:#eeebe0;--muted:#abb2a5;--line:#444d44;--accent:#9bcab0;--wash:#2c3b31;--shadow:#0006}}
+:root{color-scheme:light dark;--paper:#f5f2ea;--card:#fdfbf5;--ink:#272b26;--muted:#656a60;--line:#cecfc3;--accent:#2f6452;--wash:#e6ede4;--shadow:#272b2622;--serif:Georgia,serif;--sans:system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--gap:16px;--pad:20px;--radius:2px;--fast:.18s;--slow:.5s;
+--green-e:#2f6452;--green-t:#e6ede4;--blue-e:#2b5f8a;--blue-t:#e3ecf3;--plum-e:#7a4a7e;--plum-t:#efe5ef;--amber-e:#7d5200;--amber-t:#f6ead0;--clay-e:#a63d2a;--clay-t:#f7e3dc;--slate-e:#656a60;--slate-t:#ecebe4}
+@media(prefers-color-scheme:dark){:root{--paper:#191d1a;--card:#212722;--ink:#eeebe0;--muted:#abb2a5;--line:#444d44;--accent:#9bcab0;--wash:#2c3b31;--shadow:#0006;
+--green-e:#9bcab0;--green-t:#2c3b31;--blue-e:#8fbde0;--blue-t:#23323f;--plum-e:#cfa6d3;--plum-t:#382c3a;--amber-e:#e0b867;--amber-t:#3b3220;--clay-e:#eb9d8a;--clay-t:#402924;--slate-e:#abb2a5;--slate-t:#2b302b}}
+/* Roles: edge for borders, icons and tags; tint for fills. Body text stays --ink. */
+[data-role=green]{--e:var(--green-e);--t:var(--green-t)}
+[data-role=blue]{--e:var(--blue-e);--t:var(--blue-t)}
+[data-role=plum]{--e:var(--plum-e);--t:var(--plum-t)}
+[data-role=amber]{--e:var(--amber-e);--t:var(--amber-t)}
+[data-role=clay]{--e:var(--clay-e);--t:var(--clay-t)}
+[data-role=slate]{--e:var(--slate-e);--t:var(--slate-t)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans)}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);overflow-wrap:anywhere}
 main{max-width:1080px;margin:auto;padding:48px 32px 32px}
 main>*{animation:arrive var(--slow) both}
-.box,.arrow{animation:arrive .7s ease-out both;animation-delay:calc(150ms + var(--i,0)*120ms)}
+.box,.arrow{animation:arrive .6s ease-out both;animation-delay:calc(100ms + var(--i,0)*60ms)}
 header{border-top:3px solid var(--ink);padding-top:var(--gap);margin-bottom:32px}
-.bar{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px var(--gap)}
-.eyebrow,.hint,.caption,.tag,.arrow,footer{font:11px/1.5 var(--mono);letter-spacing:.05em;color:var(--muted);margin:0}
+.bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px var(--gap)}
+.eyebrow,.hint,.caption,.tag,.arrow,.chip,.legend,footer{font:11px/1.5 var(--mono);letter-spacing:.05em;color:var(--muted);margin:0}
 .eyebrow,.tag{text-transform:uppercase}
 .eyebrow{color:var(--accent)}
 .tag{display:block;margin-bottom:4px}
-h1{font:normal clamp(32px,6vw,56px)/1.08 var(--serif);letter-spacing:-.03em;margin:20px 0 10px}
+h1{font:normal clamp(32px,6vw,56px)/1.08 var(--serif);letter-spacing:-.03em;margin:20px 0 10px;text-wrap:balance}
+h1.long{font-size:clamp(26px,4vw,40px)}
 h2.tag{margin-bottom:10px}
 .summary{margin:0 0 10px;max-width:60ch}
+.callout{margin:0 0 12px;max-width:64ch;padding:10px 14px;border-left:3px solid var(--e,var(--accent));background:var(--t,var(--wash))}
+.callout .tag{color:var(--e)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 10px}
+.glyph{color:var(--e)}
+.chip{display:inline-block;padding:1px 8px;border:1px solid var(--e,var(--line));background:var(--t,var(--card));border-radius:99px;color:var(--ink)}
+.chip[data-role=slate]{border-style:dashed}
 button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.box{display:block;width:100%;padding:14px var(--pad);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);font:18px/1.25 var(--serif);overflow-wrap:anywhere;transform:perspective(800px) rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg));transition:border-color var(--fast),background var(--fast),transform var(--fast)}
-.box:hover,.box[aria-expanded=true]{border-color:var(--accent);background:var(--wash)}
-.arrow{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:4px var(--pad);border:0;background:none;transition:color var(--fast)}
-.arrow::before{content:'↓';font-size:16px;color:var(--accent)}
-.arrow:hover,.arrow[aria-expanded=true]{color:var(--accent)}
+.toggle{padding:2px 8px;border:1px solid var(--line);background:none;border-radius:var(--radius);font:11px/1.5 var(--mono);color:var(--muted)}
+.tools{display:flex;align-items:center;gap:8px}
+.box.seen .tag::after{content:' ✓';color:var(--accent)}
+.toggle[aria-pressed=true]{color:var(--accent);border-color:var(--accent)}
+.box:not([data-role]){--e:var(--line);--t:var(--card)}
+.box{display:block;width:100%;padding:14px var(--pad);background:var(--t);border:1px solid var(--e);border-radius:var(--radius);font:18px/1.25 var(--serif);transition:border-color var(--fast),background var(--fast),box-shadow var(--fast)}
+.box .label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.box[data-role] .tag{color:var(--e)}
+.box[data-role=slate]{border-style:dashed}
+.box:not([data-role]):hover,.box:not([data-role])[aria-expanded=true]{--e:var(--accent);--t:var(--wash)}
+.box[data-role]:hover,.box[data-role][aria-expanded=true]{box-shadow:inset 0 0 0 1px var(--e)}
+.arrow{display:flex;flex-wrap:wrap;align-items:center;gap:0 10px;width:100%;min-height:44px;padding:4px var(--pad);border:0;background:none;transition:color var(--fast)}
+.arrow::before{content:'↓';font-size:16px;color:var(--e,var(--accent))}
+.arrow:hover,.arrow[aria-expanded=true]{color:var(--e,var(--accent))}
+.note{display:none;margin-top:6px;font:14px/1.45 var(--sans);color:var(--ink);white-space:pre-line;text-transform:none;letter-spacing:0;flex-basis:100%}
+.all .note{display:block}
+.all .box .label{-webkit-line-clamp:none}
+.notes{display:none;margin-top:32px}
+.notes li{margin-bottom:6px;white-space:pre-line}
+.all .notes{display:block}
 footer{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:32px;padding-top:var(--gap);border-top:1px solid var(--line)}
 footer a{color:inherit;text-underline-offset:3px}
-.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));padding:var(--gap) var(--pad);background:color-mix(in srgb,var(--card) 70%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow),inset 0 1px 1px #fff3;pointer-events:none;max-height:calc(100dvh - 24px);overflow:auto;animation:arrive var(--fast)}
+.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:arrive var(--fast)}
 .detail[hidden]{display:none}
 .detail h2{font:normal 20px/1.2 var(--serif);margin:0 28px 6px 0}
 .detail p{margin:0;font-size:14px;white-space:pre-line}
 .close{display:none;position:absolute;top:0;right:0;width:44px;height:44px;border:0;background:none;font-size:20px;text-align:center}
 .pinned{pointer-events:auto}
 .pinned .close{display:block}
+.card{max-width:640px;margin:48px auto;padding:24px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--e,var(--ink));font:15px/1.5 var(--sans)}
+.card h1{font-size:28px;margin:0 0 8px}
+.card pre{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--paper);padding:10px;margin:12px 0 0}
 @keyframes arrive{from{opacity:0;translate:0 12px}}
 @media(max-width:600px){main{padding:24px 16px}.detail{width:calc(100vw - 24px)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-/* This template only. */
+@media print{
+:root{color-scheme:light}
+*{animation:none!important}
+.hint,.toggle,.detail,.tools{display:none!important}
+.note,.notes{display:block}
+.box .label{-webkit-line-clamp:none}
+.box,.arrow,tr{break-inside:avoid}
+main{padding:0}
+footer a::after{content:' ' attr(href)}}
+
+/* system-plan only */
 .board{position:relative;display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:72px;align-items:start}
 .lane,.shell,.parts{display:grid;gap:20px;min-width:0}
-.lane h2{margin:0;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.shell{padding:12px;border:1px dashed var(--accent);border-radius:var(--radius)}
+.lane>h2{margin:0;padding-bottom:8px;border-bottom:2px solid var(--e);color:var(--e)}
+.shell{padding:12px;border:1px dashed var(--e);border-radius:var(--radius)}
 .parts{padding-left:20px}
-.on{border-color:var(--accent);background:var(--wash)}
+.box.on{box-shadow:inset 0 0 0 2px var(--e)}
+.box.guess{border-style:dashed}
+.board.dim .box:not(.on){opacity:.45;transition:opacity var(--fast)}
 .wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.wires path{fill:none;stroke:var(--accent);stroke-width:1.4}
-.wires marker path{fill:var(--accent);stroke:none}
-.wire-label{position:absolute;z-index:2;transform:translate(-50%,-50%);padding:5px 8px;background:var(--paper);border:1px solid var(--accent);border-radius:var(--radius);font:11px/1.4 var(--mono);color:var(--accent);white-space:nowrap}
+.wires>g path{fill:none;stroke-width:1.6;stroke-dasharray:600;animation:draw .2s ease-out both}
+.wire-label{position:absolute;z-index:2;transform:translate(-50%,-50%);padding:5px 8px;background:var(--paper);border:1px solid var(--e);border-radius:var(--radius);font:11px/1.4 var(--mono);color:var(--e);white-space:nowrap}
 .wire-label.tagged{transform:translateY(-50%)}
-.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--gap);margin-top:40px}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--gap);margin-top:40px;counter-reset:step}
 .plan h2{grid-column:1/-1;margin:0}
+@keyframes draw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
 @media(max-width:760px){.board{grid-template-columns:1fr;gap:28px;padding-left:20px}}
 </style>
 </head>
 <body>
-<!-- EDIT ONLY THIS JSON. Plain text, no HTML. Labels: 2–5 words. Details: 1–3 short plain lines, split with \n.
-{title, eyebrow, nodes: [{id, lane, label, detail}], edges: [{from, to, label, detail}], plan: [{label, detail, boxes?}]}
-lane: upstream | system | internal | downstream. Exactly one system node; internal nodes are its parts. Up to 4 per lane.
-edges use node ids and stay hidden until their box is hovered. plan: 3–5 steps; boxes lists the node ids a step touches.
-caption, footnote, sources [{label, url}] are optional. -->
+<!-- Replace the JSON below with your own, in the format SKILL.md shows. Change nothing else in this file. -->
 <script id="diagram-data" type="application/json">
-{
-  "title": "Counting a country",
-  "eyebrow": "US Census · 1890",
-  "caption": "Storage medium: cardboard.",
-  "footnote": "Please do not fold, spindle or mutilate the exhibit.",
-  "sources": [
-    {"label": "Census Bureau · the machine", "url": "https://www.census.gov/about/history/bureau-history/census-innovations/technology/hollerith-machine.html"}
-  ],
-  "nodes": [
-    {"id": "schedules", "lane": "upstream", "label": "Census schedules", "detail": "Paper forms filled in door to door."},
-    {"id": "office", "lane": "upstream", "label": "Census Office", "detail": "Decides which totals to count."},
-    {"id": "stock", "lane": "upstream", "label": "Blank cards", "detail": "Card stock cut to fit the punch and the reader."},
-    {"id": "system", "lane": "system", "label": "Hollerith tabulating system", "detail": "Counts people by reading holes in cards with electricity."},
-    {"id": "punch", "lane": "internal", "label": "Pantograph punch", "detail": "A clerk turns one person's answers into holes in one card."},
-    {"id": "reader", "lane": "internal", "label": "Card reader", "detail": "Pins drop through the holes into cups of mercury.\nEach one closes a circuit."},
-    {"id": "dials", "lane": "internal", "label": "Dial counters", "detail": "Each closed circuit moves a dial forward by one."},
-    {"id": "sort", "lane": "internal", "label": "Sorting box", "detail": "A lid pops open.\nThe clerk drops the card in by hand."},
-    {"id": "congress", "lane": "downstream", "label": "House seats", "detail": "Congress divides seats among the states by population."},
-    {"id": "reports", "lane": "downstream", "label": "Census reports", "detail": "Printed volumes of tables."},
-    {"id": "news", "lane": "downstream", "label": "Newspapers", "detail": "Print the totals for everyone else."}
-  ],
-  "edges": [
-    {"from": "schedules", "to": "system", "label": "Written answers", "detail": "Each person's answers are copied onto one card."},
-    {"from": "office", "to": "system", "label": "What to count", "detail": "The office names the totals it needs."},
-    {"from": "stock", "to": "system", "label": "Blank cards", "detail": "One card per person: about 63 million."},
-    {"from": "system", "to": "congress", "label": "State totals", "detail": "Population by state decides each state's seats."},
-    {"from": "system", "to": "reports", "label": "Finished tables", "detail": "Clerks copy the dial readings into tables for print."},
-    {"from": "system", "to": "news", "label": "Released figures", "detail": "Papers print the totals as they come out."},
-    {"from": "punch", "to": "reader", "label": "Punched cards", "detail": "Fed in by hand, one at a time."},
-    {"from": "reader", "to": "dials", "label": "Electric pulses", "detail": "One pulse for each hole read."},
-    {"from": "reader", "to": "sort", "label": "Which lid", "detail": "The circuit picks the lid that opens."},
-    {"from": "sort", "to": "reader", "label": "Second pass", "detail": "Sorted piles go through again for finer counts."}
-  ],
-  "plan": [
-    {"label": "Punch the cards", "detail": "Copy every person on the schedules onto a card.", "boxes": ["schedules", "stock", "punch"]},
-    {"label": "Count the holes", "detail": "Feed the cards through. The dials add up.", "boxes": ["reader", "dials"]},
-    {"label": "Sort and recount", "detail": "Regroup the cards to count combinations, such as age by state.", "boxes": ["sort", "reader"]},
-    {"label": "Publish the totals", "detail": "Copy the dial readings into tables and send them to print.", "boxes": ["office", "reports", "congress", "news"]}
-  ]
-}
+{"title":"REPLACE_ME"}
 </script>
 <script>
 (()=>{
 'use strict';
-// Forgive trailing commas; if the JSON is still broken, say so on the page instead of showing nothing.
-let data;
-try{data=JSON.parse(document.getElementById('diagram-data').textContent.replace(/,(\s*[}\]])/g,'$1'))}
-catch(e){const p=document.createElement('pre');p.style.cssText='margin:24px;white-space:pre-wrap;font:14px/1.5 ui-monospace,monospace;color:#b3261e';p.textContent='This diagram could not load: the JSON in <script id="diagram-data"> is broken.\n'+e.message+'\nCheck for a missing comma, quote or bracket near that spot.';document.body.append(p);return}
-const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n};
-document.title=data.title;
-const main=el('main'),header=el('header'),bar=el('div','bar'),footer=el('footer');
-bar.append(el('p','eyebrow',data.eyebrow),el('p','hint','Hover to inspect · tap to pin'));
-header.append(bar,el('h1','',data.title));
-if(data.summary)header.append(el('p','summary',data.summary));
-if(data.caption)header.append(el('p','caption',data.caption));
-if(data.footnote)footer.append(el('span','',data.footnote));
-(data.sources||[]).forEach(s=>{if(/^https:\/\//.test(s.url)){const a=el('a','',s.label);a.href=s.url;footer.append(a)}});
+const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
+// Forgive sloppy JSON: anything outside the outer { } (code fences, prose), trailing commas, HTML, markdown, wrong types.
+const txt=v=>v==null||v===false?'':Array.isArray(v)?v.map(txt).filter(Boolean).join('\n'):typeof v==='object'?txt(v.label??v.text??v.name??v.title):String(v).replace(/<\/?[a-z][^>]*>/gi,'').replace(/\*\*|__|`/g,'').trim();
+const list=v=>Array.isArray(v)?v.filter(x=>x!=null&&x!==''):v==null||v===''||v===false?[]:typeof v==='object'?Object.values(v):String(v).split(/\s*[;\n]\s*|,\s+/).filter(Boolean);
+const item=v=>{
+  if(v==null||typeof v!=='object'||Array.isArray(v))return{label:txt(v),detail:''};
+  const detail=txt(v.detail??v.details??v.description??v.desc??v.note);
+  return{...v,label:txt(v.label??v.name??v.title??v.text??v.id)||detail.slice(0,40),detail};
+};
+const pick=(v,map,dflt)=>map[txt(v).toLowerCase()]??dflt;
+const yes=v=>v===true||/^(true|yes|y|1)$/i.test(txt(v));
 
+let onShow=()=>{},onHide=()=>{},keepOpen=()=>false;
+const main=el('main'),header=el('header'),footer=el('footer');
 // One popover for boxes and arrows: hover or focus shows, click or Enter pins, Esc or × closes.
 const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('button','close','×');
 pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-label','Close');pop.append(popTitle,popBody,closer);
@@ -158,98 +160,178 @@ function hide(refocus){
   clearTimeout(timer);
   const old=active;
   if(!old)return;
-  release(old);active=null;pinned=false;pop.hidden=true;connect(null);
+  release(old);active=null;pinned=false;pop.hidden=true;onHide();
   if(refocus){quiet=true;old.focus();quiet=false}
 }
-function show(btn,item,pin){
+function show(btn,it,pin){
   if(quiet||(pinned&&!pin))return;
   clearTimeout(timer);
   if(active)release(active);
   active=btn;pinned=pin;
   btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-describedby','detail');
-  popTitle.textContent=item.label;popBody.textContent=item.detail;
-  pop.classList.toggle('pinned',pin);pop.hidden=false;place();connect(btn);
+  popTitle.textContent=it.label;popBody.textContent=it.detail;popBody.hidden=!it.detail;
+  pop.classList.toggle('pinned',pin);pop.hidden=false;place();onShow(btn);
+  if(btn.id){btn.classList.add('seen');seen();if(pin)history.replaceState(null,'','#'+btn.id)} // read marks; pinned item becomes a link
 }
-function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!board.matches(':hover'))hide()},200)}
-function tip(btn,item){
-  btn.type='button';btn.setAttribute('aria-expanded','false');
-  btn.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show(btn,item,false)});
+function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!keepOpen())hide()},200)}
+const tips=[],progress=el('p','hint progress');
+const seen=()=>{const n=tips.filter(t=>t.btn.classList.contains('seen')).length;progress.textContent=n+' of '+tips.length+' read'};
+function tip(btn,it){
+  if(!btn.classList.contains('wire-label')){tips.push({btn,it});btn.id='item-'+tips.length}
+  btn.type='button';btn.setAttribute('aria-expanded','false');btn.dataset.tip='';
+  if(it.detail)btn.append(el('span','note',it.detail));
+  btn.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show(btn,it,false)});
   btn.addEventListener('pointerleave',later);
-  btn.addEventListener('focus',()=>show(btn,item,false));
+  btn.addEventListener('focus',()=>show(btn,it,false));
   btn.addEventListener('blur',later);
-  btn.addEventListener('click',()=>active===btn&&pinned?hide():show(btn,item,true));
-  if(btn.classList.contains('box')&&!matchMedia('(prefers-reduced-motion:reduce)').matches){ // gentle 3D tilt toward the pointer
-    btn.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const r=btn.getBoundingClientRect();btn.style.setProperty('--rx',((e.clientX-r.left)/r.width-.5)*4+'deg');btn.style.setProperty('--ry',(.5-(e.clientY-r.top)/r.height)*4+'deg')});
-    btn.addEventListener('pointerleave',()=>{btn.style.removeProperty('--rx');btn.style.removeProperty('--ry')});
-  }
+  btn.addEventListener('click',()=>active===btn&&pinned?hide():show(btn,it,true));
   return btn;
 }
+const role=(n,r)=>{if(r)n.dataset.role=r;return n};
+function box(it,tag,r,cls){
+  const b=role(el('button','box'+(cls?' '+cls:'')),r);
+  if(tag)b.append(el('span','tag',tag));
+  b.append(el('span','label',it.label));
+  return tip(b,it);
+}
+const arrow=(it,r)=>tip(role(el('button','arrow',it.label),r),it);
+const legend=rows=>{const l=el('p','legend');rows.forEach(([r,glyph,text])=>{const s=role(el('span'),r);s.append(el('span','glyph',glyph),' '+text);l.append(s)});return l};
+const callout=(tag,text,r)=>{const c=role(el('p','callout'),r||'green');c.append(el('span','tag',tag),text);return c};
 closer.addEventListener('click',()=>hide(true));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')hide(true)});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')return hide(true);
+  // Arrow keys step through the boxes and arrows in reading order.
+  const step={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key],here=document.activeElement;
+  if(!step||!here?.matches('[data-tip]:not(.wire-label)'))return;
+  const all=[...main.querySelectorAll('[data-tip]:not(.wire-label)')].filter(n=>n.offsetParent),next=all[all.indexOf(here)+step];
+  if(next){e.preventDefault();next.focus()}
+});
 document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[aria-expanded]'))hide()});
 addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
 
-const board=el('section','board'),plan=el('section','plan'),shell=el('div','shell'),parts=el('div','parts stack'),boxes={},lanes={system:shell,internal:parts};
-[['upstream','Upstream'],['system','Our system'],['downstream','Downstream']].forEach(([key,name])=>{
-  const lane=el('div','lane');
-  lane.append(el('h2','tag',name));board.append(lane);
-  if(lanes[key])lane.append(shell);else lanes[key]=lane;
-});
-(data.nodes||[]).forEach(n=>{
-  const b=tip(el('button','box',n.label),n);
-  b.dataset.id=n.id;boxes[n.id]=b;
-  (lanes[n.lane]||lanes.upstream).append(b); // unknown lane: show it rather than crash
-});
-plan.append(el('h2','tag','The plan'));
-shell.append(parts);
-(data.plan||[]).forEach((s,i)=>{
-  const b=el('button','box');
-  b.append(el('span','tag',String(i+1).padStart(2,'0')),s.label);b.lit=s.boxes||[];plan.append(tip(b,s));
+function fallback(text,done){const t=el('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();done()}
+function card(title,lines,snippet,r){
+  const c=role(el('section','card'),r||'clay');
+  c.append(el('h1','',title));lines.forEach(l=>c.append(el('p','',l)));
+  if(snippet)c.append(el('pre','',snippet));
+  document.title=title;document.body.replaceChildren(c);
+}
+function parse(src){
+  const a=src.indexOf('{'),b=src.lastIndexOf('}');
+  const s=a<0||b<a?src.trim():src.slice(a,b+1).replace(/,(\s*[}\]])/g,'$1');
+  try{return JSON.parse(s)}catch(e){
+    const m=/position (\d+)/.exec(e.message),at=m?+m[1]:-1;
+    e.snippet=at<0?s.slice(0,240):s.slice(Math.max(0,at-80),at)+' ⟵ HERE ⟶ '+s.slice(at,at+60);
+    throw e;
+  }
+}
+// key: the list that must have items; render(data) adds the template's sections to main.
+function boot(key,render){
+  let data;
+  try{data=parse(document.getElementById('diagram-data').textContent)}
+  catch(e){return card('This diagram could not load',['The JSON block in this file is broken. Fix the JSON block; change nothing else.','Problem: '+e.message],e.snippet)}
+  if(Array.isArray(data))data={[key]:data};
+  if(!data||typeof data!=='object')data={};
+  const title=txt(data.title)||'Untitled';
+  if(title==='REPLACE_ME')return card('No diagram yet',['Replace {"title":"REPLACE_ME"} in this file with your JSON, in the format SKILL.md shows. Change nothing else.'],'',  'amber');
+  if(!list(data[key]).length)return card(title,['This diagram is empty. Add items to "'+key+'" in the JSON block, as SKILL.md shows.'],'','amber');
+  try{
+    document.title=title;
+    const bar=el('div','bar'),h1=el('h1',title.length>40?'long':'',title),all=el('button','toggle','Show all details');
+    all.type='button';all.setAttribute('aria-pressed','false');
+    all.addEventListener('click',()=>all.setAttribute('aria-pressed',document.body.classList.toggle('all')));
+    const copy=el('button','toggle','Copy as Markdown');copy.type='button';
+    copy.addEventListener('click',()=>{
+      const md='# '+title+'\n\n'+tips.map(({it},i)=>(i+1)+'. **'+it.label+'**'+(it.detail?' — '+it.detail.replace(/\n+/g,' '):'')).join('\n')+'\n';
+      const done=()=>{copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy as Markdown',1500)};
+      navigator.clipboard?.writeText(md).then(done,()=>fallback(md,done))??fallback(md,done);
+    });
+    const tools=el('div','tools');tools.append(progress,all,copy);
+    bar.append(el('p','eyebrow',txt(data.eyebrow)),el('p','hint','Hover or tab to inspect · tap to pin'),tools);
+    header.append(bar,h1);
+    if(txt(data.caption))header.append(el('p','caption',txt(data.caption)));
+    if(txt(data.footnote))footer.append(el('span','',txt(data.footnote)));
+    list(data.sources).map(item).forEach(s=>{const url=txt(s.url??s.href??s.link);if(/^https:\/\//.test(url)){const a=el('a','',s.label||url);a.href=url;footer.append(a)}});
+    main.append(header);render(data);main.append(footer);
+    document.body.append(main,pop);
+    main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
+    seen();
+    const linked=location.hash?document.getElementById(location.hash.slice(1)):null; // deep link: open that item
+    if(linked&&'tip' in linked.dataset)setTimeout(()=>{linked.scrollIntoView({block:'center'});linked.click()},700);
+  }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
+}
+
+const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream'};
+const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum'};
+const STATUS={new:['','● New'],changed:['','◇ Changed'],unsure:['','? Guess']};
+const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
+const slug=s=>txt(s).toLowerCase().replace(/[^a-z0-9]+/g,'-');
+boot('nodes',data=>{
+  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts stack'),boxes={},lanes={system:shell,internal:parts};
+  [['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream']].forEach(([key,name])=>{
+    const lane=role(el('div','lane'),LANE_ROLE[key]);
+    lane.append(el('h2','tag',name));board.append(lane);
+    if(lanes[key])lane.append(shell);else lanes[key]=lane;
+  });
+  const nodes=list(data.nodes).map(item);
+  if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
+  nodes.forEach(n=>{
+    const lane=pick(n.lane,LANE,'upstream'),k=pick(n.status,STATUSES,''),id=slug(n.id||n.label);
+    const b=box(n,STATUS[k]?.[1],LANE_ROLE[lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
+    b.dataset.id=id;b.dataset.lane=lane;boxes[id]=b;lanes[lane].append(b);
+  });
+  shell.append(parts); // system box first, its parts below
+  plan.append(el('h2','tag','The plan'));
+  list(data.plan).map(item).forEach((s,i)=>{
+    const b=box(s,String(i+1).padStart(2,'0'));b.lit=list(s.boxes).map(slug);plan.append(b);
+  });
+  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from),to:slug(e.to)}));
+
+  // Connections: hidden at rest, drawn only for the box that is hovered, focused or pinned.
+  const wires=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  wires.setAttribute('class','wires');wires.setAttribute('aria-hidden','true');
+  wires.innerHTML=['blue','green','plum'].map(r=>`<marker id="head-${r}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" style="fill:var(--${r}-e)"/></marker>`).join('')+'<g/>';
+  board.append(wires);
+  let current=null,lit=[];
+  function draw(){
+    wires.lastChild.replaceChildren();
+    board.querySelectorAll('.wire-label').forEach(n=>n.remove());
+    for(const id in boxes)boxes[id].classList.toggle('on',id===current||lit.includes(id));
+    board.classList.toggle('dim',lit.length>0); // a plan step is lit: fade everything it doesn't touch
+    if(!current)return;
+    const o=board.getBoundingClientRect(),tagged={},labels=[];
+    edges.filter(e=>(e.from===current||e.to===current)&&boxes[e.from]&&boxes[e.to]).forEach(e=>{
+      const far=boxes[e.from===current?e.to:e.from],r=LANE_ROLE[far.dataset.lane]; // wire takes the colour of the far end
+      const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect();
+      const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,label=role(tip(el('button','wire-label',e.label),e),r);
+      let ax,bx,bend;
+      if(a.right<b.left||b.right<a.left){
+        // Side by side: curve across the gap, label on the far box's top edge so labels never stack.
+        const t=far.getBoundingClientRect();
+        ax=(a.right<b.left?a.right:a.left)-o.left;bx=(a.right<b.left?b.left:b.right)-o.left;bend=(ax+bx)/2;
+        label.style.left=t.left+t.width/2-o.left+'px';label.style.top=t.top-o.top+'px';
+      }else{
+        // Stacked: curve down the left side, label tagged onto the other box.
+        const t=far.getBoundingClientRect(),fid=far.dataset.id;
+        ax=a.left-o.left;bx=b.left-o.left;bend=Math.min(ax,bx)-18;
+        label.classList.add('tagged');
+        label.style.left=t.left-o.left+12+'px';label.style.top=(tagged[fid]?t.bottom:t.top)-o.top+'px';tagged[fid]=true;
+      }
+      const path=document.createElementNS(wires.namespaceURI,'path');
+      path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
+      path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
+      wires.lastChild.append(path);labels.push(label);
+    });
+    boxes[current].after(...labels);
+  }
+  onShow=btn=>{if(btn.classList.contains('wire-label'))return;current=btn.dataset.id||null;lit=btn.lit||[];draw()};
+  onHide=()=>{current=null;lit=[];draw()};
+  keepOpen=()=>board.matches(':hover');
+  board.addEventListener('pointerleave',later);
+  new ResizeObserver(draw).observe(board);
+  main.append(board,plan);
 });
 
-// Connections: hidden at rest, drawn only for the box that is hovered, focused or pinned.
-const wires=document.createElementNS('http://www.w3.org/2000/svg','svg');
-wires.setAttribute('class','wires');wires.setAttribute('aria-hidden','true');
-wires.innerHTML='<marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z"/></marker><g/>';
-board.append(wires);
-let current=null,lit=[];
-function connect(btn){
-  if(btn&&btn.classList.contains('wire-label'))return;
-  current=btn&&btn.dataset.id||null;lit=btn&&btn.lit||[];draw();
-}
-function draw(){
-  wires.lastChild.replaceChildren();
-  board.querySelectorAll('.wire-label').forEach(n=>n.remove());
-  for(const id in boxes)boxes[id].classList.toggle('on',id===current||lit.includes(id));
-  if(!current)return;
-  const o=board.getBoundingClientRect(),tagged={},labels=[];
-  (data.edges||[]).filter(e=>(e.from===current||e.to===current)&&boxes[e.from]&&boxes[e.to]).forEach(e=>{
-    const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect();
-    const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,label=tip(el('button','wire-label',e.label),e);
-    let ax,bx,bend;
-    if(a.right<b.left||b.right<a.left){
-      // Side by side: curve across the gap, label on the far box's top edge so labels never stack.
-      const t=e.from===current?b:a;
-      ax=(a.right<b.left?a.right:a.left)-o.left;bx=(a.right<b.left?b.left:b.right)-o.left;bend=(ax+bx)/2;
-      label.style.left=t.left+t.width/2-o.left+'px';label.style.top=t.top-o.top+'px';
-    }else{
-      // Stacked: curve down the left side, label tagged onto the other box.
-      const otherId=e.from===current?e.to:e.from,t=e.from===current?b:a;
-      ax=a.left-o.left;bx=b.left-o.left;bend=Math.min(ax,bx)-18;
-      label.classList.add('tagged');
-      label.style.left=t.left-o.left+12+'px';label.style.top=(tagged[otherId]?t.bottom:t.top)-o.top+'px';tagged[otherId]=true;
-    }
-    const path=document.createElementNS(wires.namespaceURI,'path');
-    path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
-    path.setAttribute('marker-end','url(#head)');
-    wires.lastChild.append(path);labels.push(label);
-  });
-  boxes[current].after(...labels);
-}
-board.addEventListener('pointerleave',later);
-new ResizeObserver(draw).observe(board);
-main.append(header,board,plan,footer);document.body.append(main,pop);
-main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance
 })();
 </script>
 </body>
