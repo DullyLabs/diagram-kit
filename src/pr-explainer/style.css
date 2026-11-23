@@ -1,0 +1,24 @@
+h2.tag{margin-top:32px}
+.flow{display:flex}
+.flow .box{flex:1;min-width:140px}
+.flow .arrow{flex:0 0 104px;flex-direction:column;justify-content:center;gap:0;padding:4px;text-align:center}
+.flow .arrow::before{content:'→'}
+.flow .box[data-role=green]{border-top-width:3px}
+.tables{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:var(--gap)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font:13px/1.4 var(--mono)}
+caption{padding-bottom:6px;text-align:left;color:var(--e)}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;font-weight:normal;overflow-wrap:anywhere}
+th{color:var(--muted)}
+.diff{background:var(--t);box-shadow:inset 3px 0 var(--e)}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:0 24px;list-style:none;margin:0;padding:0}
+.checks li{display:grid;grid-template-columns:auto 1fr;gap:0 10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.checks .where{grid-column:2;font:12px/1.5 var(--mono);color:var(--muted)}
+.tall,.flow.tall{flex-direction:column;max-width:480px}
+.tall .arrow{flex:none;flex-direction:row;justify-content:start;gap:10px;padding:4px var(--pad);text-align:left}
+.tall .arrow::before{content:'↓'}
+@media(max-width:700px){
+.flow{flex-direction:column}
+.flow .box{min-width:0}
+.flow .arrow{flex:none;flex-direction:row;justify-content:start;gap:10px;padding:4px var(--pad);text-align:left}
+.flow .arrow::before{content:'↓'}}

@@ -1,0 +1,107 @@
+{
+  "title": "Same Mac. New machinery.",
+  "eyebrow": "Mac · Intel to Apple silicon · 2020–2023",
+  "caption": "Contents replaced. Case: untouched.",
+  "footnote": "The MacBook Air's fan has left the collection.",
+  "sources": [
+    {
+      "label": "Apple · M1 announcement",
+      "url": "https://www.apple.com/newsroom/2020/11/apple-unleashes-m1/"
+    },
+    {
+      "label": "Apple · Rosetta",
+      "url": "https://support.apple.com/en-us/102527"
+    },
+    {
+      "label": "Apple · universal binaries",
+      "url": "https://developer.apple.com/documentation/apple-silicon/building-a-universal-macos-binary"
+    }
+  ],
+  "themes": [
+    {
+      "before": {
+        "label": "Intel chips",
+        "detail": "Intel made the Mac's main processor from 2006."
+      },
+      "change": {
+        "label": "Swap the chip",
+        "detail": "First M1 Macs: November 2020.\nLast to switch: Mac Pro, June 2023."
+      },
+      "after": {
+        "label": "Apple silicon",
+        "detail": "Apple designs the chip.\nProcessor, graphics and memory share one package."
+      },
+      "label": "Processor",
+      "effect": "better"
+    },
+    {
+      "before": {
+        "label": "Ran directly",
+        "detail": "Apps were built for Intel and ran on Intel."
+      },
+      "change": {
+        "label": "Translate with Rosetta 2",
+        "detail": "Rosetta 2 converts Intel apps to run on the new chips."
+      },
+      "after": {
+        "label": "Most still run",
+        "detail": "Most Intel apps work unchanged.\nKernel extensions and Intel virtual machines do not."
+      },
+      "label": "Old apps",
+      "effect": "worse"
+    },
+    {
+      "before": {
+        "label": "Built for Intel",
+        "detail": "One build, one chip family."
+      },
+      "change": {
+        "label": "Ship universal apps",
+        "detail": "One app file holds code for both chip families."
+      },
+      "after": {
+        "label": "One download, both chips",
+        "detail": "The Mac runs the half that fits. Nobody has to choose."
+      },
+      "label": "New apps",
+      "effect": "better"
+    },
+    {
+      "before": {
+        "label": "12 hours of video",
+        "detail": "Apple's rating for the early-2020 Intel MacBook Air."
+      },
+      "change": {
+        "label": "Use less power",
+        "detail": "Four fast cores for heavy work.\nFour frugal ones for everything else."
+      },
+      "after": {
+        "label": "18 hours of video",
+        "detail": "Apple's rating for the M1 MacBook Air.\nNo fan."
+      },
+      "label": "Battery",
+      "effect": "better"
+    },
+    {
+      "before": {
+        "label": "Boot Camp",
+        "detail": "Intel Macs could restart into Windows."
+      },
+      "change": {
+        "label": "Drop Boot Camp",
+        "detail": "Boot Camp needs an Intel chip. It was not carried over."
+      },
+      "after": {
+        "label": "Virtual machine only",
+        "detail": "Windows 11 for Arm runs inside apps such as Parallels."
+      },
+      "label": "Windows",
+      "effect": "removed"
+    }
+  ],
+  "unchanged": [
+    "macOS",
+    "Your files",
+    "The aluminium case"
+  ]
+}

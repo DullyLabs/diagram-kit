@@ -1,0 +1,181 @@
+{
+  "title": "Counting a country",
+  "eyebrow": "US Census · 1890",
+  "caption": "Storage medium: cardboard.",
+  "footnote": "Please do not fold, spindle or mutilate the exhibit.",
+  "sources": [
+    {
+      "label": "Census Bureau · the machine",
+      "url": "https://www.census.gov/about/history/bureau-history/census-innovations/technology/hollerith-machine.html"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "schedules",
+      "lane": "upstream",
+      "label": "Census schedules",
+      "detail": "Paper forms filled in door to door."
+    },
+    {
+      "id": "office",
+      "lane": "upstream",
+      "label": "Census Office",
+      "detail": "Decides which totals to count."
+    },
+    {
+      "id": "stock",
+      "lane": "upstream",
+      "label": "Blank cards",
+      "detail": "Card stock cut to fit the punch and the reader."
+    },
+    {
+      "id": "system",
+      "lane": "system",
+      "label": "Hollerith tabulating system",
+      "detail": "Counts people by reading holes in cards with electricity."
+    },
+    {
+      "id": "punch",
+      "lane": "internal",
+      "label": "Pantograph punch",
+      "detail": "A clerk turns one person's answers into holes in one card."
+    },
+    {
+      "id": "reader",
+      "lane": "internal",
+      "label": "Card reader",
+      "detail": "Pins drop through the holes into cups of mercury.\nEach one closes a circuit."
+    },
+    {
+      "id": "dials",
+      "lane": "internal",
+      "label": "Dial counters",
+      "detail": "Each closed circuit moves a dial forward by one."
+    },
+    {
+      "id": "sort",
+      "lane": "internal",
+      "label": "Sorting box",
+      "detail": "A lid pops open.\nThe clerk drops the card in by hand.",
+      "status": "new"
+    },
+    {
+      "id": "congress",
+      "lane": "downstream",
+      "label": "House seats",
+      "detail": "Congress divides seats among the states by population."
+    },
+    {
+      "id": "reports",
+      "lane": "downstream",
+      "label": "Census reports",
+      "detail": "Printed volumes of tables."
+    },
+    {
+      "id": "news",
+      "lane": "downstream",
+      "label": "Newspapers",
+      "detail": "Print the totals for everyone else.",
+      "status": "unsure"
+    }
+  ],
+  "edges": [
+    {
+      "from": "schedules",
+      "to": "system",
+      "label": "Written answers",
+      "detail": "Each person's answers are copied onto one card."
+    },
+    {
+      "from": "office",
+      "to": "system",
+      "label": "What to count",
+      "detail": "The office names the totals it needs."
+    },
+    {
+      "from": "stock",
+      "to": "system",
+      "label": "Blank cards",
+      "detail": "One card per person: about 63 million."
+    },
+    {
+      "from": "system",
+      "to": "congress",
+      "label": "State totals",
+      "detail": "Population by state decides each state's seats."
+    },
+    {
+      "from": "system",
+      "to": "reports",
+      "label": "Finished tables",
+      "detail": "Clerks copy the dial readings into tables for print."
+    },
+    {
+      "from": "system",
+      "to": "news",
+      "label": "Released figures",
+      "detail": "Papers print the totals as they come out."
+    },
+    {
+      "from": "punch",
+      "to": "reader",
+      "label": "Punched cards",
+      "detail": "Fed in by hand, one at a time."
+    },
+    {
+      "from": "reader",
+      "to": "dials",
+      "label": "Electric pulses",
+      "detail": "One pulse for each hole read."
+    },
+    {
+      "from": "reader",
+      "to": "sort",
+      "label": "Which lid",
+      "detail": "The circuit picks the lid that opens."
+    },
+    {
+      "from": "sort",
+      "to": "reader",
+      "label": "Second pass",
+      "detail": "Sorted piles go through again for finer counts."
+    }
+  ],
+  "plan": [
+    {
+      "label": "Punch the cards",
+      "detail": "Copy every person on the schedules onto a card.",
+      "boxes": [
+        "schedules",
+        "stock",
+        "punch"
+      ]
+    },
+    {
+      "label": "Count the holes",
+      "detail": "Feed the cards through. The dials add up.",
+      "boxes": [
+        "reader",
+        "dials"
+      ]
+    },
+    {
+      "label": "Sort and recount",
+      "detail": "Regroup the cards to count combinations, such as age by state.",
+      "boxes": [
+        "sort",
+        "reader"
+      ]
+    },
+    {
+      "label": "Publish the totals",
+      "detail": "Copy the dial readings into tables and send them to print.",
+      "boxes": [
+        "office",
+        "reports",
+        "congress",
+        "news"
+      ]
+    }
+  ]
+}

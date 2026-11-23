@@ -1,0 +1,83 @@
+{
+  "title": "A landing, in six moves",
+  "eyebrow": "Apollo 11 · 20 July 1969",
+  "caption": "Please do not press the abort button.",
+  "footnote": "The descent stage is still on display at the site. No visiting hours.",
+  "sources": [
+    {
+      "label": "NASA · landing transcript",
+      "url": "https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.landing.html"
+    },
+    {
+      "label": "NASA · Apollo by the Numbers",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/04/sp-4029.pdf"
+    }
+  ],
+  "steps": [
+    {
+      "label": "Eagle undocks",
+      "detail": "The lander leaves Columbia, the ship that stays in orbit.",
+      "arrow": {
+        "label": "Look it over",
+        "detail": "Collins checks Eagle from Columbia's window."
+      },
+      "kind": "send",
+      "phase": "Leave orbit"
+    },
+    {
+      "label": "Lower the orbit",
+      "detail": "A 30-second burn behind the Moon.\nThe low point drops to about 15 km.",
+      "arrow": {
+        "label": "Coast down",
+        "detail": "About an hour of falling, engine off."
+      },
+      "kind": "change",
+      "phase": "Leave orbit"
+    },
+    {
+      "label": "Powered descent",
+      "detail": "The engine fires again to brake.\nTwelve minutes to the surface.",
+      "arrow": {
+        "label": "Computer falls behind",
+        "detail": "A radar that isn't needed keeps sending it work."
+      },
+      "kind": "change",
+      "phase": "Land"
+    },
+    {
+      "label": "1202 and 1201 alarms",
+      "detail": "The computer is overloaded.\nIt drops minor jobs and keeps steering.\nMission Control says go.",
+      "branch": {
+        "label": "Abort to orbit",
+        "detail": "Not taken.\nEagle would have climbed back to Columbia.",
+        "arrow": {
+          "label": "If steering stops",
+          "detail": "A computer that stopped guiding meant an abort."
+        }
+      },
+      "arrow": {
+        "label": "Keep going",
+        "detail": "Eagle tips upright. The crew can see the ground."
+      },
+      "kind": "check",
+      "phase": "Land"
+    },
+    {
+      "label": "Armstrong takes over",
+      "detail": "The autopilot is heading for a crater full of boulders.\nHe flies past it.",
+      "arrow": {
+        "label": "Find flat ground",
+        "detail": "Low-fuel calls count down while he looks."
+      },
+      "kind": "change",
+      "phase": "Land"
+    },
+    {
+      "label": "Eagle touches down",
+      "detail": "Sea of Tranquility, 20:17 UTC.\nUnder a minute of fuel left.",
+      "kind": "stop",
+      "phase": "Land"
+    }
+  ],
+  "summary": "How Eagle got from orbit to the surface, and the alarm that nearly stopped it."
+}

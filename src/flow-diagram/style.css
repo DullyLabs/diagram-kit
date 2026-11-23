@@ -1,0 +1,5 @@
+.flow{display:grid;max-width:480px;margin:auto}
+.phase{margin:24px 0 8px}
+.branch{display:grid;margin:0 0 4px 28px;border-left:1px dashed var(--amber-e)}
+.branch .arrow::before{content:'↳'}
+.branch .box{border-style:dashed}

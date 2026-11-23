@@ -1,0 +1,105 @@
+{
+  "title": "Two more digits. One less crisis.",
+  "eyebrow": "Fictional bank PR · November 1998",
+  "summary": "Stores loan years as four digits instead of two, so the year 2000 sorts and subtracts correctly.",
+  "caption": "Artefact: a year, shown at full size for the first time.",
+  "footnote": "Good until the year 9999. A future exhibit.",
+  "flow": [
+    {
+      "label": "Teller terminals",
+      "detail": "Unchanged.\nTellers still type two digits.",
+      "arrow": {
+        "label": "Add the century",
+        "detail": "Years under 50 become 20YY.\nThe rest become 19YY."
+      }
+    },
+    {
+      "label": "Loan records",
+      "changed": true,
+      "detail": "The year column grows from 2 digits to 4.\nOld rows get a century by the same rule.",
+      "arrow": {
+        "label": "Read due dates",
+        "detail": "The job now reads four-digit years."
+      }
+    },
+    {
+      "label": "Nightly interest",
+      "changed": true,
+      "detail": "Counts days between dates.\nWith two digits, 2000 minus 1999 came out as −99 years.",
+      "arrow": {
+        "label": "Send entries",
+        "detail": "Each interest entry carries a full year."
+      }
+    },
+    {
+      "label": "Statements",
+      "changed": true,
+      "detail": "Prints four-digit years.\nSorts by full year, so 2000 follows 1999."
+    }
+  ],
+  "sample": {
+    "columns": [
+      "Loan",
+      "Due date",
+      "Year stored"
+    ],
+    "before": {
+      "note": "sorted by year",
+      "rows": [
+        [
+          "L-208",
+          "01-15-00",
+          "00"
+        ],
+        [
+          "L-312",
+          "03-01-28",
+          "28"
+        ],
+        [
+          "L-104",
+          "06-30-99",
+          "99"
+        ]
+      ]
+    },
+    "after": {
+      "note": "sorted by year",
+      "rows": [
+        [
+          "L-104",
+          "06-30-1999",
+          "1999"
+        ],
+        [
+          "L-208",
+          "01-15-2000",
+          "2000"
+        ],
+        [
+          "L-312",
+          "03-01-2028",
+          "2028"
+        ]
+      ]
+    }
+  },
+  "checks": [
+    {
+      "text": "No date falls outside 1950–2049.",
+      "risk": "high"
+    },
+    {
+      "text": "49 becomes 2049. 50 becomes 1950.",
+      "risk": "high"
+    },
+    {
+      "text": "29 February 2000 is accepted.",
+      "risk": "medium"
+    },
+    {
+      "text": "Balances match after the migration.",
+      "risk": "low"
+    }
+  ]
+}

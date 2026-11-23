@@ -1,0 +1,6 @@
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:32px var(--gap)}
+.theme{display:grid;align-content:start}
+.theme h2 .chip{margin-left:6px}
+.box[data-role=green]{border-left-width:3px}
+.same{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:32px}
+.same h2{margin:0 8px 0 0}
