@@ -111,7 +111,10 @@ caption, footnote, sources [{label, url}] are optional. -->
 <script>
 (()=>{
 'use strict';
-const data=JSON.parse(document.getElementById('diagram-data').textContent);
+// Forgive trailing commas; if the JSON is still broken, say so on the page instead of showing nothing.
+let data;
+try{data=JSON.parse(document.getElementById('diagram-data').textContent.replace(/,(\s*[}\]])/g,'$1'))}
+catch(e){const p=document.createElement('pre');p.style.cssText='margin:24px;white-space:pre-wrap;font:14px/1.5 ui-monospace,monospace;color:#b3261e';p.textContent='This diagram could not load: the JSON in <script id="diagram-data"> is broken.\n'+e.message+'\nCheck for a missing comma, quote or bracket near that spot.';document.body.append(p);return}
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n};
 document.title=data.title;
 const main=el('main'),header=el('header'),bar=el('div','bar'),footer=el('footer');
@@ -174,23 +177,25 @@ document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[ari
 addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
 
 const flow=el('section','flow'),tables=el('section','tables'),checks=el('ul','checks');
-data.flow.forEach((s,i)=>{
+(data.flow||[]).forEach((s,i)=>{
   const b=el('button','box'+(s.changed?' changed':''));
   b.append(el('span','tag',s.changed?'Changed':'Unchanged'),s.label);flow.append(tip(b,s));
   if(s.arrow&&i<data.flow.length-1)flow.append(tip(el('button','arrow',s.arrow.label),s.arrow));
 });
+const sample=data.sample||{};
 [['before','after'],['after','before']].forEach(([side,other])=>{
-  const {note,rows}=data.sample[side],table=el('table'),head=el('tr');
+  if(!sample[side])return;
+  const {note,rows=[]}=sample[side],table=el('table'),head=el('tr');
   table.append(el('caption','tag',side+(note?' · '+note:'')),head);
-  data.sample.columns.forEach(c=>head.append(el('th','',c)));
+  (sample.columns||[]).forEach(c=>head.append(el('th','',c)));
   rows.forEach(row=>{
-    const tr=el('tr'),twin=data.sample[other].rows.find(r=>r[0]===row[0])||[];
-    row.forEach((cell,i)=>tr.append(el('td',cell===twin[i]?'':'diff',cell)));
+    const tr=el('tr'),twin=(sample[other]?.rows||[]).find(r=>r[0]===row[0])||[];
+    [].concat(row).forEach((cell,i)=>tr.append(el('td',cell===twin[i]?'':'diff',cell)));
     table.append(tr);
   });
   tables.append(table);
 });
-data.checks.forEach(c=>checks.append(el('li','',c)));
+(data.checks||[]).forEach(c=>checks.append(el('li','',c)));
 main.append(header,el('h2','tag','Data flow'),flow,el('h2','tag','Sample rows'),tables,el('h2','tag','Check before merging'),checks,footer);
 document.body.append(main,pop);
 main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance

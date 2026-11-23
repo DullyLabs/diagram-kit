@@ -110,7 +110,10 @@ caption, footnote, sources [{label, url}] are optional. -->
 <script>
 (()=>{
 'use strict';
-const data=JSON.parse(document.getElementById('diagram-data').textContent);
+// Forgive trailing commas; if the JSON is still broken, say so on the page instead of showing nothing.
+let data;
+try{data=JSON.parse(document.getElementById('diagram-data').textContent.replace(/,(\s*[}\]])/g,'$1'))}
+catch(e){const p=document.createElement('pre');p.style.cssText='margin:24px;white-space:pre-wrap;font:14px/1.5 ui-monospace,monospace;color:#b3261e';p.textContent='This diagram could not load: the JSON in <script id="diagram-data"> is broken.\n'+e.message+'\nCheck for a missing comma, quote or bracket near that spot.';document.body.append(p);return}
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n};
 document.title=data.title;
 const main=el('main'),header=el('header'),bar=el('div','bar'),footer=el('footer');
@@ -178,14 +181,14 @@ const board=el('section','board'),plan=el('section','plan'),shell=el('div','shel
   lane.append(el('h2','tag',name));board.append(lane);
   if(lanes[key])lane.append(shell);else lanes[key]=lane;
 });
-data.nodes.forEach(n=>{
+(data.nodes||[]).forEach(n=>{
   const b=tip(el('button','box',n.label),n);
   b.dataset.id=n.id;boxes[n.id]=b;
-  lanes[n.lane].append(b);
+  (lanes[n.lane]||lanes.upstream).append(b); // unknown lane: show it rather than crash
 });
 plan.append(el('h2','tag','The plan'));
 shell.append(parts);
-data.plan.forEach((s,i)=>{
+(data.plan||[]).forEach((s,i)=>{
   const b=el('button','box');
   b.append(el('span','tag',String(i+1).padStart(2,'0')),s.label);b.lit=s.boxes||[];plan.append(tip(b,s));
 });
@@ -206,7 +209,7 @@ function draw(){
   for(const id in boxes)boxes[id].classList.toggle('on',id===current||lit.includes(id));
   if(!current)return;
   const o=board.getBoundingClientRect(),tagged={},labels=[];
-  data.edges.filter(e=>(e.from===current||e.to===current)&&boxes[e.from]&&boxes[e.to]).forEach(e=>{
+  (data.edges||[]).filter(e=>(e.from===current||e.to===current)&&boxes[e.from]&&boxes[e.to]).forEach(e=>{
     const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect();
     const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,label=tip(el('button','wire-label',e.label),e);
     let ax,bx,bend;

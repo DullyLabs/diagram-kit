@@ -93,7 +93,10 @@ caption, footnote, sources [{label, url}] are optional. -->
 <script>
 (()=>{
 'use strict';
-const data=JSON.parse(document.getElementById('diagram-data').textContent);
+// Forgive trailing commas; if the JSON is still broken, say so on the page instead of showing nothing.
+let data;
+try{data=JSON.parse(document.getElementById('diagram-data').textContent.replace(/,(\s*[}\]])/g,'$1'))}
+catch(e){const p=document.createElement('pre');p.style.cssText='margin:24px;white-space:pre-wrap;font:14px/1.5 ui-monospace,monospace;color:#b3261e';p.textContent='This diagram could not load: the JSON in <script id="diagram-data"> is broken.\n'+e.message+'\nCheck for a missing comma, quote or bracket near that spot.';document.body.append(p);return}
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n};
 document.title=data.title;
 const main=el('main'),header=el('header'),bar=el('div','bar'),footer=el('footer');
@@ -156,13 +159,15 @@ document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[ari
 addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
 
 const grid=el('section','grid');
-data.themes.forEach((t,i)=>{
+(data.themes||[]).forEach((t,i)=>{
   const theme=el('section','theme stack');
   theme.append(el('h2','tag',String(i+1).padStart(2,'0')+' · '+t.name));
   ['before','change','after'].forEach(k=>{
+    const v=typeof t[k]==='string'?{label:t[k]}:t[k]; // accept a bare string
+    if(!v)return;
     const b=el('button',k==='change'?'arrow':'box '+k);
     if(k!=='change')b.append(el('span','tag',k));
-    b.append(t[k].label);theme.append(tip(b,t[k]));
+    b.append(v.label||'');theme.append(tip(b,v));
   });
   grid.append(theme);
 });
