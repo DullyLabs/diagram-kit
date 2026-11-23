@@ -6,7 +6,7 @@ description: Use when planning a large epic that reads from some systems, change
 # System plan
 
 1. Find out the systems that feed ours (upstream), what ours is made of, and who uses its output (downstream). Ask the user for any you can't find; mark guesses as guesses.
-2. Copy `template.html` from this skill's base directory to the path the user names, else `./<epic>-plan.html`.
+2. Copy `template.html` from the folder this SKILL.md is in to the path the user names, else `./<epic>-plan.html`.
 3. Replace only the JSON in `<script id="diagram-data">`. Its schema is in the comment above it. Touch nothing else.
 4. Open the file in a browser.
 

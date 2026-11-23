@@ -6,7 +6,7 @@ description: Use when asked to explain how some code, job or process works step 
 # Flow diagram
 
 1. Read the code until you can tell the story in 4–8 steps. One decision point at most.
-2. Copy `template.html` from this skill's base directory to the path the user names, else `./<topic>-flow.html`.
+2. Copy `template.html` from the folder this SKILL.md is in to the path the user names, else `./<topic>-flow.html`.
 3. Replace only the JSON in `<script id="diagram-data">`. Its schema is in the comment above it. Touch nothing else.
 4. Open the file in a browser.
 

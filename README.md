@@ -1,6 +1,6 @@
 # diagram-kit
 
-Explainer diagrams for Claude Code that stay quiet until you ask. At rest you see short labels; hover or tap a box or arrow for the plain-language detail.
+Explainer diagrams for any coding agent that stay quiet until you ask. At rest you see short labels; hover or tap a box or arrow for the plain-language detail.
 
 Each skill copies one self-contained HTML template and fills only its JSON block, so even a small model produces a tidy diagram.
 
@@ -13,9 +13,16 @@ Each skill copies one self-contained HTML template and fills only its JSON block
 
 ## Install
 
+Each skill is a folder with a `SKILL.md` and a standalone `template.html`, with no build step and no network calls. Copy the folders in `skills/` to wherever your agent reads skills:
+
+| Agent | Folder |
+|---|---|
+| opencode | `~/.config/opencode/skills/` |
+| Claude Code | `~/.claude/skills/` |
+| Others | `.agents/skills/`, or point the agent at a `SKILL.md` |
+
 ```
-/plugin marketplace add DullyLabs/diagram-kit
-/plugin install diagram-kit@dullylabs
+git clone https://github.com/DullyLabs/diagram-kit && cp -r diagram-kit/skills/* ~/.config/opencode/skills/
 ```
 
 Then ask: "explain this PR as a diagram".

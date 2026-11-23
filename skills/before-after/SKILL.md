@@ -6,7 +6,7 @@ description: Use when asked what a big change (an epic, migration, rewrite or lo
 # Before / after
 
 1. Read the change (commits, diff, tickets) and group it into 3–6 themes the reader cares about. Hundreds of changes still make 3–6 themes.
-2. Copy `template.html` from this skill's base directory to the path the user names, else `./<topic>-before-after.html`.
+2. Copy `template.html` from the folder this SKILL.md is in to the path the user names, else `./<topic>-before-after.html`.
 3. Replace only the JSON in `<script id="diagram-data">`. Its schema is in the comment above it. Touch nothing else.
 4. Open the file in a browser.
 
