@@ -62,7 +62,7 @@ button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-hig
 .all .notes{display:block}
 footer{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:32px;padding-top:var(--gap);border-top:1px solid var(--line)}
 footer a{color:inherit;text-underline-offset:3px}
-.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:arrive var(--fast)}
+.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:arrive var(--fast)}
 .detail[hidden]{display:none}
 .detail h2{font:normal 20px/1.2 var(--serif);margin:0 28px 6px 0}
 .detail p{margin:0;font-size:14px;white-space:pre-line}
@@ -121,12 +121,12 @@ const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('butt
 pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-label','Close');pop.append(popTitle,popBody,closer);
 let active=null,pinned=false,timer,quiet=false;
 // Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
-function nestle(el,target,opts={}){
-  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,[data-obstacle]'}=opts;
+function nestle(el,target,opts={}){ // target: an element, or any object with getBoundingClientRect()
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,.callout,.caption,.legend,[data-obstacle]'}=opts;
   const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
   const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
   const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
-  const rects=[...document.querySelectorAll(obstacles)].filter(o=>!o.contains(target)&&!target.contains(o)&&!el.contains(o)).map(o=>o.getBoundingClientRect());
+  const rects=[...document.querySelectorAll(obstacles)].filter(o=>!(target instanceof Node&&(o.contains(target)||target.contains(o)))&&!el.contains(o)&&o!==el).map(o=>o.getBoundingClientRect());
   // Candidates per axis: beside the target, aligned with it, centred on it, or against a viewport edge. Order breaks ties: below, right, left, above.
   const xs=[t.left,t.right+gap,t.left-w-gap,t.right-w,t.left+(t.width-w)/2,0,innerWidth].map(v=>fit(v,w,innerWidth));
   const ys=[t.bottom+gap,t.top,t.top-h-gap,t.bottom-h,t.top+(t.height-h)/2,0,innerHeight].map(v=>fit(v,h,innerHeight));
@@ -161,13 +161,13 @@ function show(btn,it,pin){
   btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-describedby','detail');
   popTitle.textContent=it.label;popBody.textContent=it.detail;popBody.hidden=!it.detail;
   pop.classList.toggle('pinned',pin);pop.hidden=false;place();onShow(btn);
-  if(btn.id){btn.classList.add('seen');seen();if(pin)history.replaceState(null,'','#'+btn.id)} // read marks; pinned item becomes a link
+  if(btn.dataset.n){btn.classList.add('seen');seen();if(pin)history.replaceState(null,'','#item-'+btn.dataset.n)} // read marks; pinned item becomes a link
 }
 function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!keepOpen())hide()},200)}
 const tips=[],progress=el('p','hint progress');
 const seen=()=>{const n=tips.filter(t=>t.btn.classList.contains('seen')).length;progress.textContent=n+' of '+tips.length+' read'};
 function tip(btn,it){
-  if(!btn.classList.contains('wire-label')){tips.push({btn,it});btn.id='item-'+tips.length}
+  if(!btn.classList.contains('wire-label')){tips.push({btn,it});btn.dataset.n=tips.length} // no id, so the browser's own #jump never hides the title
   btn.type='button';btn.setAttribute('aria-expanded','false');btn.dataset.tip='';
   if(it.detail)btn.append(el('span','note',it.detail));
   btn.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show(btn,it,false)});
@@ -246,8 +246,8 @@ function boot(key,render){
     document.body.append(main,pop);
     main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
     seen();
-    const linked=location.hash?document.getElementById(location.hash.slice(1)):null; // deep link: open that item
-    if(linked&&'tip' in linked.dataset)setTimeout(()=>{linked.scrollIntoView({block:'center'});linked.click()},700);
+    const linked=tips[(/^#item-(\d+)$/.exec(location.hash)?.[1]||0)-1]?.btn; // deep link: open that item
+    if(linked)setTimeout(()=>{const r=linked.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)linked.scrollIntoView({block:'center'});linked.click()},700);
   }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
 }
 

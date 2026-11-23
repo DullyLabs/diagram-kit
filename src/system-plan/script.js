@@ -36,35 +36,32 @@ boot('nodes',data=>{
     for(const id in boxes)boxes[id].classList.toggle('on',id===current||lit.includes(id));
     board.classList.toggle('dim',lit.length>0); // a plan step is lit: fade everything it doesn't touch
     if(!current)return;
-    const o=board.getBoundingClientRect(),tagged={},labels=[];
+    const o=board.getBoundingClientRect(),labels=[];
     edges.filter(e=>(e.from===current||e.to===current)&&boxes[e.from]&&boxes[e.to]).forEach(e=>{
       const far=boxes[e.from===current?e.to:e.from],r=LANE_ROLE[far.dataset.lane]; // wire takes the colour of the far end
       const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect();
       const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,label=role(tip(el('button','wire-label',e.label),e),r);
       let ax,bx,bend;
       if(a.right<b.left||b.right<a.left){
-        // Side by side: curve across the gap, label on the far box's top edge so labels never stack.
-        const t=far.getBoundingClientRect();
+        // Side by side: curve across the gap.
         ax=(a.right<b.left?a.right:a.left)-o.left;bx=(a.right<b.left?b.left:b.right)-o.left;bend=(ax+bx)/2;
-        label.style.left=t.left+t.width/2-o.left+'px';label.style.top=t.top-o.top+'px';
       }else{
-        // Stacked: curve down the left side, label tagged onto the other box.
-        const t=far.getBoundingClientRect(),fid=far.dataset.id;
+        // Stacked: curve down the left side.
         ax=a.left-o.left;bx=b.left-o.left;bend=Math.min(ax,bx)-18;
-        label.classList.add('tagged');
-        label.style.left=t.left-o.left+12+'px';label.style.top=(tagged[fid]?t.bottom:t.top)-o.top+'px';tagged[fid]=true;
       }
       const path=document.createElementNS(wires.namespaceURI,'path');
       path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
       path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
-      wires.lastChild.append(path);labels.push(label);
+      // Anchor the label at the curve's midpoint (in page coordinates) so it sits on its own line.
+      const mx=o.left+(ax+bx)/2+(bend-(ax+bx)/2)*.75,my=o.top+(ay+by)/2,mid={getBoundingClientRect:()=>new DOMRect(mx,my,0,0)};
+      wires.lastChild.append(path);labels.push([label,mid]);
     });
-    boxes[current].after(...labels);
+    labels.forEach(([label,far])=>{boxes[current].after(label);nestle(label,far,{gap:2,pull:60,obstacles:'.box,.wire-label,.lane>h2,h1,.detail'})}); // labels repel boxes, each other and the popover
   }
   onShow=btn=>{if(btn.classList.contains('wire-label'))return;current=btn.dataset.id||null;lit=btn.lit||[];draw()};
   onHide=()=>{current=null;lit=[];draw()};
   keepOpen=()=>board.matches(':hover');
   board.addEventListener('pointerleave',later);
-  new ResizeObserver(draw).observe(board);
+  new ResizeObserver(draw).observe(board);addEventListener('scroll',()=>{if(current)draw()},{passive:true});
   main.append(board,plan);
 });

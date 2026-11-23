@@ -6,12 +6,12 @@ Each skill copies one self-contained HTML template and fills only its JSON block
 
 | Skill | Use it for | Example inside |
 |---|---|---|
-| `flow-diagram` | What some code does, step by step | Apollo 11 landing, 1969 |
-| `before-after` | What a big epic or migration changed | Mac moves from Intel to Apple silicon, 2020 |
-| `pr-explainer` | Someone else's data-heavy PR | A 1998 bank's Y2K fix |
-| `system-plan` | Upstream → your system → downstream, plus the plan | 1890 US Census tabulator |
-| `join-explainer` | Why a join gained, lost or repeated rows | PostgreSQL tutorial: where did Hayward go? |
-| `grain-map` | What one row means, and whether combining tables doubles counts | PostgreSQL tutorial: a city is not an observation |
+| [`flow-diagram`](skills/flow-diagram) | What some code does, step by step | Apollo 11 landing, 1969 |
+| [`before-after`](skills/before-after) | What a big epic or migration changed | Mac moves from Intel to Apple silicon, 2020 |
+| [`pr-explainer`](skills/pr-explainer) | Someone else's data-heavy PR | A 1998 bank's Y2K fix |
+| [`system-plan`](skills/system-plan) | Upstream → your system → downstream, plus the plan | 1890 US Census tabulator |
+| [`join-explainer`](skills/join-explainer) | Why a join gained, lost or repeated rows | PostgreSQL tutorial: where did Hayward go? |
+| [`grain-map`](skills/grain-map) | What one row means, and whether combining tables doubles counts | PostgreSQL tutorial: a city is not an observation |
 
 ## Install
 
@@ -27,14 +27,14 @@ Each skill is a folder with a `SKILL.md` and a standalone `template.html`, with 
 git clone https://github.com/DullyLabs/diagram-kit && cp -r diagram-kit/skills/* ~/.config/opencode/skills/
 ```
 
-Then ask: "explain this PR as a diagram".
+Then ask: "explain this PR as a diagram". Each skill's folder has a screenshot and a filled-in `example.html` (live at `https://dullylabs.com/diagram-kit/skills/<name>/example.html` once Pages is on).
 
-![Flow](pr-assets/templates/flow-diagram.png)
-![Before and after](pr-assets/templates/before-after.png)
-![PR explainer](pr-assets/templates/pr-explainer.png)
-![System plan](pr-assets/templates/system-plan.png)
-![Join explainer](pr-assets/templates/join-explainer.png)
-![Grain map](pr-assets/templates/grain-map.png)
+![Flow](skills/flow-diagram/screenshot.png)
+![Before and after](skills/before-after/screenshot.png)
+![PR explainer](skills/pr-explainer/screenshot.png)
+![System plan](skills/system-plan/screenshot.png)
+![Join explainer](skills/join-explainer/screenshot.png)
+![Grain map](skills/grain-map/screenshot.png)
 
 To change a template, edit `src/` and run `python3 src/build.py`; checks are in `test/`.
 

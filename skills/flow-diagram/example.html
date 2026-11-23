@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>flow-diagram</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%275%27%20fill%3D%27%232b5f8a%27/%3E%3Cpath%20d%3D%27M16%206v20m-6-6%206%206%206-6%27%20fill%3D%27none%27%20stroke%3D%27%23f5f2ea%27%20stroke-width%3D%272.5%27/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light dark;--paper:#f5f2ea;--card:#fdfbf5;--ink:#272b26;--muted:#656a60;--line:#cecfc3;--accent:#2f6452;--wash:#e6ede4;--shadow:#272b2622;--serif:Georgia,serif;--sans:system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--gap:16px;--pad:20px;--radius:2px;--fast:.18s;--slow:.5s;
+--green-e:#2f6452;--green-t:#e6ede4;--blue-e:#2b5f8a;--blue-t:#e3ecf3;--plum-e:#7a4a7e;--plum-t:#efe5ef;--amber-e:#7d5200;--amber-t:#f6ead0;--clay-e:#a63d2a;--clay-t:#f7e3dc;--slate-e:#656a60;--slate-t:#ecebe4}
+@media(prefers-color-scheme:dark){:root{--paper:#191d1a;--card:#212722;--ink:#eeebe0;--muted:#abb2a5;--line:#444d44;--accent:#9bcab0;--wash:#2c3b31;--shadow:#0006;
+--green-e:#9bcab0;--green-t:#2c3b31;--blue-e:#8fbde0;--blue-t:#23323f;--plum-e:#cfa6d3;--plum-t:#382c3a;--amber-e:#e0b867;--amber-t:#3b3220;--clay-e:#eb9d8a;--clay-t:#402924;--slate-e:#abb2a5;--slate-t:#2b302b}}
+/* Roles: edge for borders, icons and tags; tint for fills. Body text stays --ink. */
+[data-role=green]{--e:var(--green-e);--t:var(--green-t)}
+[data-role=blue]{--e:var(--blue-e);--t:var(--blue-t)}
+[data-role=plum]{--e:var(--plum-e);--t:var(--plum-t)}
+[data-role=amber]{--e:var(--amber-e);--t:var(--amber-t)}
+[data-role=clay]{--e:var(--clay-e);--t:var(--clay-t)}
+[data-role=slate]{--e:var(--slate-e);--t:var(--slate-t)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);overflow-wrap:anywhere}
+main{max-width:1080px;margin:auto;padding:48px 32px 32px}
+main>*{animation:arrive var(--slow) both}
+.box,.arrow{animation:arrive .6s ease-out both;animation-delay:calc(100ms + var(--i,0)*60ms)}
+header{border-top:3px solid var(--ink);padding-top:var(--gap);margin-bottom:32px}
+.bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px var(--gap)}
+.eyebrow,.hint,.caption,.tag,.arrow,.chip,.legend,footer{font:11px/1.5 var(--mono);letter-spacing:.05em;color:var(--muted);margin:0}
+.eyebrow,.tag{text-transform:uppercase}
+.eyebrow{color:var(--accent)}
+.tag{display:block;margin-bottom:4px}
+h1{font:normal clamp(32px,6vw,56px)/1.08 var(--serif);letter-spacing:-.03em;margin:20px 0 10px;text-wrap:balance}
+h1.long{font-size:clamp(26px,4vw,40px)}
+h2.tag{margin-bottom:10px}
+.summary{margin:0 0 10px;max-width:60ch}
+.callout{margin:0 0 12px;max-width:64ch;padding:10px 14px;border-left:3px solid var(--e,var(--accent));background:var(--t,var(--wash))}
+.callout .tag{color:var(--e)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 10px}
+.glyph{color:var(--e)}
+.chip{display:inline-block;padding:1px 8px;border:1px solid var(--e,var(--line));background:var(--t,var(--card));border-radius:99px;color:var(--ink)}
+.chip[data-role=slate]{border-style:dashed}
+button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.toggle{padding:2px 8px;border:1px solid var(--line);background:none;border-radius:var(--radius);font:11px/1.5 var(--mono);color:var(--muted)}
+.tools{display:flex;align-items:center;gap:8px}
+.box.seen .tag::after{content:' ✓';color:var(--accent)}
+.toggle[aria-pressed=true]{color:var(--accent);border-color:var(--accent)}
+.box:not([data-role]){--e:var(--line);--t:var(--card)}
+.box{display:block;width:100%;padding:14px var(--pad);background:var(--t);border:1px solid var(--e);border-radius:var(--radius);font:18px/1.25 var(--serif);transition:border-color var(--fast),background var(--fast),box-shadow var(--fast)}
+.box .label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.box[data-role] .tag{color:var(--e)}
+.box[data-role=slate]{border-style:dashed}
+.box:not([data-role]):hover,.box:not([data-role])[aria-expanded=true]{--e:var(--accent);--t:var(--wash)}
+.box[data-role]:hover,.box[data-role][aria-expanded=true]{box-shadow:inset 0 0 0 1px var(--e)}
+.arrow{display:flex;flex-wrap:wrap;align-items:center;gap:0 10px;width:100%;min-height:44px;padding:4px var(--pad);border:0;background:none;transition:color var(--fast)}
+.arrow::before{content:'↓';font-size:16px;color:var(--e,var(--accent))}
+.arrow:hover,.arrow[aria-expanded=true]{color:var(--e,var(--accent))}
+.note{display:none;margin-top:6px;font:14px/1.45 var(--sans);color:var(--ink);white-space:pre-line;text-transform:none;letter-spacing:0;flex-basis:100%}
+.all .note{display:block}
+.all .box .label{-webkit-line-clamp:none}
+.notes{display:none;margin-top:32px}
+.notes li{margin-bottom:6px;white-space:pre-line}
+.all .notes{display:block}
+footer{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:32px;padding-top:var(--gap);border-top:1px solid var(--line)}
+footer a{color:inherit;text-underline-offset:3px}
+.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:arrive var(--fast)}
+.detail[hidden]{display:none}
+.detail h2{font:normal 20px/1.2 var(--serif);margin:0 28px 6px 0}
+.detail p{margin:0;font-size:14px;white-space:pre-line}
+.close{display:none;position:absolute;top:0;right:0;width:44px;height:44px;border:0;background:none;font-size:20px;text-align:center}
+.pinned{pointer-events:auto}
+.pinned .close{display:block}
+.card{max-width:640px;margin:48px auto;padding:24px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--e,var(--ink));font:15px/1.5 var(--sans)}
+.card h1{font-size:28px;margin:0 0 8px}
+.card pre{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--paper);padding:10px;margin:12px 0 0}
+@keyframes arrive{from{opacity:0;translate:0 12px}}
+@media(max-width:600px){main{padding:24px 16px}.detail{width:calc(100vw - 24px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+:root{color-scheme:light}
+*{animation:none!important}
+.hint,.toggle,.detail,.tools{display:none!important}
+.note,.notes{display:block}
+.box .label{-webkit-line-clamp:none}
+.box,.arrow,tr{break-inside:avoid}
+main{padding:0}
+footer a::after{content:' ' attr(href)}}
+
+/* flow-diagram only */
+.flow{display:grid;max-width:480px;margin:auto}
+.phase{margin:24px 0 8px}
+.branch{display:grid;margin:0 0 4px 28px;border-left:1px dashed var(--amber-e)}
+.branch .arrow::before{content:'↳'}
+.branch .box{border-style:dashed}
+</style>
+</head>
+<body>
+<!-- Replace the JSON below with your own, in the format SKILL.md shows. Change nothing else in this file. -->
+<script id="diagram-data" type="application/json">
+{
+  "title": "A landing, in six moves",
+  "eyebrow": "Apollo 11 · 20 July 1969",
+  "caption": "Please do not press the abort button.",
+  "footnote": "The descent stage is still on display at the site. No visiting hours.",
+  "sources": [
+    {
+      "label": "NASA · landing transcript",
+      "url": "https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.landing.html"
+    },
+    {
+      "label": "NASA · Apollo by the Numbers",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/04/sp-4029.pdf"
+    }
+  ],
+  "steps": [
+    {
+      "label": "Eagle undocks",
+      "detail": "The lander leaves Columbia, the ship that stays in orbit.",
+      "arrow": {
+        "label": "Look it over",
+        "detail": "Collins checks Eagle from Columbia's window."
+      },
+      "kind": "send",
+      "phase": "Leave orbit"
+    },
+    {
+      "label": "Lower the orbit",
+      "detail": "A 30-second burn behind the Moon.\nThe low point drops to about 15 km.",
+      "arrow": {
+        "label": "Coast down",
+        "detail": "About an hour of falling, engine off."
+      },
+      "kind": "change",
+      "phase": "Leave orbit"
+    },
+    {
+      "label": "Powered descent",
+      "detail": "The engine fires again to brake.\nTwelve minutes to the surface.",
+      "arrow": {
+        "label": "Computer falls behind",
+        "detail": "A radar that isn't needed keeps sending it work."
+      },
+      "kind": "change",
+      "phase": "Land"
+    },
+    {
+      "label": "1202 and 1201 alarms",
+      "detail": "The computer is overloaded.\nIt drops minor jobs and keeps steering.\nMission Control says go.",
+      "branch": {
+        "label": "Abort to orbit",
+        "detail": "Not taken.\nEagle would have climbed back to Columbia.",
+        "arrow": {
+          "label": "If steering stops",
+          "detail": "A computer that stopped guiding meant an abort."
+        }
+      },
+      "arrow": {
+        "label": "Keep going",
+        "detail": "Eagle tips upright. The crew can see the ground."
+      },
+      "kind": "check",
+      "phase": "Land"
+    },
+    {
+      "label": "Armstrong takes over",
+      "detail": "The autopilot is heading for a crater full of boulders.\nHe flies past it.",
+      "arrow": {
+        "label": "Find flat ground",
+        "detail": "Low-fuel calls count down while he looks."
+      },
+      "kind": "change",
+      "phase": "Land"
+    },
+    {
+      "label": "Eagle touches down",
+      "detail": "Sea of Tranquility, 20:17 UTC.\nUnder a minute of fuel left.",
+      "kind": "stop",
+      "phase": "Land"
+    }
+  ],
+  "summary": "How Eagle got from orbit to the surface, and the alarm that nearly stopped it."
+}
+</script>
+<script>
+(()=>{
+'use strict';
+const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
+// Forgive sloppy JSON: anything outside the outer { } (code fences, prose), trailing commas, HTML, markdown, wrong types.
+const txt=v=>v==null||v===false?'':Array.isArray(v)?v.map(txt).filter(Boolean).join('\n'):typeof v==='object'?txt(v.label??v.text??v.name??v.title):String(v).replace(/<\/?[a-z][^>]*>/gi,'').replace(/\*\*|__|`/g,'').trim();
+const list=v=>Array.isArray(v)?v.filter(x=>x!=null&&x!==''):v==null||v===''||v===false?[]:typeof v==='object'?Object.values(v):String(v).split(/\s*[;\n]\s*|,\s+/).filter(Boolean);
+const item=v=>{
+  if(v==null||typeof v!=='object'||Array.isArray(v))return{label:txt(v),detail:''};
+  const detail=txt(v.detail??v.details??v.description??v.desc??v.note);
+  return{...v,label:txt(v.label??v.name??v.title??v.text??v.id)||detail.slice(0,40),detail};
+};
+const pick=(v,map,dflt)=>map[txt(v).toLowerCase()]??dflt;
+const yes=v=>v===true||/^(true|yes|y|1)$/i.test(txt(v));
+
+let onShow=()=>{},onHide=()=>{},keepOpen=()=>false;
+const main=el('main'),header=el('header'),footer=el('footer');
+// One popover for boxes and arrows: hover or focus shows, click or Enter pins, Esc or × closes.
+const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('button','close','×');
+pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-label','Close');pop.append(popTitle,popBody,closer);
+let active=null,pinned=false,timer,quiet=false;
+// Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
+function nestle(el,target,opts={}){ // target: an element, or any object with getBoundingClientRect()
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,.callout,.caption,.legend,[data-obstacle]'}=opts;
+  const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
+  const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
+  const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
+  const rects=[...document.querySelectorAll(obstacles)].filter(o=>!(target instanceof Node&&(o.contains(target)||target.contains(o)))&&!el.contains(o)&&o!==el).map(o=>o.getBoundingClientRect());
+  // Candidates per axis: beside the target, aligned with it, centred on it, or against a viewport edge. Order breaks ties: below, right, left, above.
+  const xs=[t.left,t.right+gap,t.left-w-gap,t.right-w,t.left+(t.width-w)/2,0,innerWidth].map(v=>fit(v,w,innerWidth));
+  const ys=[t.bottom+gap,t.top,t.top-h-gap,t.bottom-h,t.top+(t.height-h)/2,0,innerHeight].map(v=>fit(v,h,innerHeight));
+  let best,low=Infinity;
+  ys.forEach((y,j)=>xs.forEach((x,i)=>{
+    const k=j*7+i,away=Math.hypot(Math.max(t.left-x-w,x-t.right,0),Math.max(t.top-y-h,y-t.bottom,0));
+    const score=rects.reduce((s,r)=>s+cover(x,y,r),4*cover(x,y,t))+pull*away-(last.target===target&&last.k===k?stick:0); // stick: no side-hopping on scroll
+    if(score<low){low=score;best={x,y,k}}
+  }));
+  el._nestle={target,k:best.k};
+  el.style.left=best.x+'px';el.style.top=best.y+'px';
+}
+function place(){
+  if(!active)return;
+  if(innerWidth>=600)return nestle(pop,active);
+  const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
+  pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px';
+}
+function release(btn){btn.setAttribute('aria-expanded','false');btn.removeAttribute('aria-describedby')}
+function hide(refocus){
+  clearTimeout(timer);
+  const old=active;
+  if(!old)return;
+  release(old);active=null;pinned=false;pop.hidden=true;onHide();
+  if(refocus){quiet=true;old.focus();quiet=false}
+}
+function show(btn,it,pin){
+  if(quiet||(pinned&&!pin))return;
+  clearTimeout(timer);
+  if(active)release(active);
+  active=btn;pinned=pin;
+  btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-describedby','detail');
+  popTitle.textContent=it.label;popBody.textContent=it.detail;popBody.hidden=!it.detail;
+  pop.classList.toggle('pinned',pin);pop.hidden=false;place();onShow(btn);
+  if(btn.dataset.n){btn.classList.add('seen');seen();if(pin)history.replaceState(null,'','#item-'+btn.dataset.n)} // read marks; pinned item becomes a link
+}
+function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!keepOpen())hide()},200)}
+const tips=[],progress=el('p','hint progress');
+const seen=()=>{const n=tips.filter(t=>t.btn.classList.contains('seen')).length;progress.textContent=n+' of '+tips.length+' read'};
+function tip(btn,it){
+  if(!btn.classList.contains('wire-label')){tips.push({btn,it});btn.dataset.n=tips.length} // no id, so the browser's own #jump never hides the title
+  btn.type='button';btn.setAttribute('aria-expanded','false');btn.dataset.tip='';
+  if(it.detail)btn.append(el('span','note',it.detail));
+  btn.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show(btn,it,false)});
+  btn.addEventListener('pointerleave',later);
+  btn.addEventListener('focus',()=>show(btn,it,false));
+  btn.addEventListener('blur',later);
+  btn.addEventListener('click',()=>active===btn&&pinned?hide():show(btn,it,true));
+  return btn;
+}
+const role=(n,r)=>{if(r)n.dataset.role=r;return n};
+function box(it,tag,r,cls){
+  const b=role(el('button','box'+(cls?' '+cls:'')),r);
+  if(tag)b.append(el('span','tag',tag));
+  b.append(el('span','label',it.label));
+  return tip(b,it);
+}
+const arrow=(it,r)=>tip(role(el('button','arrow',it.label),r),it);
+const legend=rows=>{const l=el('p','legend');rows.forEach(([r,glyph,text])=>{const s=role(el('span'),r);s.append(el('span','glyph',glyph),' '+text);l.append(s)});return l};
+const callout=(tag,text,r)=>{const c=role(el('p','callout'),r||'green');c.append(el('span','tag',tag),text);return c};
+closer.addEventListener('click',()=>hide(true));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')return hide(true);
+  // Arrow keys step through the boxes and arrows in reading order.
+  const step={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key],here=document.activeElement;
+  if(!step||!here?.matches('[data-tip]:not(.wire-label)'))return;
+  const all=[...main.querySelectorAll('[data-tip]:not(.wire-label)')].filter(n=>n.offsetParent),next=all[all.indexOf(here)+step];
+  if(next){e.preventDefault();next.focus()}
+});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[aria-expanded]'))hide()});
+addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
+
+function fallback(text,done){const t=el('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();done()}
+function card(title,lines,snippet,r){
+  const c=role(el('section','card'),r||'clay');
+  c.append(el('h1','',title));lines.forEach(l=>c.append(el('p','',l)));
+  if(snippet)c.append(el('pre','',snippet));
+  document.title=title;document.body.replaceChildren(c);
+}
+function parse(src){
+  const a=src.indexOf('{'),b=src.lastIndexOf('}');
+  const s=a<0||b<a?src.trim():src.slice(a,b+1).replace(/,(\s*[}\]])/g,'$1');
+  try{return JSON.parse(s)}catch(e){
+    const m=/position (\d+)/.exec(e.message),at=m?+m[1]:-1;
+    e.snippet=at<0?s.slice(0,240):s.slice(Math.max(0,at-80),at)+' ⟵ HERE ⟶ '+s.slice(at,at+60);
+    throw e;
+  }
+}
+// key: the list that must have items; render(data) adds the template's sections to main.
+function boot(key,render){
+  let data;
+  try{data=parse(document.getElementById('diagram-data').textContent)}
+  catch(e){return card('This diagram could not load',['The JSON block in this file is broken. Fix the JSON block; change nothing else.','Problem: '+e.message],e.snippet)}
+  if(Array.isArray(data))data={[key]:data};
+  if(!data||typeof data!=='object')data={};
+  const title=txt(data.title)||'Untitled';
+  if(title==='REPLACE_ME')return card('No diagram yet',['Replace {"title":"REPLACE_ME"} in this file with your JSON, in the format SKILL.md shows. Change nothing else.'],'',  'amber');
+  if(!list(data[key]).length)return card(title,['This diagram is empty. Add items to "'+key+'" in the JSON block, as SKILL.md shows.'],'','amber');
+  try{
+    document.title=title;
+    const bar=el('div','bar'),h1=el('h1',title.length>40?'long':'',title),all=el('button','toggle','Show all details');
+    all.type='button';all.setAttribute('aria-pressed','false');
+    all.addEventListener('click',()=>all.setAttribute('aria-pressed',document.body.classList.toggle('all')));
+    const copy=el('button','toggle','Copy as Markdown');copy.type='button';
+    copy.addEventListener('click',()=>{
+      const md='# '+title+'\n\n'+tips.map(({it},i)=>(i+1)+'. **'+it.label+'**'+(it.detail?' — '+it.detail.replace(/\n+/g,' '):'')).join('\n')+'\n';
+      const done=()=>{copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy as Markdown',1500)};
+      navigator.clipboard?.writeText(md).then(done,()=>fallback(md,done))??fallback(md,done);
+    });
+    const tools=el('div','tools');tools.append(progress,all,copy);
+    bar.append(el('p','eyebrow',txt(data.eyebrow)),el('p','hint','Hover or tab to inspect · tap to pin'),tools);
+    header.append(bar,h1);
+    if(txt(data.caption))header.append(el('p','caption',txt(data.caption)));
+    if(txt(data.footnote))footer.append(el('span','',txt(data.footnote)));
+    list(data.sources).map(item).forEach(s=>{const url=txt(s.url??s.href??s.link);if(/^https:\/\//.test(url)){const a=el('a','',s.label||url);a.href=url;footer.append(a)}});
+    main.append(header);render(data);main.append(footer);
+    document.body.append(main,pop);
+    main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
+    seen();
+    const linked=tips[(/^#item-(\d+)$/.exec(location.hash)?.[1]||0)-1]?.btn; // deep link: open that item
+    if(linked)setTimeout(()=>{const r=linked.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)linked.scrollIntoView({block:'center'});linked.click()},700);
+  }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
+}
+
+const KIND={fetch:['blue','↓','Fetch'],check:['amber','◇','Check'],change:['green','●','Change'],save:['green','●','Save'],send:['plum','↗','Send'],stop:['clay','▲','Stop']};
+const KINDS={...Object.fromEntries(Object.keys(KIND).map(k=>[k,k])),read:'fetch',load:'fetch',get:'fetch',query:'fetch',input:'fetch',receive:'fetch',validate:'check',verify:'check',test:'check',decide:'check',decision:'check',if:'check',transform:'change',update:'change',compute:'change',process:'change',convert:'change',write:'save',store:'save',persist:'save',emit:'send',publish:'send',notify:'send',output:'send',error:'stop',fail:'stop',end:'stop',abort:'stop',exit:'stop'};
+boot('steps',data=>{
+  const steps=list(data.steps).map(item),flow=el('section','flow stack'),used=new Set();
+  if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
+  let phase='';
+  steps.forEach((s,i)=>{
+    const p=txt(s.phase),k=pick(s.kind??s.type,KINDS,''),kind=KIND[k];
+    if(p&&p!==phase)flow.append(el('h2','tag phase',phase=p));
+    if(kind)used.add(k);
+    flow.append(box(s,String(i+1).padStart(2,'0')+(kind?' · '+kind[1]+' '+kind[2]:''),kind?.[0]));
+    if(s.branch){
+      const b=item(s.branch),side=el('div','branch');
+      if(b.arrow)side.append(arrow(item(b.arrow),'amber'));
+      side.append(box(b,'◇ Or','amber'));flow.append(side);
+    }
+    if(i<steps.length-1)flow.append(s.arrow?arrow(item(s.arrow)):el('div','arrow'));
+  });
+  if(used.size)header.append(legend([...used].map(k=>KIND[k])));
+  main.append(flow);
+});
+
+})();
+</script>
+</body>
+</html>
