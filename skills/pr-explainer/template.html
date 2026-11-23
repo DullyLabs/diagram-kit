@@ -32,7 +32,7 @@ button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-hig
 .arrow:hover,.arrow[aria-expanded=true]{color:var(--accent)}
 footer{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:32px;padding-top:var(--gap);border-top:1px solid var(--line)}
 footer a{color:inherit;text-underline-offset:3px}
-.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));padding:var(--gap) var(--pad);background:color-mix(in srgb,var(--card) 70%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow),inset 0 1px 1px #fff3;pointer-events:none;animation:arrive var(--fast)}
+.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));padding:var(--gap) var(--pad);background:color-mix(in srgb,var(--card) 70%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow),inset 0 1px 1px #fff3;pointer-events:none;max-height:calc(100dvh - 24px);overflow:auto;animation:arrive var(--fast)}
 .detail[hidden]{display:none}
 .detail h2{font:normal 20px/1.2 var(--serif);margin:0 28px 6px 0}
 .detail p{margin:0;font-size:14px;white-space:pre-line}
@@ -129,16 +129,30 @@ if(data.footnote)footer.append(el('span','',data.footnote));
 const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('button','close','×');
 pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-label','Close');pop.append(popTitle,popBody,closer);
 let active=null,pinned=false,timer,quiet=false;
+// Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
+function nestle(el,target,opts={}){
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,[data-obstacle]'}=opts;
+  const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
+  const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
+  const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
+  const rects=[...document.querySelectorAll(obstacles)].filter(o=>!o.contains(target)&&!target.contains(o)&&!el.contains(o)).map(o=>o.getBoundingClientRect());
+  // Candidates per axis: beside the target, aligned with it, centred on it, or against a viewport edge. Order breaks ties: below, right, left, above.
+  const xs=[t.left,t.right+gap,t.left-w-gap,t.right-w,t.left+(t.width-w)/2,0,innerWidth].map(v=>fit(v,w,innerWidth));
+  const ys=[t.bottom+gap,t.top,t.top-h-gap,t.bottom-h,t.top+(t.height-h)/2,0,innerHeight].map(v=>fit(v,h,innerHeight));
+  let best,low=Infinity;
+  ys.forEach((y,j)=>xs.forEach((x,i)=>{
+    const k=j*7+i,away=Math.hypot(Math.max(t.left-x-w,x-t.right,0),Math.max(t.top-y-h,y-t.bottom,0));
+    const score=rects.reduce((s,r)=>s+cover(x,y,r),4*cover(x,y,t))+pull*away-(last.target===target&&last.k===k?stick:0); // stick: no side-hopping on scroll
+    if(score<low){low=score;best={x,y,k}}
+  }));
+  el._nestle={target,k:best.k};
+  el.style.left=best.x+'px';el.style.top=best.y+'px';
+}
 function place(){
   if(!active)return;
-  const r=active.getBoundingClientRect(),w=pop.offsetWidth,h=pop.offsetHeight,fitY=y=>Math.max(12,Math.min(y,innerHeight-h-12));
-  let x=Math.max(12,Math.min(r.left,innerWidth-w-12)),y=r.bottom+8+h<=innerHeight-12?r.bottom+8:fitY(r.top-h-8);
-  if(innerWidth<600)y=r.bottom>innerHeight-h-24?12:innerHeight-h-12; // phone: dock away from the target
-  else if(active.closest('.stack')){ // vertical stacks: open beside, so the next item stays visible
-    const right=r.right+8,left=r.left-w-8;
-    if(right+w<=innerWidth-12){x=right;y=fitY(r.top)}else if(left>=12){x=left;y=fitY(r.top)}
-  }
-  pop.style.left=x+'px';pop.style.top=y+'px';
+  if(innerWidth>=600)return nestle(pop,active);
+  const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
+  pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px';
 }
 function release(btn){btn.setAttribute('aria-expanded','false');btn.removeAttribute('aria-describedby')}
 function hide(refocus){
