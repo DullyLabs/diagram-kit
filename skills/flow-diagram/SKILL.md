@@ -32,6 +32,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `steps[].arrow` | `{label, detail}`: what moves to the next step ("the cleaned rows"). Leave out on the last step |
 | `steps[].branch` | At most one in the whole flow: `{label, detail, arrow}` for a side exit, like an error path |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 

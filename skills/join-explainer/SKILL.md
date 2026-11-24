@@ -31,6 +31,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `condition` | The match, copied from the SQL ("orders.customer_id = customers.id") |
 | `groups` | 2–6 items `{label, left, right, detail}`: `label` is a matching value; `left` and `right` are whole-number row counts with that value in each table; `detail` says what happens to those rows |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 

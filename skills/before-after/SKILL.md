@@ -36,6 +36,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `phases` | Needed with `work`: the stages in order, each `{label, when, detail}`; a job's `phase` is one of these labels |
 | `unchanged` | A list of short names of what stayed the same; reviewers worry about this most |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 

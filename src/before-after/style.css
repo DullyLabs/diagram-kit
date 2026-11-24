@@ -53,4 +53,4 @@
 .name::before{content:'→ '}
 .risks{grid-column:1/-1}
 .sides .box .tag{display:none}}
-@media print{.wires{display:none}}
+@media print{.wires{display:none}.part{display:block}}

@@ -32,6 +32,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `sample.before.rows`, `sample.after.rows` | 3–5 made-up rows each, as lists of cells in column order. The first cell names the row and is the same before and after. Never real customer data |
 | `checks` | 2–5 items `{text, risk, where}`: `risk` is `high`, `medium` or `low`; `where` is the file or table to look at, copied from the PR, else leave it out |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 

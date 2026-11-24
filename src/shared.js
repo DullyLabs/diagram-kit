@@ -121,6 +121,7 @@ function boot(key,render){
   catch(e){return card('This diagram could not load',['The JSON block in this file is broken. Fix the JSON block; change nothing else.','Problem: '+e.message],e.snippet)}
   if(Array.isArray(data))data={[key]:data};
   if(!data||typeof data!=='object')data={};
+  for(const k in Object(data.style))if(k.startsWith('--'))document.documentElement.style.setProperty(k,txt(data.style[k])); // look tweaks: any variable from the top of the stylesheet
   const title=txt(data.title)||'Untitled';
   if(title==='REPLACE_ME')return card('No diagram yet',['Replace {"title":"REPLACE_ME"} in this file with your JSON, in the format SKILL.md shows. Change nothing else.'],'',  'amber');
   if(!list(data[key]).length)return card(title,['This diagram is empty. Add items to "'+key+'" in the JSON block, as SKILL.md shows.'],'','amber');

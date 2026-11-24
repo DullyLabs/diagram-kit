@@ -32,6 +32,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `edges` | `{from, to, label, detail}` using node ids; `label` says what moves ("orders, every hour") |
 | `plan` | 3–5 steps in the order they must happen: `{label, detail, boxes}`; `boxes` lists the node ids the step touches |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 

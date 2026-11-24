@@ -29,6 +29,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `tables` | 2–5 items `{id, label, grain, key, keyDetail, detail}`: `id` is one lowercase word; `grain` finishes "one row is…" ("one order line"); `key` is the columns that make a row unique ("order_id + line_no"); `keyDetail` says how sure that is ("not enforced by the database") |
 | `links` | `{from, to, label, matches, detail}`: `from`/`to` are table ids; `label` is the match ("orders.id = lines.order_id"); `matches` is `one` or `many` partners per `from` row, or leave it out if unsure |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 
