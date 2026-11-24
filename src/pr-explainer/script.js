@@ -23,7 +23,7 @@ boot('flow',data=>{
   const rows={before:rowsOf(side.before).map(cells),after:rowsOf(side.after).map(cells)};
   if(rows.before.length||rows.after.length){
     const tables=el('section','tables');
-    [['before','after','slate'],['after','before','green']].forEach(([s,other,r])=>{
+    [['before','after','slate'],['after','before','blue']].forEach(([s,other,r])=>{
       if(!rows[s].length)return;
       // Pair rows by their first cell; if none match, pair them by position.
       const keyed=rows[s].some(row=>rows[other].some(o=>o[0]===row[0])),table=role(el('table'),r),head=el('tr'),note=txt(side[s]?.note),wrap=el('div','scroll');

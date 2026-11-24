@@ -145,7 +145,7 @@ const pick=(v,map,dflt)=>{const k=txt(v).toLowerCase();return Object.hasOwn(map,
 const slug=s=>txt(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-'); // ids: case, spaces and punctuation don't matter
 const yes=v=>v===true||/^(true|yes|y|1)$/i.test(txt(v));
 
-let onShow=()=>{},onHide=()=>{},keepOpen=()=>false;
+let onShow=()=>{},onHide=()=>{},keepOpen=()=>false,popOpts;
 const main=el('main'),header=el('header'),footer=el('footer');
 // One popover for boxes and arrows: hover or focus shows, click or Enter pins, Esc or × closes.
 const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('button','close','×');
@@ -174,7 +174,7 @@ function nestle(el,target,opts={}){ // target: an element, or any object with ge
 }
 function place(){
   if(!active)return;
-  if(innerWidth>=600)return nestle(pop,active);
+  if(innerWidth>=600)return nestle(pop,active,popOpts);
   const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
   pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px';
 }

@@ -1,6 +1,20 @@
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:32px var(--gap)}
-.theme{display:grid;align-content:start}
-.theme h2 .chip{margin-left:6px}
-.box[data-role=green]{border-left-width:3px}
+.side{display:none}
+.theme{display:grid;max-width:480px;margin-bottom:32px}
+.theme h2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.after{border-left-width:3px}
 .same{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:32px}
 .same h2{margin:0 8px 0 0}
+@media(min-width:720px){
+.sides{--mid:200px;position:relative;display:grid;grid-template-columns:1fr var(--mid) 1fr;padding-bottom:var(--gap)}
+.sides::before{content:'';position:absolute;inset:0 0 0 auto;width:calc((100% - var(--mid))/2);background:var(--t);border-top:3px solid var(--e)}
+.side,.theme>*{position:relative}
+.side{display:block;margin:0;padding:14px 0 6px;font:22px/1.2 var(--serif);color:var(--e)}
+.side+.side{grid-column:3;padding-left:var(--gap)}
+.theme{display:contents}
+.theme h2{grid-column:1/-1;margin:18px 0 10px;padding:10px var(--gap) 0 0;border-top:1px solid var(--line)}
+.before{grid-column:1}
+.sides .arrow{grid-column:2;flex-direction:column;justify-content:center;gap:0;padding:4px 12px;text-align:center}
+.sides .arrow::before{content:'⟶';font-size:22px;line-height:1}
+.sides .arrow .note{flex-basis:auto}
+.after{grid-column:3;width:auto;margin:0 var(--gap);background:var(--card)}
+.sides .box .tag{display:none}}
