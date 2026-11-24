@@ -9,7 +9,31 @@
       "grain": "One city",
       "key": "name",
       "keyDetail": "The tutorial does not enforce this; two cities with the same name would break it.",
-      "detail": "San Francisco has one city row in the tutorial sample."
+      "detail": "San Francisco has one city row in the tutorial sample.",
+      "parts": [
+        {
+          "label": "name",
+          "detail": "Text, up to 80 characters."
+        },
+        {
+          "label": "location",
+          "detail": "A point: two numbers for where the city is."
+        }
+      ],
+      "risks": [
+        {
+          "label": "Two cities, one name",
+          "detail": "Nothing stops a second San Francisco row.\nEvery reading would then match both."
+        }
+      ],
+      "work": [
+        {
+          "label": "Make name the key",
+          "detail": "The tutorial's next chapter declares name as the primary key.",
+          "phase": "First",
+          "owner": "Schema"
+        }
+      ]
     },
     {
       "id": "weather",
@@ -17,7 +41,42 @@
       "grain": "One city observation",
       "key": "city + date",
       "keyDetail": "Holds for this sample; two readings on one day would break it.",
-      "detail": "San Francisco appears on two dates; Hayward appears once."
+      "detail": "San Francisco appears on two dates; Hayward appears once.",
+      "parts": [
+        {
+          "label": "city",
+          "detail": "Text; meant to match cities.name."
+        },
+        {
+          "label": "temp_lo, temp_hi",
+          "detail": "Low and high temperature, whole numbers."
+        },
+        {
+          "label": "prcp",
+          "detail": "Precipitation."
+        },
+        {
+          "label": "date",
+          "detail": "The day of the reading."
+        }
+      ],
+      "risks": [
+        {
+          "label": "A reading with no city",
+          "detail": "Hayward has a weather row and no city row."
+        }
+      ],
+      "work": [
+        {
+          "label": "Point city at cities",
+          "detail": "A foreign key rejects a reading for a city that is not listed.",
+          "phase": "Then",
+          "owner": "Schema",
+          "needs": [
+            "Make name the key"
+          ]
+        }
+      ]
     }
   ],
   "links": [
@@ -41,7 +100,23 @@
     {
       "label": "PostgreSQL · joins tutorial",
       "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+    },
+    {
+      "label": "PostgreSQL · creating a table",
+      "url": "https://www.postgresql.org/docs/current/tutorial-table.html"
+    },
+    {
+      "label": "PostgreSQL · foreign keys",
+      "url": "https://www.postgresql.org/docs/current/tutorial-fk.html"
     }
   ],
-  "summary": "A weather row is one reading for one city on one day; joining to cities is safe, joining the other way repeats city rows."
+  "summary": "A weather row is one reading for one city on one day; joining to cities is safe, joining the other way repeats city rows.",
+  "phases": [
+    {
+      "label": "First"
+    },
+    {
+      "label": "Then"
+    }
+  ]
 }

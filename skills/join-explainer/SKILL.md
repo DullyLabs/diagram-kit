@@ -30,7 +30,11 @@ Write for a reader who is new to this: every word must help them understand the 
 | `join` | One of `inner`, `left`, `right`, `full`. Leave it out if unsure (means `inner`) |
 | `condition` | The match, copied from the SQL ("orders.customer_id = customers.id") |
 | `groups` | 2–6 items `{label, left, right, detail}`: `label` is a matching value; `left` and `right` are whole-number row counts with that value in each table; `detail` says what happens to those rows |
+| `groups[].risks` | Optional: what goes wrong for these rows later, `{label, detail}` |
+| `groups[].work` | Optional jobs that fix it: `{label, detail, phase, owner, needs}`; `phase` is a name from `phases`; `needs` lists the labels of jobs that must finish first |
+| `phases` | Optional, with jobs: `{label, when, detail}` in order, such as "Build", "Switch", "Clean up" |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 
@@ -61,13 +65,48 @@ Plain words, not jargon:
       "label": "San Francisco",
       "left": 2,
       "right": 1,
-      "detail": "Two weather observations, dated 1994-11-27 and 1994-11-29, match one city row."
+      "detail": "Two weather observations, dated 1994-11-27 and 1994-11-29, match one city row.",
+      "risks": [
+        {
+          "label": "Location repeats",
+          "detail": "The city's location appears on both rows.\nCount cities from this result and San Francisco counts twice."
+        }
+      ]
     },
     {
       "label": "Hayward",
       "left": 1,
       "right": 0,
-      "detail": "This weather row has no city to match, so it disappears.\nSet \"join\" to \"left\" to keep it."
+      "detail": "This weather row has no city to match, so it disappears.\nSet \"join\" to \"left\" to keep it.",
+      "risks": [
+        {
+          "label": "Lost without an error",
+          "detail": "Nothing warns that a reading is missing from the result."
+        }
+      ],
+      "work": [
+        {
+          "label": "Keep unmatched readings",
+          "detail": "Use a left join where every reading must show.",
+          "phase": "Now",
+          "owner": "Query"
+        },
+        {
+          "label": "Add Hayward to cities",
+          "detail": "Give the reading a city to match.",
+          "phase": "Now",
+          "owner": "Data"
+        },
+        {
+          "label": "Reject unknown cities",
+          "detail": "A foreign key stops a reading for a city that is not listed.",
+          "phase": "Next",
+          "owner": "Schema",
+          "needs": [
+            "Add Hayward to cities"
+          ]
+        }
+      ]
     }
   ],
   "footnote": "Counts come from the tutorial sample, not a live database.",
@@ -75,9 +114,21 @@ Plain words, not jargon:
     {
       "label": "PostgreSQL · joins tutorial",
       "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+    },
+    {
+      "label": "PostgreSQL · foreign keys",
+      "url": "https://www.postgresql.org/docs/current/tutorial-fk.html"
     }
   ],
-  "summary": "Combining weather with cities keeps San Francisco twice and drops Hayward, because Hayward has no city row."
+  "summary": "Combining weather with cities keeps San Francisco twice and drops Hayward, because Hayward has no city row.",
+  "phases": [
+    {
+      "label": "Now"
+    },
+    {
+      "label": "Next"
+    }
+  ]
 }
 ```
 <!-- /example -->

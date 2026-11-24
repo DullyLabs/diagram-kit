@@ -3,23 +3,27 @@ const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plu
 const STATUS={new:'● New',changed:'◇ Changed',unsure:'? Guess'};
 const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
 boot('nodes',data=>{
-  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts stack'),boxes={},lanes={system:shell,internal:parts};
+  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts stack'),boxes={},cols={system:shell,internal:parts};
   [['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream']].forEach(([key,name])=>{
     const lane=role(el('div','lane'),LANE_ROLE[key]);
     lane.append(el('h2','tag',name));board.append(lane);
-    if(lanes[key])lane.append(shell);else lanes[key]=lane;
+    if(cols[key])lane.append(shell);else cols[key]=lane;
   });
   const nodes=list(data.nodes).map(item);
   if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
   nodes.forEach(n=>{
     const lane=pick(n.lane,LANE,'upstream'),k=pick(n.status,STATUSES,''),id=slug(n.id||n.label);
     const b=box(n,STATUS[k],LANE_ROLE[lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
-    b.dataset.id=id;b.dataset.lane=lane;boxes[id]=b;lanes[lane].append(b);
+    b.dataset.id=id;b.dataset.lane=lane;boxes[id]=b;cols[lane].append(step(b,{...n,parts:''},n.label)); // a node's parts are the internal lane
   });
   shell.append(parts); // system box first, its parts below
-  plan.append(el('h2','tag','The plan'));
-  list(data.plan).map(item).forEach((s,i)=>{
-    const b=box(s,String(i+1).padStart(2,'0'));b.lit=list(s.boxes).map(slug);plan.append(b);
+  // The plan: a numbered list, or jobs by phase when steps name a phase, an owner or what they need. A job's row is the first box it touches.
+  const steps=list(data.plan).map(item),phased=list(data.phases).length||steps.some(s=>s.phase??s.when??s.needs??s.after??s.owner??s.who);
+  if(steps.length&&!phased)plan.append(el('h2','tag','The plan'));
+  steps.forEach((s,i)=>{
+    const lit=list(s.boxes).map(slug),name=boxes[lit.find(id=>boxes[id])]?.querySelector('.label').textContent||'Plan';
+    if(phased)return(lanes.find(l=>l.name===name)||lanes[lanes.push({name,work:[]})-1]).work.push(s);
+    const b=box(s,String(i+1).padStart(2,'0'));b.lit=lit;plan.append(b);
   });
   const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from),to:slug(e.to)}));
 
@@ -67,5 +71,5 @@ boot('nodes',data=>{
   // Connections in words, for show-all, print and copy.
   const notes=el('ul','notes'),name=id=>boxes[id]?.querySelector('.label').textContent||id;
   edges.forEach(e=>notes.append(el('li','',name(e.from)+' → '+name(e.to)+': '+e.label+(e.detail?' — '+e.detail:''))));
-  main.append(board,plan);if(edges.length)main.append(notes);
+  main.append(board);if(plan.firstChild)main.append(plan);if(edges.length)main.append(notes);
 });

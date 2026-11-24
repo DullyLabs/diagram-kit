@@ -8,7 +8,8 @@ boot('steps',data=>{
     const p=txt(s.phase),k=pick(s.kind??s.type,KINDS,''),kind=KIND[k];
     if(p&&p!==phase)flow.append(el('h2','tag phase',phase=p));
     if(kind)used.add(k);
-    flow.append(box(s,String(i+1).padStart(2,'0')+(kind?' · '+kind[1]+' '+kind[2]:''),kind?.[0]));
+    const n=String(i+1).padStart(2,'0');
+    flow.append(step(box(s,n+(kind?' · '+kind[1]+' '+kind[2]:''),kind?.[0]),s,n+' · '+s.label));
     if(s.branch){
       const b=item(s.branch),side=el('div','branch');
       if(b.arrow)side.append(arrow(item(b.arrow),'amber'));

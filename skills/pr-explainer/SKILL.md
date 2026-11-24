@@ -31,7 +31,12 @@ Write for a reader who is new to this: every word must help them understand the 
 | `sample.columns` | 2–4 column names |
 | `sample.before.rows`, `sample.after.rows` | 3–5 made-up rows each, as lists of cells in column order. The first cell names the row and is the same before and after. Never real customer data |
 | `checks` | 2–5 items `{text, risk, where}`: `risk` is `high`, `medium` or `low`; `where` is the file or table to look at, copied from the PR, else leave it out |
+| `flow[].parts` | Optional, on changed boxes: 2–4 things inside the box that change, `{label, detail}` |
+| `flow[].risks` | Optional: what can go wrong at this box, `{label, detail}` |
+| `flow[].work` | Optional jobs to roll the change out: `{label, detail, phase, owner, needs}`; `phase` is a name from `phases`; `needs` lists the labels of jobs that must finish first |
+| `phases` | Optional, with jobs: `{label, when, detail}` in order, such as "Build", "Switch", "Clean up" |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
+| `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
 ## Words
 
@@ -64,7 +69,13 @@ Plain words, not jargon:
       "arrow": {
         "label": "Add the century",
         "detail": "Years under 50 become 20YY.\nThe rest become 19YY."
-      }
+      },
+      "risks": [
+        {
+          "label": "Wrong century guessed",
+          "detail": "A year typed as 49 becomes 2049, even when 1949 was meant."
+        }
+      ]
     },
     {
       "label": "Loan records",
@@ -73,7 +84,46 @@ Plain words, not jargon:
       "arrow": {
         "label": "Read due dates",
         "detail": "The job now reads four-digit years."
-      }
+      },
+      "parts": [
+        {
+          "label": "Year column",
+          "detail": "Grows from 2 characters to 4."
+        },
+        {
+          "label": "Old rows",
+          "detail": "Filled in once, by the same century rule."
+        },
+        {
+          "label": "Index on due date",
+          "detail": "Rebuilt after the fill."
+        }
+      ],
+      "risks": [
+        {
+          "label": "Fill stops halfway",
+          "detail": "Rows with two digits and rows with four would sit side by side."
+        }
+      ],
+      "work": [
+        {
+          "id": "widen",
+          "label": "Widen the year column",
+          "detail": "Old programs still read the first two characters.",
+          "phase": "Before",
+          "owner": "Database"
+        },
+        {
+          "id": "fill",
+          "label": "Fill in old rows",
+          "detail": "Run on a copy first and compare balances.",
+          "phase": "Switch night",
+          "owner": "Database",
+          "needs": [
+            "widen"
+          ]
+        }
+      ]
     },
     {
       "label": "Nightly interest",
@@ -82,12 +132,46 @@ Plain words, not jargon:
       "arrow": {
         "label": "Send entries",
         "detail": "Each interest entry carries a full year."
-      }
+      },
+      "work": [
+        {
+          "id": "interest",
+          "label": "Read four-digit years",
+          "detail": "Goes live the night the fill finishes.",
+          "phase": "Switch night",
+          "owner": "Batch",
+          "needs": [
+            "fill"
+          ]
+        }
+      ]
     },
     {
       "label": "Statements",
       "changed": true,
-      "detail": "Prints four-digit years.\nSorts by full year, so 2000 follows 1999."
+      "detail": "Prints four-digit years.\nSorts by full year, so 2000 follows 1999.",
+      "work": [
+        {
+          "id": "print",
+          "label": "Print four digits",
+          "detail": "The layout gains two characters per date.",
+          "phase": "Switch night",
+          "owner": "Reports",
+          "needs": [
+            "fill"
+          ]
+        },
+        {
+          "label": "Compare a month of statements",
+          "detail": "Old and new runs must agree on every balance.",
+          "phase": "After",
+          "owner": "Reports",
+          "needs": [
+            "print",
+            "interest"
+          ]
+        }
+      ]
     }
   ],
   "sample": {
@@ -153,6 +237,20 @@ Plain words, not jargon:
     {
       "text": "Balances match after the migration.",
       "risk": "low"
+    }
+  ],
+  "phases": [
+    {
+      "label": "Before",
+      "when": "Any night"
+    },
+    {
+      "label": "Switch night",
+      "when": "One weekend"
+    },
+    {
+      "label": "After",
+      "when": "A month"
     }
   ]
 }

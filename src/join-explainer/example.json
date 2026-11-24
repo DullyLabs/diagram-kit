@@ -11,13 +11,48 @@
       "label": "San Francisco",
       "left": 2,
       "right": 1,
-      "detail": "Two weather observations, dated 1994-11-27 and 1994-11-29, match one city row."
+      "detail": "Two weather observations, dated 1994-11-27 and 1994-11-29, match one city row.",
+      "risks": [
+        {
+          "label": "Location repeats",
+          "detail": "The city's location appears on both rows.\nCount cities from this result and San Francisco counts twice."
+        }
+      ]
     },
     {
       "label": "Hayward",
       "left": 1,
       "right": 0,
-      "detail": "This weather row has no city to match, so it disappears.\nSet \"join\" to \"left\" to keep it."
+      "detail": "This weather row has no city to match, so it disappears.\nSet \"join\" to \"left\" to keep it.",
+      "risks": [
+        {
+          "label": "Lost without an error",
+          "detail": "Nothing warns that a reading is missing from the result."
+        }
+      ],
+      "work": [
+        {
+          "label": "Keep unmatched readings",
+          "detail": "Use a left join where every reading must show.",
+          "phase": "Now",
+          "owner": "Query"
+        },
+        {
+          "label": "Add Hayward to cities",
+          "detail": "Give the reading a city to match.",
+          "phase": "Now",
+          "owner": "Data"
+        },
+        {
+          "label": "Reject unknown cities",
+          "detail": "A foreign key stops a reading for a city that is not listed.",
+          "phase": "Next",
+          "owner": "Schema",
+          "needs": [
+            "Add Hayward to cities"
+          ]
+        }
+      ]
     }
   ],
   "footnote": "Counts come from the tutorial sample, not a live database.",
@@ -25,7 +60,19 @@
     {
       "label": "PostgreSQL · joins tutorial",
       "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+    },
+    {
+      "label": "PostgreSQL · foreign keys",
+      "url": "https://www.postgresql.org/docs/current/tutorial-fk.html"
     }
   ],
-  "summary": "Combining weather with cities keeps San Francisco twice and drops Hayward, because Hayward has no city row."
+  "summary": "Combining weather with cities keeps San Francisco twice and drops Hayward, because Hayward has no city row.",
+  "phases": [
+    {
+      "label": "Now"
+    },
+    {
+      "label": "Next"
+    }
+  ]
 }

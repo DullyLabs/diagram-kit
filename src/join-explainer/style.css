@@ -1,7 +1,8 @@
 .join-board{margin:28px 0}
 .join-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:12px;align-items:stretch;margin-bottom:12px}
 .join-row .box{background:var(--card);border-color:var(--line);border-top:2px solid var(--e);min-width:0}
-.join-row .box:nth-child(2) .label,.join-row .box:nth-child(3) .label,.join-row .box:last-child .label{font:32px/1.2 var(--mono)}
+.join-row .box:nth-child(2) .label,.join-row .box:nth-child(3) .label,.join-row .box:nth-child(4) .label{font:32px/1.2 var(--mono)}
 .headings h2{margin:0}
-@media(max-width:600px){.join-row{grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}.headings{display:none}.join-row .box:first-child{grid-column:1/-1}.join-row .box:last-child{grid-column:1/-1}.join-row .box:last-child .label{font-size:24px}}
+.extra{grid-column:1/-1;text-align:right}
+@media(max-width:600px){.join-row{grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}.headings{display:none}.join-row .box:first-child{grid-column:1/-1}.join-row .box:nth-child(4){grid-column:1/-1}.join-row .box:nth-child(4) .label{font-size:24px}}
 

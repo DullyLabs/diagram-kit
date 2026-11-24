@@ -12,7 +12,7 @@ const pick=(v,map,dflt)=>{const k=txt(v).toLowerCase();return Object.hasOwn(map,
 const slug=s=>txt(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-'); // ids: case, spaces and punctuation don't matter
 const yes=v=>v===true||/^(true|yes|y|1)$/i.test(txt(v));
 
-let onShow=()=>{},onHide=()=>{},keepOpen=()=>false;
+let onShow=()=>{},onHide=()=>{},keepOpen=()=>false,popOpts;
 const main=el('main'),header=el('header'),footer=el('footer');
 // One popover for boxes and arrows: hover or focus shows, click or Enter pins, Esc or × closes.
 const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('button','close','×');
@@ -41,7 +41,7 @@ function nestle(el,target,opts={}){ // target: an element, or any object with ge
 }
 function place(){
   if(!active)return;
-  if(innerWidth>=600)return nestle(pop,active);
+  if(innerWidth>=600)return nestle(pop,active,popOpts);
   const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
   pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px';
 }
@@ -86,6 +86,79 @@ function box(it,tag,r,cls){
 const arrow=(it,r)=>tip(role(el('button','arrow',it.label),r),it);
 const legend=rows=>{const l=el('p','legend');rows.forEach(([r,glyph,text])=>{const s=role(el('span'),r);s.append(el('span','glyph',glyph),' '+text);l.append(s)});return l};
 const callout=(tag,text,r)=>{const c=role(el('p','callout'),r||'green');c.append(el('span','tag',tag),text);return c};
+// Depth, the same in every template: an item opens into its parts and risks, and its jobs join the plan below the diagram.
+const lanes=[],count=(a,word)=>a.length?a.length+' '+word+(a.length>1?'s':''):'';
+function depth(host,head,it,name,part,word='part'){ // part(p) draws one part into host; leave it out where parts don't fit
+  const parts=part?list(it.parts).map(item):[],risks=list(it.risks).map(item),work=list(it.work??it.jobs).map(item);
+  if(work.length)lanes.push({name,work});
+  if(!parts.length&&!risks.length)return;
+  const more=el('button','more',[count(parts,word),count(risks,'risk')].filter(Boolean).join(' · ')),chip=head.querySelector('.chip');
+  more.type='button';more.setAttribute('aria-expanded','false');
+  more.addEventListener('click',()=>more.setAttribute('aria-expanded',host.classList.toggle('open')));
+  chip?chip.before(more):head.append(more);
+  host.classList.add('deep');
+  parts.forEach(p=>part(p));
+  if(risks.length){
+    const r=el('div','risks part');r.append(el('span','tag','Risks'));
+    risks.forEach(x=>r.append(tip(role(el('button','chip','▲ '+x.label),'clay'),x)));host.append(r);
+  }
+}
+// A box that can open: the box, then its parts and risks.
+function step(b,it,name,word){
+  const s=el('div','step');s.append(b);
+  depth(s,s,it,name,p=>s.append(box(p,'',b.dataset.role,'part')),word);
+  return s;
+}
+// The plan: one row per item that has jobs, one column per phase. A job names what it needs; lines join them.
+function jobs(data){
+  if(!lanes.length)return;
+  const phases=list(data.phases).map(item),all=lanes.flatMap(l=>l.work),byId={};
+  all.forEach(w=>{
+    const k=slug(w.phase??w.when);
+    w.id=slug(w.id||w.label);byId[w.id]=w;
+    w.col=phases.findIndex(p=>slug(p.label)===k);
+    if(w.col<0)w.col=+k>0&&+k<=phases.length?k-1:k||!phases.length?phases.push(item(k?w.phase??w.when:'Plan'))-1:0;
+  });
+  all.forEach(w=>{w.needs=list(w.needs??w.after).map(slug).filter(id=>byId[id]&&id!==w.id)});
+  all.forEach(w=>{
+    const names=ws=>ws.map(o=>o.label).join(', ');
+    w.unlocks=all.filter(o=>o.needs.includes(w.id));
+    w.detail=[w.detail,w.needs.length&&'Needs: '+names(w.needs.map(id=>byId[id])),w.unlocks.length&&'Unlocks: '+names(w.unlocks)].filter(Boolean).join('\n');
+  });
+  const plan=el('section','jobs'),scroll=el('div','scroll'),grid=el('div','lanes'),NS='http://www.w3.org/2000/svg',wires=document.createElementNS(NS,'svg');
+  grid.style.setProperty('--n',phases.length);grid.append(el('span'));
+  phases.forEach(p=>{const b=el('button','phase');b.append(el('span','label',p.label),el('span','tag',txt(p.when)));grid.append(tip(b,p))});
+  lanes.forEach(l=>{
+    const cells=phases.map(()=>el('div','cell'));
+    l.work.forEach(w=>{w.b=box(w,txt(w.owner??w.who??w.team),'','job');w.b.dataset.job=w.id;w.b.lit=list(w.boxes).map(slug);cells[w.col].append(w.b)});
+    grid.append(el('h3','tag',l.name),...cells);
+  });
+  wires.setAttribute('class','links');wires.setAttribute('aria-hidden','true');
+  wires.innerHTML='<marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z"/></marker><marker id="hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z"/></marker><g/>';
+  grid.append(wires);
+  let current;
+  function draw(){
+    const o=grid.getBoundingClientRect(),on=byId[current];
+    wires.lastChild.replaceChildren();
+    grid.classList.toggle('dim',!!on); // a job is open: fade everything it doesn't touch
+    all.forEach(w=>w.b.classList.toggle('on',!!on&&(w===on||on.needs.includes(w.id)||on.unlocks.includes(w))));
+    all.forEach(w=>w.needs.forEach(id=>{
+      const a=byId[id].b.getBoundingClientRect(),b=w.b.getBoundingClientRect(),hot=on&&(w===on||id===on.id);
+      const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,across=a.right<b.left||b.right<a.left;
+      // Different phases: curve across the gap. Same phase: curve down the left side.
+      const ax=(across&&a.right<b.left?a.right:a.left)-o.left,bx=(across&&b.right<a.left?b.right:b.left)-o.left,bend=across?(ax+bx)/2:Math.min(ax,bx)-12;
+      const path=document.createElementNS(NS,'path');
+      path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
+      path.setAttribute('marker-end',hot?'url(#hot)':'url(#head)');if(hot)path.setAttribute('class','hot');
+      wires.lastChild[hot?'append':'prepend'](path);
+    }));
+  }
+  const show0=onShow,hide0=onHide; // keep the template's own hover behaviour
+  onShow=btn=>{show0(btn);current=btn.dataset.job;draw()};
+  onHide=()=>{hide0();current=null;draw()};
+  new ResizeObserver(draw).observe(grid);
+  scroll.append(grid);plan.append(el('h2','tag','The plan'),scroll);main.append(plan);
+}
 closer.addEventListener('click',()=>hide(true));
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape')return hide(true);
@@ -121,6 +194,7 @@ function boot(key,render){
   catch(e){return card('This diagram could not load',['The JSON block in this file is broken. Fix the JSON block; change nothing else.','Problem: '+e.message],e.snippet)}
   if(Array.isArray(data))data={[key]:data};
   if(!data||typeof data!=='object')data={};
+  for(const k in Object(data.style))if(k.startsWith('--'))document.documentElement.style.setProperty(k,txt(data.style[k])); // look tweaks: any variable from the top of the stylesheet
   const title=txt(data.title)||'Untitled';
   if(title==='REPLACE_ME')return card('No diagram yet',['Replace {"title":"REPLACE_ME"} in this file with your JSON, in the format SKILL.md shows. Change nothing else.'],'',  'amber');
   if(!list(data[key]).length)return card(title,['This diagram is empty. Add items to "'+key+'" in the JSON block, as SKILL.md shows.'],'','amber');
@@ -144,10 +218,11 @@ function boot(key,render){
     if(txt(data.caption))header.append(el('p','caption',txt(data.caption)));
     if(txt(data.footnote))footer.append(el('span','',txt(data.footnote)));
     list(data.sources).map(item).forEach(s=>{const url=txt(s.url??s.href??s.link);if(/^https:\/\//.test(url)){const a=el('a','',s.label||url);a.href=url;footer.append(a)}});
-    main.append(header);render(data);main.append(footer);
+    main.append(header);render(data);jobs(data);main.append(footer);
     document.body.append(main,pop);
     main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
     const linked=tips[(/^#item-(\d+)$/.exec(location.hash)?.[1]||0)-1]?.btn; // deep link: open that item
+    linked?.closest('.deep:not(.open)')?.querySelector('.more')?.click(); // a linked part opens its item
     if(linked)setTimeout(()=>{const r=linked.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)linked.scrollIntoView({block:'center'});linked.click()},700);
   }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
 }
