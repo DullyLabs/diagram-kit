@@ -7,7 +7,7 @@ boot('flow',data=>{
   const steps=list(data.flow).map(item),flow=el('section','flow'+(steps.length>4?' tall stack':''));
   steps.forEach((s,i)=>{
     const changed=yes(s.changed);
-    flow.append(box(s,changed?'● Changed':'Unchanged',changed?'green':'slate'));
+    flow.append(step(box(s,changed?'● Changed':'Unchanged',changed?'green':'slate'),s,s.label));
     if(i<steps.length-1)flow.append(s.arrow?arrow(item(s.arrow)):el('div','arrow'));
   });
   main.append(heading('What moves'),flow);

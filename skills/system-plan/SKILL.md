@@ -31,6 +31,9 @@ Write for a reader who is new to this: every word must help them understand the 
 | `nodes[].status` | One of `new`, `changed`, `unsure`. Leave it out for existing systems |
 | `edges` | `{from, to, label, detail}` using node ids; `label` says what moves ("orders, every hour") |
 | `plan` | 3–5 steps in the order they must happen: `{label, detail, boxes}`; `boxes` lists the node ids the step touches |
+| `nodes[].risks` | Optional: what can go wrong at this box, `{label, detail}` |
+| `plan[].phase`, `owner`, `needs` | Optional, for a plan people will build from: `phase` is a name from `phases`, `owner` is who does it, `needs` lists the labels of steps that must finish first. Put the box the step mostly changes first in `boxes` |
+| `phases` | Optional, with jobs: `{label, when, detail}` in order, such as "Build", "Switch", "Clean up" |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
 | `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
@@ -91,7 +94,13 @@ Plain words, not jargon:
       "id": "punch",
       "lane": "internal",
       "label": "Pantograph punch",
-      "detail": "A clerk turns one person's answers into holes in one card."
+      "detail": "A clerk turns one person's answers into holes in one card.",
+      "risks": [
+        {
+          "label": "A wrong hole is a wrong answer",
+          "detail": "The reader counts whatever is punched.\nIt never sees the paper form."
+        }
+      ]
     },
     {
       "id": "reader",
@@ -110,7 +119,13 @@ Plain words, not jargon:
       "lane": "internal",
       "label": "Sorting box",
       "detail": "A lid pops open.\nThe clerk drops the card in by hand.",
-      "status": "new"
+      "status": "new",
+      "risks": [
+        {
+          "label": "Filed by hand",
+          "detail": "A clerk can drop a card under the wrong lid."
+        }
+      ]
     },
     {
       "id": "congress",
@@ -199,10 +214,12 @@ Plain words, not jargon:
       "label": "Punch the cards",
       "detail": "Copy every person on the schedules onto a card.",
       "boxes": [
+        "punch",
         "schedules",
-        "stock",
-        "punch"
-      ]
+        "stock"
+      ],
+      "phase": "Punch",
+      "owner": "Punch clerks"
     },
     {
       "label": "Count the holes",
@@ -210,6 +227,11 @@ Plain words, not jargon:
       "boxes": [
         "reader",
         "dials"
+      ],
+      "phase": "Count",
+      "owner": "Machine clerks",
+      "needs": [
+        "Punch the cards"
       ]
     },
     {
@@ -218,17 +240,42 @@ Plain words, not jargon:
       "boxes": [
         "sort",
         "reader"
+      ],
+      "phase": "Count",
+      "owner": "Machine clerks",
+      "needs": [
+        "Count the holes"
       ]
     },
     {
       "label": "Publish the totals",
       "detail": "Copy the dial readings into tables and send them to print.",
       "boxes": [
-        "office",
         "reports",
+        "office",
         "congress",
         "news"
+      ],
+      "phase": "Publish",
+      "owner": "Census Office",
+      "needs": [
+        "Count the holes",
+        "Sort and recount"
       ]
+    }
+  ],
+  "phases": [
+    {
+      "label": "Punch",
+      "detail": "One card per person."
+    },
+    {
+      "label": "Count",
+      "detail": "Every card through the reader, more than once."
+    },
+    {
+      "label": "Publish",
+      "detail": "Totals leave the building."
     }
   ]
 }

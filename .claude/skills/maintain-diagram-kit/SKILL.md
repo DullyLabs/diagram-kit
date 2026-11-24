@@ -22,6 +22,7 @@ Someone has to explain a large piece of work to the people who will build it, an
 - **Sections follow the data.** A section draws only when its field is present, so every new field is optional and the short form still fits one screen.
 - **Look tweaks go through `style`.** Models change variables, never rules. Anything worth tweaking becomes a variable at the top of `src/shared.css`.
 - **Forgive the model.** Accept field aliases, missing ids, strings where objects were expected, and broken JSON (show what to fix). `test/sloppy.py` holds the cases; extend it when a new field can break a page.
+- **Depth is the same everywhere.** `parts`, `risks` and jobs by phase are drawn by `depth()`, `step()` and `jobs()` in `src/shared.js`; a template only says where its items open.
 - **Depth is quiet.** At rest the page shows labels of 40 characters or fewer. Detail appears on hover, pins on click, and all of it shows with ≡ and in print. No text on the page explains how to use it.
 - **Connections also exist in words.** Every drawn line is repeated as text ("Needs", "Unlocks") for print, copy and screen readers.
 - **Never colour alone.** Position, a label and a border style carry each distinction too. Before sits left, grey and dashed; After sits right, blue and solid.

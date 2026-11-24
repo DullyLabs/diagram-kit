@@ -11,7 +11,13 @@
       "arrow": {
         "label": "Add the century",
         "detail": "Years under 50 become 20YY.\nThe rest become 19YY."
-      }
+      },
+      "risks": [
+        {
+          "label": "Wrong century guessed",
+          "detail": "A year typed as 49 becomes 2049, even when 1949 was meant."
+        }
+      ]
     },
     {
       "label": "Loan records",
@@ -20,7 +26,46 @@
       "arrow": {
         "label": "Read due dates",
         "detail": "The job now reads four-digit years."
-      }
+      },
+      "parts": [
+        {
+          "label": "Year column",
+          "detail": "Grows from 2 characters to 4."
+        },
+        {
+          "label": "Old rows",
+          "detail": "Filled in once, by the same century rule."
+        },
+        {
+          "label": "Index on due date",
+          "detail": "Rebuilt after the fill."
+        }
+      ],
+      "risks": [
+        {
+          "label": "Fill stops halfway",
+          "detail": "Rows with two digits and rows with four would sit side by side."
+        }
+      ],
+      "work": [
+        {
+          "id": "widen",
+          "label": "Widen the year column",
+          "detail": "Old programs still read the first two characters.",
+          "phase": "Before",
+          "owner": "Database"
+        },
+        {
+          "id": "fill",
+          "label": "Fill in old rows",
+          "detail": "Run on a copy first and compare balances.",
+          "phase": "Switch night",
+          "owner": "Database",
+          "needs": [
+            "widen"
+          ]
+        }
+      ]
     },
     {
       "label": "Nightly interest",
@@ -29,12 +74,46 @@
       "arrow": {
         "label": "Send entries",
         "detail": "Each interest entry carries a full year."
-      }
+      },
+      "work": [
+        {
+          "id": "interest",
+          "label": "Read four-digit years",
+          "detail": "Goes live the night the fill finishes.",
+          "phase": "Switch night",
+          "owner": "Batch",
+          "needs": [
+            "fill"
+          ]
+        }
+      ]
     },
     {
       "label": "Statements",
       "changed": true,
-      "detail": "Prints four-digit years.\nSorts by full year, so 2000 follows 1999."
+      "detail": "Prints four-digit years.\nSorts by full year, so 2000 follows 1999.",
+      "work": [
+        {
+          "id": "print",
+          "label": "Print four digits",
+          "detail": "The layout gains two characters per date.",
+          "phase": "Switch night",
+          "owner": "Reports",
+          "needs": [
+            "fill"
+          ]
+        },
+        {
+          "label": "Compare a month of statements",
+          "detail": "Old and new runs must agree on every balance.",
+          "phase": "After",
+          "owner": "Reports",
+          "needs": [
+            "print",
+            "interest"
+          ]
+        }
+      ]
     }
   ],
   "sample": {
@@ -100,6 +179,20 @@
     {
       "text": "Balances match after the migration.",
       "risk": "low"
+    }
+  ],
+  "phases": [
+    {
+      "label": "Before",
+      "when": "Any night"
+    },
+    {
+      "label": "Switch night",
+      "when": "One weekend"
+    },
+    {
+      "label": "After",
+      "when": "A month"
     }
   ]
 }

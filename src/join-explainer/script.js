@@ -21,6 +21,8 @@ boot('groups',data=>{
     row.append(box({label:r===null?'?':String(r),detail:'Rows in '+R+' with this value.'},R,'plum'));
     const why=n===null?'A count is missing in the JSON.':matches?'Every '+L+' row pairs with every '+R+' row: '+l+' × '+r+' = '+n+'.'+(l>1&&r>1?'\nRows repeat, so totals can double.':''):n?'Kept with blanks for the other table.':'These rows disappear from the result.';
     row.append(box({label:n===null?'?':String(n),detail:why},'Rows out',matches?'green':n?'amber':'clay'));
+    const extra=el('div','extra');row.append(extra);depth(row,extra,g,g.label);
+    if(!extra.firstChild)extra.remove();
     board.append(row);
   });
   main.append(board,callout('Rows out in total',known&&Number.isSafeInteger(total)?String(total):'Unknown: a count is missing.','slate'));

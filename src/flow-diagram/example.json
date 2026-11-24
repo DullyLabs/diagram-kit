@@ -42,7 +42,27 @@
         "detail": "A radar that isn't needed keeps sending it work."
       },
       "kind": "change",
-      "phase": "Land"
+      "phase": "Land",
+      "parts": [
+        {
+          "label": "Brake",
+          "detail": "The engine fires against the direction of travel to shed orbital speed."
+        },
+        {
+          "label": "Approach",
+          "detail": "Eagle pitches upright, so the crew can see where they are heading."
+        },
+        {
+          "label": "Final descent",
+          "detail": "The pilot picks the spot; the computer holds the rate of descent."
+        }
+      ],
+      "risks": [
+        {
+          "label": "Landing long",
+          "detail": "Landmarks pass early.\nEagle will come down beyond the planned spot."
+        }
+      ]
     },
     {
       "label": "1202 and 1201 alarms",
@@ -70,7 +90,17 @@
         "detail": "Low-fuel calls count down while he looks."
       },
       "kind": "change",
-      "phase": "Land"
+      "phase": "Land",
+      "risks": [
+        {
+          "label": "Fuel runs low",
+          "detail": "Mission Control calls 60 seconds, then 30."
+        },
+        {
+          "label": "Dust hides the ground",
+          "detail": "The engine blows dust across the surface in the last metres."
+        }
+      ]
     },
     {
       "label": "Eagle touches down",

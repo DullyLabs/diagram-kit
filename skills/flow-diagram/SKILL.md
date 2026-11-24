@@ -31,6 +31,10 @@ Write for a reader who is new to this: every word must help them understand the 
 | `steps[].phase` | Optional group name, the same on neighbouring steps ("Load", "Clean") |
 | `steps[].arrow` | `{label, detail}`: what moves to the next step ("the cleaned rows"). Leave out on the last step |
 | `steps[].branch` | At most one in the whole flow: `{label, detail, arrow}` for a side exit, like an error path |
+| `steps[].parts` | Optional, on the 1–2 steps that need it: 2–4 smaller steps inside this one, `{label, detail}` |
+| `steps[].risks` | Optional: what can go wrong at this step, `{label, detail}` |
+| `steps[].work` | Optional jobs to do: `{label, detail, phase, owner, needs}`; `phase` is a name from `phases`; `needs` lists the labels of jobs that must finish first |
+| `phases` | Optional, with jobs: `{label, when, detail}` in order, such as "Build", "Switch", "Clean up" |
 | `eyebrow`, `caption`, `footnote`, `sources` | Optional; leave out if unsure |
 | `style` | Optional look tweaks: variables from the top of the template's `<style>`, such as `{"--radius": "8px", "--serif": "system-ui"}`. A colour set here applies in light and dark mode |
 
@@ -96,7 +100,27 @@ Plain words, not jargon:
         "detail": "A radar that isn't needed keeps sending it work."
       },
       "kind": "change",
-      "phase": "Land"
+      "phase": "Land",
+      "parts": [
+        {
+          "label": "Brake",
+          "detail": "The engine fires against the direction of travel to shed orbital speed."
+        },
+        {
+          "label": "Approach",
+          "detail": "Eagle pitches upright, so the crew can see where they are heading."
+        },
+        {
+          "label": "Final descent",
+          "detail": "The pilot picks the spot; the computer holds the rate of descent."
+        }
+      ],
+      "risks": [
+        {
+          "label": "Landing long",
+          "detail": "Landmarks pass early.\nEagle will come down beyond the planned spot."
+        }
+      ]
     },
     {
       "label": "1202 and 1201 alarms",
@@ -124,7 +148,17 @@ Plain words, not jargon:
         "detail": "Low-fuel calls count down while he looks."
       },
       "kind": "change",
-      "phase": "Land"
+      "phase": "Land",
+      "risks": [
+        {
+          "label": "Fuel runs low",
+          "detail": "Mission Control calls 60 seconds, then 30."
+        },
+        {
+          "label": "Dust hides the ground",
+          "detail": "The engine blows dust across the surface in the last metres."
+        }
+      ]
     },
     {
       "label": "Eagle touches down",

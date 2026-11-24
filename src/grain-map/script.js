@@ -7,6 +7,7 @@ boot('tables',data=>{
     card.append(el('h2','tag',t.label||id));
     card.append(box({label:txt(t.grain)||'Grain not specified',detail:t.detail},'One row is','blue'));
     card.append(box({label:txt(t.key)||'Key not specified',detail:txt(t.keyDetail)},'Unique by','slate'));
+    depth(card,card.firstChild,t,t.label||id,p=>card.append(box(p,'Column','','part')),'column');
     cards.append(card);
   });
   main.append(cards);
