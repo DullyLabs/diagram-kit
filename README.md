@@ -9,7 +9,7 @@ Each skill copies one self-contained HTML template and fills only its JSON block
 | [`flow-diagram`](skills/flow-diagram) | What some code does, step by step | Apollo 11 landing, 1969 |
 | [`before-after`](skills/before-after) | What a big epic or migration changed | Mac moves from Intel to Apple silicon, 2020 |
 | [`pr-explainer`](skills/pr-explainer) | Someone else's data-heavy PR | A 1998 bank's Y2K fix |
-| [`system-plan`](skills/system-plan) | Upstream → your system → downstream, plus the plan | 1890 US Census tabulator |
+| [`system-plan`](skills/system-plan) | What feeds a system, what's inside, who it serves, plus the plan | 1890 US Census tabulator |
 | [`join-explainer`](skills/join-explainer) | Why a join gained, lost or repeated rows | PostgreSQL tutorial: where did Hayward go? |
 | [`grain-map`](skills/grain-map) | What one row means, and whether combining tables doubles counts | PostgreSQL tutorial: a city is not an observation |
 

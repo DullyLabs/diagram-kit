@@ -31,7 +31,7 @@ for t in minimal:
 # system-plan: lanes by alias, bands keyed by alias, a loop, a self edge, a missing id, source/target edges.
 src = (root / "system-plan.html").read_text()
 block = re.search(r'(<script id="diagram-data" type="application/json">)(.*?)(</script>)', src, re.S)
-lanes = {"title": "T", "bands": {"top": "Runs it", "bottom": "Checks it"}, "nodes": [
+lanes = {"title": "T", "bands": {"top": "Runs it", "bottom": "Checks it"}, "lanes": {"from": "Feeds it"}, "nodes": [
   {"id": "p", "lane": "people", "label": "People"}, {"id": "s", "lane": "main", "label": "Sys"},
   {"id": "a", "lane": "part", "label": "A"}, {"id": "b", "lane": "part", "label": "B"}, {"id": "c", "lane": "part", "label": "C"},
   {"id": "w", "lane": "watchers", "label": "Watch"}],

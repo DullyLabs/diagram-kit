@@ -1,23 +1,29 @@
-const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream',
-  above:'above',top:'above',people:'above',users:'above',actors:'above',below:'below',bottom:'below',watchers:'below',observers:'below'};
-const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum',above:'amber',below:'amber'};
+// Lanes by what they do for this system; the old positional names still work.
+const LANE={feeds:'feeds',from:'feeds',upstream:'feeds',source:'feeds',sources:'feeds',input:'feeds',inputs:'feeds',external:'feeds',
+  system:'system',main:'system',ours:'system',part:'part',parts:'part',internal:'part',component:'part',inside:'part',
+  serves:'serves',for:'serves',downstream:'serves',consumer:'serves',consumers:'serves',output:'serves',outputs:'serves',sink:'serves',
+  runs:'runs',above:'runs',top:'runs',people:'runs',users:'runs',actors:'runs',checks:'checks',below:'checks',bottom:'checks',watchers:'checks',observers:'checks'};
+const LANE_ROLE={feeds:'blue',system:'green',part:'green',serves:'plum',runs:'amber',checks:'amber'};
 const STATUS={new:'● New',changed:'◇ Changed',unsure:'? Guess'};
 const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
 popOpts={obstacles:'.box,.more,.chip,.wire-label,.lane>h2,h1'};
 boot('nodes',data=>{
-  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts'),boxes={},cols={system:shell,internal:parts};
-  const nodes=list(data.nodes).map(item).map(n=>({...n,lane:pick(n.lane,LANE,'upstream'),id:slug(n.id||n.label)}));
+  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts'),boxes={},cols={system:shell,part:parts};
+  const nodes=list(data.nodes).map(item).map(n=>({...n,lane:pick(n.lane,LANE,'feeds'),id:slug(n.id||n.label)}));
   const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from??e.source),to:slug(e.to??e.target)}));
-  const names={};for(const k in Object(data.bands))names[pick(k,LANE,k)]=txt(data.bands[k]);const named=k=>names[k]; // optional lane names: {"above":"Who runs it"}
-  [['above','People who use it'],['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream'],['below','Watching it']].forEach(([key,name])=>{
-    if((key==='above'||key==='below')&&!nodes.some(n=>n.lane===key))return; // the top and bottom bands draw only when used
+  // Lane headings say what each lane is in this story; without them, they are built from the system's own name.
+  const names={},lanesIn=data.lanes??data.bands,sys=nodes.find(n=>n.lane==='system')?.label||'it';
+  for(const k in Object(lanesIn))names[pick(k,LANE,k)]=txt(lanesIn[k]);
+  const fallback={runs:'Who runs '+sys,feeds:'What feeds '+sys,system:'Inside '+sys,serves:'Who '+sys+' serves',checks:'What checks '+sys};
+  ['runs','feeds','system','serves','checks'].forEach(key=>{
+    if((key==='runs'||key==='checks')&&!nodes.some(n=>n.lane===key))return; // the top and bottom bands draw only when used
     const lane=role(el('div','lane '+key),LANE_ROLE[key]);
-    lane.append(el('h2','tag',named(key)||name));board.append(lane);
+    lane.append(el('h2','tag',names[key]||fallback[key]));board.append(lane);
     if(cols[key])lane.append(shell);else cols[key]=lane;
   });
   if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
   // Parts flow left to right: a part's column is the longest chain of parts that feed it (loops ignored), at most three.
-  const inner=new Set(nodes.filter(n=>n.lane==='internal').map(n=>n.id)),rank={},seen={},back=new Set();
+  const inner=new Set(nodes.filter(n=>n.lane==='part').map(n=>n.id)),rank={},seen={},back=new Set();
   const visit=id=>{seen[id]=1;edges.forEach(e=>{if(e.from!==id||!inner.has(e.to))return;if(seen[e.to]===1)back.add(e);else if(!seen[e.to])visit(e.to)});seen[id]=2};
   inner.forEach(id=>rank[id]=0);inner.forEach(id=>seen[id]||visit(id));
   for(let i=0;i<inner.size;i++)edges.forEach(e=>{if(!back.has(e)&&inner.has(e.from)&&inner.has(e.to))rank[e.to]=Math.max(rank[e.to],rank[e.from]+1)});
@@ -27,7 +33,7 @@ boot('nodes',data=>{
     const k=pick(n.status,STATUSES,'');
     const b=box(n,STATUS[k],LANE_ROLE[n.lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
     b.dataset.id=n.id;b.dataset.lane=n.lane;boxes[n.id]=b;
-    (n.lane==='internal'?columns[Math.min(rank[n.id],width-1)]:cols[n.lane]).append(step(b,{...n,parts:''},n.label)); // a node's parts are the internal lane
+    (n.lane==='part'?columns[Math.min(rank[n.id],width-1)]:cols[n.lane]).append(step(b,{...n,parts:''},n.label)); // a node's parts are the part lane
   });
   if(inner.size)shell.append(parts); // system box first, its parts below
   // The plan: a numbered list, or jobs by phase when steps name a phase, an owner or what they need. A job's row is the first box it touches.
