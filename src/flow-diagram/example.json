@@ -1,8 +1,7 @@
 {
-  "title": "A landing, in six moves",
+  "title": "Apollo 11 lunar landing sequence",
   "eyebrow": "Apollo 11 · 20 July 1969",
-  "caption": "Please do not press the abort button.",
-  "footnote": "The descent stage is still on display at the site. No visiting hours.",
+  "caption": "Six steps from undocking to touchdown, including the computer alarms.",
   "sources": [
     {
       "label": "NASA · landing transcript",
@@ -109,5 +108,5 @@
       "phase": "Land"
     }
   ],
-  "summary": "How Eagle got from orbit to the surface, and the alarm that nearly stopped it."
+  "summary": "How Eagle descended from orbit to the surface, including the 1202 and 1201 program alarms and Armstrong's manual landing."
 }

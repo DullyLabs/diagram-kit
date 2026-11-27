@@ -1,7 +1,7 @@
 {
-  "title": "Where did Hayward go?",
+  "title": "Why joining weather to cities drops Hayward",
   "eyebrow": "PostgreSQL tutorial · sample rows",
-  "caption": "Hayward left without saying goodbye.",
+  "caption": "Hayward has weather rows but no city row, so the inner join drops it.",
   "left": "weather",
   "right": "cities",
   "join": "inner",

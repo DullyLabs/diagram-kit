@@ -9,7 +9,7 @@ minimal = {
   "system-plan": {"title": "T", "nodes": [{"id": "a", "lane": "mine", "label": "Mine"}]},
   "join-explainer": {"title": "T", "groups": [{"label": "x", "left": "2"}]},
   "grain-map": {"title": "T", "tables": ["orders"]},
-  "gantt-chart": {"title": "T", "tasks": [{"label": "No dates"}, {"label": "Backwards", "start": "2026-03-09", "end": "2026-03-02", "needs": "No dates, ghost"}, "Just text", {"label": "Bad date", "start": "soon", "days": "3"}]},
+  "gantt-chart": {"title": "T", "tasks": [{"label": "No dates"}, {"label": "Backwards", "start": "2026-03-09", "end": "2026-03-02", "needs": "No dates, ghost"}, "Just text", {"label": "Bad date", "start": "soon", "days": "3"}, {"label": "Month 13", "start": "2026-13-14", "done": "50%"}]},
 }
 for t in minimal:
   src = (root / f"{t}.html").read_text()

@@ -1,7 +1,7 @@
 const DAY=864e5,ROLES=['green','blue','plum','amber','clay','slate'],MON='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),WD='Sun Mon Tue Wed Thu Fri Sat'.split(' ');
 const SCALES=[['day',45,5],['week',210,28],['month',Infinity,90]]; // tick, the most drawn days it suits, the shortest empty stretch it folds away
 // Days since 1970, or null: 2026-11-23, 2026/11/23 and anything with a time after it.
-const day=v=>{const m=/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/.exec(txt(v));if(!m)return null;const n=Date.UTC(m[1],m[2]-1,m[3]);return new Date(n).getUTCDate()==m[3]?n/DAY:null};
+const day=v=>{const m=/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/.exec(txt(v));if(!m)return null;const n=Date.UTC(m[1],m[2]-1,m[3]);return new Date(n).getUTCDate()==m[3]&&new Date(n).getUTCMonth()==m[2]-1?n/DAY:null};
 const utc=n=>new Date(n*DAY),year=n=>utc(n).getUTCFullYear(),fmt=(n,y)=>utc(n).getUTCDate()+' '+MON[utc(n).getUTCMonth()]+(y?' '+year(n):'');
 const span=(d,[days,weeks,months])=>d<14?d+days+(d>1&&days.length>2?'s':''):d<70?Math.round(d/7)+weeks:Math.round(d/30.4)+months;
 const SHORT=[' d',' wk',' mo'],LONG=[' day',' weeks',' months'];
@@ -61,7 +61,7 @@ boot('tasks',data=>{
     const r=ROLES[t.k%6],row=el('div','g-row'),name=el('div','g-name'),lane=el('div','g-lane'),label=el('span','g-label');
     const when=t.a===null?'No dates yet':t.point?fmt(t.b,1):fmt(t.a,year(t.a)!==year(t.b))+' – '+fmt(t.b,1)+' · '+span(t.b-t.a+1,LONG);
     const names=ts=>ts.map(o=>o.label).join(', ');
-    t.detail=[t.detail,when,t.owner&&'Owner: '+t.owner,t.pct>0&&t.pct<100&&t.pct+'% done',t.pct===100&&'Done',
+    t.detail=[t.detail,when+(t.gate&&!t.point?' · ends at a gate':t.point?' · gate':''),(named||kinds.length>1)&&'Kind: '+kinds[t.k].label,t.owner&&'Owner: '+t.owner,t.pct>0&&t.pct<100&&t.pct+'% done',t.pct===100&&'Done',
       t.parents.length&&'Needs: '+names(t.parents),t.children.length&&'Unlocks: '+names(t.children)].filter(Boolean).join('\n');
     label.append(el('span','g-text',t.label));
     if(t.owner)label.append(el('span','g-who',t.owner));

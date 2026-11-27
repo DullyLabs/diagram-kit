@@ -14,7 +14,6 @@
       "label": "Start tearing down the hotel",
       "end": "1929-10-01",
       "kind": "Ground",
-      "owner": "Starrett Brothers and Eken",
       "done": true,
       "detail": "The old Waldorf-Astoria stood on the site.\nIt closed in May 1929."
     },
@@ -22,7 +21,6 @@
       "label": "Award the steel contract",
       "end": "1930-01-12",
       "kind": "Paper",
-      "owner": "Empire State Inc.",
       "done": true,
       "detail": "57,480 tons of it."
     },
@@ -31,10 +29,9 @@
       "start": "1930-01-22",
       "end": "1930-03-17",
       "kind": "Ground",
-      "owner": "Starrett Brothers and Eken",
       "done": true,
       "needs": ["Start tearing down the hotel"],
-      "detail": "Two shifts of 300 men dig 55 feet down, around the clock.",
+      "detail": "Two shifts of 300 men dig 55 feet down, around the clock.\nThe building itself starts on 17 March.",
       "risks": [
         {"label": "The hotel is still coming down", "detail": "Digging began before the old hotel had been completely demolished."}
       ]
@@ -76,13 +73,12 @@
       "kind": "Finishing",
       "gate": true,
       "needs": ["Raise the steel frame"],
-      "detail": "Complete twelve days ahead of schedule, 410 days after construction began."
+      "detail": "Complete twelve days ahead of schedule."
     },
     {
       "label": "Open the doors",
       "end": "1931-05-01",
       "kind": "Finishing",
-      "owner": "Empire State Inc.",
       "needs": ["Finish the building"],
       "detail": "Forty-five days ahead of the planned opening.",
       "risks": [

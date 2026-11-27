@@ -18,7 +18,7 @@ description: Use when asked to explain how some code, job or process works step 
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
@@ -57,10 +57,9 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "A landing, in six moves",
+  "title": "Apollo 11 lunar landing sequence",
   "eyebrow": "Apollo 11 · 20 July 1969",
-  "caption": "Please do not press the abort button.",
-  "footnote": "The descent stage is still on display at the site. No visiting hours.",
+  "caption": "Six steps from undocking to touchdown, including the computer alarms.",
   "sources": [
     {
       "label": "NASA · landing transcript",
@@ -167,7 +166,7 @@ Plain words, not jargon:
       "phase": "Land"
     }
   ],
-  "summary": "How Eagle got from orbit to the surface, and the alarm that nearly stopped it."
+  "summary": "How Eagle descended from orbit to the surface, including the 1202 and 1201 program alarms and Armstrong's manual landing."
 }
 ```
 <!-- /example -->

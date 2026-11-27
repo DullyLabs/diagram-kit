@@ -18,7 +18,7 @@ description: Use when planning a large epic that reads from some systems, change
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
@@ -56,18 +56,17 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "Four taps for an island with no rivers to spare",
+  "title": "Singapore water supply: plan to 2061",
   "eyebrow": "Singapore · water",
-  "caption": "The Johor water deal ends in 2061. Everything below has to work before then.",
+  "caption": "The 1962 Johor water agreement ends in 2061; Singapore's own sources must cover demand by then.",
   "summary": "Singapore turns used water and seawater into most of its supply, so by 2060 recycled and desalinated water can meet up to 85% of needs.",
   "lanes": {
-    "runs": "Who steers it",
-    "feeds": "Where the water comes from",
-    "system": "Inside the water loop",
-    "serves": "Who turns on a tap",
-    "checks": "How they know it's safe"
+    "runs": "Owner and price",
+    "feeds": "Water sources",
+    "system": "PUB water system",
+    "serves": "Water users",
+    "checks": "Quality checks"
   },
-  "footnote": "Please do not drink the exhibit.",
   "sources": [
     {
       "label": "MSE · water policy",
@@ -104,23 +103,23 @@ Plain words, not jargon:
     {
       "id": "price",
       "lane": "runs",
-      "label": "The water price",
+      "label": "Water price",
       "detail": "Up 20 cents a cubic metre in April 2024 and 30 more in April 2025, so each litre carries its real cost."
     },
     {
       "id": "rain",
       "lane": "feeds",
-      "label": "Rain on two-thirds of the island",
+      "label": "Rain catchment",
       "detail": "About two-thirds of the land drains into reservoirs, through more than 8,000 km of drains and canals."
     },
     {
       "id": "johor",
       "lane": "feeds",
-      "label": "Johor River",
+      "label": "Johor River (imported)",
       "detail": "The 1962 agreement lets Singapore draw up to 250 million gallons a day, at 3 sen per 1,000 gallons.",
       "risks": [
         {
-          "label": "The deal ends in 2061",
+          "label": "Agreement ends in 2061",
           "detail": "After that, the island's own taps must carry the load."
         }
       ]
@@ -128,25 +127,25 @@ Plain words, not jargon:
     {
       "id": "sea",
       "lane": "feeds",
-      "label": "The sea",
-      "detail": "Never runs dry, but turning it into drinking water takes the most energy."
+      "label": "Seawater",
+      "detail": "Unlimited supply; desalination uses the most energy of the four sources."
     },
     {
       "id": "used",
       "lane": "feeds",
-      "label": "Every drain in the country",
-      "detail": "Used water is collected, not thrown away.\nIt is the one source that grows with the city."
+      "label": "Used water",
+      "detail": "Used water from homes and industry is collected and reclaimed, not discharged."
     },
     {
       "id": "loop",
       "lane": "system",
-      "label": "PUB's water loop",
-      "detail": "Collect, treat, use, reclaim, and use again."
+      "label": "PUB water system",
+      "detail": "Collects, treats, supplies and reclaims water across all four sources."
     },
     {
       "id": "tunnels",
       "lane": "part",
-      "label": "Deep tunnels",
+      "label": "Deep Tunnel Sewerage System",
       "status": "new",
       "detail": "Carry used water by gravity to the reclamation plants.\nPhase 2 was about 80% complete at the end of November 2025."
     },
@@ -165,25 +164,25 @@ Plain words, not jargon:
     {
       "id": "reservoirs",
       "lane": "part",
-      "label": "17 reservoirs and waterworks",
+      "label": "Reservoirs and waterworks",
       "detail": "Hold rain and imported water, then treat it to drinking standard."
     },
     {
       "id": "homes",
       "lane": "serves",
-      "label": "Homes",
+      "label": "Households",
       "detail": "About 45% of today's demand.\n141 litres a person a day in 2023."
     },
     {
       "id": "fabs",
       "lane": "serves",
-      "label": "Wafer fabs and other industry",
+      "label": "Industry, including wafer fabs",
       "detail": "About 55% of demand today, more than 60% by 2065.\nFabs are NEWater's biggest users."
     },
     {
       "id": "buyback",
       "lane": "serves",
-      "label": "Johor, buying some back",
+      "label": "Johor (treated water sold back)",
       "detail": "Singapore usually sells back 16 million gallons of treated water a day, at 50 sen per 1,000 gallons."
     },
     {
@@ -197,19 +196,19 @@ Plain words, not jargon:
     {
       "from": "pub",
       "to": "loop",
-      "label": "Plans, builds, runs",
+      "label": "Plans, builds and operates",
       "detail": "One agency owns the whole loop, from drain to tap."
     },
     {
       "from": "price",
       "to": "homes",
-      "label": "A cost on every litre",
+      "label": "Price per cubic metre",
       "detail": "Higher prices pay for the new plants and nudge use down."
     },
     {
       "from": "rain",
       "to": "reservoirs",
-      "label": "Run-off after every storm",
+      "label": "Rainwater run-off",
       "detail": "Drains and canals steer rain into reservoirs."
     },
     {
@@ -227,7 +226,7 @@ Plain words, not jargon:
     {
       "from": "used",
       "to": "tunnels",
-      "label": "Everything down a drain",
+      "label": "Used water from homes and industry",
       "detail": "Homes and factories alike."
     },
     {
@@ -239,7 +238,7 @@ Plain words, not jargon:
     {
       "from": "newater",
       "to": "reservoirs",
-      "label": "Topped up in dry spells",
+      "label": "Added to reservoirs in dry periods",
       "detail": "NEWater is added to reservoirs when rain runs short."
     },
     {
@@ -290,7 +289,7 @@ Plain words, not jargon:
   ],
   "plan": [
     {
-      "label": "Finish the deep tunnels",
+      "label": "Finish the deep tunnel system, phase 2",
       "detail": "Phase 2 was about 80% complete at 30 November 2025.",
       "boxes": [
         "tunnels",
@@ -308,7 +307,7 @@ Plain words, not jargon:
       "phase": "Now",
       "owner": "PUB",
       "needs": [
-        "Finish the deep tunnels"
+        "Finish the deep tunnel system, phase 2"
       ]
     },
     {
@@ -344,8 +343,8 @@ Plain words, not jargon:
       "owner": "PUB"
     },
     {
-      "label": "Be ready without Johor",
-      "detail": "When the 1962 agreement ends, the island's own taps carry the load.",
+      "label": "Meet demand without Johor",
+      "detail": "When the 1962 agreement ends, local sources must meet all demand.",
       "boxes": [
         "johor",
         "reservoirs"

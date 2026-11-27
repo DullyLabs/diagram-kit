@@ -18,13 +18,13 @@ description: Use when asked what one row of a table means, whether combining tab
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
 | Field | What to write |
 |---|---|
-| `title` | The finding, in under 8 words ("A city is not an observation") |
+| `title` | The tables and the finding, in under 8 words ("Weather and cities: what one row means") |
 | `summary` | One sentence: which combination is safe and which repeats rows |
 | `tables` | 2–5 items `{id, label, grain, key, keyDetail, detail}`: `id` is one lowercase word; `grain` finishes "one row is…" ("one order line"); `key` is the columns that make a row unique ("order_id + line_no"); `keyDetail` says how sure that is ("not enforced by the database") |
 | `links` | `{from, to, label, matches, detail}`: `from`/`to` are table ids; `label` is the match ("orders.id = lines.order_id"); `matches` is `one` or `many` partners per `from` row, or leave it out if unsure |
@@ -52,7 +52,7 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "A city is not an observation",
+  "title": "Weather and cities tables: what one row means",
   "eyebrow": "PostgreSQL tutorial · grain review",
   "caption": "The same city can have several weather observations.",
   "tables": [

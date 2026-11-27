@@ -40,4 +40,4 @@ Then ask: "explain this PR as a diagram". Each skill's folder has a screenshot a
 
 To change a template, edit `src/` and run `python3 src/build.py`; checks are in `test/`.
 
-MIT licence. Please do not press the exhibits. Actually, do: that's how they work.
+MIT licence.

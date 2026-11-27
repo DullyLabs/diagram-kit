@@ -1,5 +1,5 @@
 {
-  "title": "A city is not an observation",
+  "title": "Weather and cities tables: what one row means",
   "eyebrow": "PostgreSQL tutorial · grain review",
   "caption": "The same city can have several weather observations.",
   "tables": [

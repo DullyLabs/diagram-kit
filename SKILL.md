@@ -24,4 +24,6 @@ description: Use first in this repo. Says which skill to read, by what you are h
 
 Every skill takes the same optional depth: an item can open into `parts` and `risks`, and jobs by phase draw a plan with lines between jobs that wait on each other.
 
+Write plainly: the title says what the page covers and every label names the real thing. Busy readers use these pages to get up to speed, so no teasers, puns or jokes.
+
 If two fit, make two pages. Every skill works the same way: copy its `template.html`, replace the JSON block, change nothing else.

@@ -19,7 +19,7 @@ description: Use when asked for a Gantt chart, a schedule, a timeline or a roadm
    - plain text only: no HTML, no markdown, no backticks.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
@@ -86,7 +86,6 @@ Plain words, not jargon:
       "label": "Start tearing down the hotel",
       "end": "1929-10-01",
       "kind": "Ground",
-      "owner": "Starrett Brothers and Eken",
       "done": true,
       "detail": "The old Waldorf-Astoria stood on the site.\nIt closed in May 1929."
     },
@@ -94,7 +93,6 @@ Plain words, not jargon:
       "label": "Award the steel contract",
       "end": "1930-01-12",
       "kind": "Paper",
-      "owner": "Empire State Inc.",
       "done": true,
       "detail": "57,480 tons of it."
     },
@@ -103,12 +101,11 @@ Plain words, not jargon:
       "start": "1930-01-22",
       "end": "1930-03-17",
       "kind": "Ground",
-      "owner": "Starrett Brothers and Eken",
       "done": true,
       "needs": [
         "Start tearing down the hotel"
       ],
-      "detail": "Two shifts of 300 men dig 55 feet down, around the clock.",
+      "detail": "Two shifts of 300 men dig 55 feet down, around the clock.\nThe building itself starts on 17 March.",
       "risks": [
         {
           "label": "The hotel is still coming down",
@@ -163,13 +160,12 @@ Plain words, not jargon:
       "needs": [
         "Raise the steel frame"
       ],
-      "detail": "Complete twelve days ahead of schedule, 410 days after construction began."
+      "detail": "Complete twelve days ahead of schedule."
     },
     {
       "label": "Open the doors",
       "end": "1931-05-01",
       "kind": "Finishing",
-      "owner": "Empire State Inc.",
       "needs": [
         "Finish the building"
       ],

@@ -18,7 +18,7 @@ description: Use when asked what a big change (an epic, migration, rewrite or lo
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
@@ -56,10 +56,9 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "Same Mac. New machinery.",
+  "title": "Mac move from Intel to Apple silicon",
   "eyebrow": "Mac · Intel to Apple silicon · 2020–2023",
-  "caption": "Contents replaced. Case: untouched.",
-  "footnote": "The MacBook Air's fan has left the collection.",
+  "caption": "What changed inside the Mac from 2020 to 2023, and what stayed the same.",
   "sources": [
     {
       "label": "Apple · the announcement, 2020",

@@ -26,6 +26,7 @@ Someone has to explain a large piece of work to the people who will build it, an
 - **Depth is quiet.** At rest the page shows labels of 40 characters or fewer. Detail appears on hover, pins on click, and all of it shows with ≡ and in print. No text on the page explains how to use it.
 - **Connections also exist in words.** Every drawn line is repeated as text ("Needs", "Unlocks") for print, copy and screen readers.
 - **Never colour alone.** Position, a label and a border style carry each distinction too. Before sits left, grey and dashed; After sits right, blue and solid.
+- **Plain, not clickbait.** Readers are busy and open these pages to get up to speed. A title says what the page covers ("Singapore water supply: plan to 2061", not "Four taps for an island"); headings, labels and captions name the real thing. No teasers, puns, jokes or mystery, in examples or in what the skills ask models to write.
 - **Examples are public history.** Each template ships one worked example from a well-documented public event, every fact with a source. Never use the maintainer's own field or anything that hints at it; the reader swaps in private content locally.
 
 ## Making a change

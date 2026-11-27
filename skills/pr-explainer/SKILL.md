@@ -18,7 +18,7 @@ description: Use when asked to explain someone else's pull request, especially o
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
@@ -57,11 +57,10 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "Two more digits. One less crisis.",
+  "title": "Y2K fix: loan years stored as four digits",
   "eyebrow": "Fictional bank PR · November 1998",
   "summary": "Stores loan years as four digits instead of two, so the year 2000 sorts and subtracts correctly.",
-  "caption": "Artefact: a year, shown at full size for the first time.",
-  "footnote": "Good until the year 9999. A future exhibit.",
+  "caption": "A fictional 1998 bank change: which records it touches and what to check.",
   "flow": [
     {
       "label": "Teller terminals",

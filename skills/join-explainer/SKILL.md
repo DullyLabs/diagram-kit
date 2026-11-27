@@ -18,13 +18,13 @@ description: Use when asked why a join, merge or lookup gained, lost or repeated
    - a name you are not sure of ends with `(guess)`.
 5. Tell the user the file path and ask them to open it in a browser. You cannot open it yourself.
 
-Write for a reader who is new to this: every word must help them understand the content, so cut anything else and never explain how to use the page.
+Write for a busy reader who must get up to speed: every word must help them understand the content, so cut anything else and never explain how to use the page. The title says plainly what the page covers; no teasers, puns or jokes.
 
 ## Fields
 
 | Field | What to write |
 |---|---|
-| `title` | The question the reader has, in under 8 words ("Where did Hayward go?") |
+| `title` | What the join does to the rows, in under 8 words ("Why the join drops Hayward") |
 | `summary` | One sentence: which rows repeat or disappear, and why |
 | `left`, `right` | The two table names |
 | `join` | One of `inner`, `left`, `right`, `full`. Leave it out if unsure (means `inner`) |
@@ -53,9 +53,9 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "Where did Hayward go?",
+  "title": "Why joining weather to cities drops Hayward",
   "eyebrow": "PostgreSQL tutorial · sample rows",
-  "caption": "Hayward left without saying goodbye.",
+  "caption": "Hayward has weather rows but no city row, so the inner join drops it.",
   "left": "weather",
   "right": "cities",
   "join": "inner",
