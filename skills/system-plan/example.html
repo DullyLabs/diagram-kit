@@ -150,269 +150,306 @@ main{max-width:1280px}
 <!-- Replace the JSON below with your own, in the format SKILL.md shows. Change nothing else in this file. -->
 <script id="diagram-data" type="application/json">
 {
-  "title": "Counting a country",
-  "eyebrow": "US Census · 1890",
-  "caption": "The 1880 count took eight years to tabulate. This one took six.",
-  "summary": "Holes in cards and electric dials take over from tally sheets, so the count that sets every state's seats in Congress lands years sooner.",
+  "title": "Four taps for an island with no rivers to spare",
+  "eyebrow": "Singapore · water",
+  "caption": "The Johor water deal ends in 2061. Everything below has to work before then.",
+  "summary": "Singapore turns used water and seawater into most of its supply, so by 2060 recycled and desalinated water can meet up to 85% of needs.",
   "lanes": {
-    "runs": "Hands on the machine",
-    "feeds": "Where every answer starts",
-    "system": "Inside the Hollerith machine",
-    "serves": "Who waits on the totals",
-    "checks": "How a clerk knows a card counted"
+    "runs": "Who steers it",
+    "feeds": "Where the water comes from",
+    "system": "Inside the water loop",
+    "serves": "Who turns on a tap",
+    "checks": "How they know it's safe"
   },
-  "footnote": "Please do not fold, spindle or mutilate the exhibit.",
+  "footnote": "Please do not drink the exhibit.",
   "sources": [
     {
-      "label": "Census Bureau · the machine",
-      "url": "https://www.census.gov/about/history/bureau-history/census-innovations/technology/hollerith-machine.html"
+      "label": "MSE · water policy",
+      "url": "https://www.mse.gov.sg/policies/water/"
     },
     {
-      "label": "Wikipedia · 1890 census",
-      "url": "https://en.wikipedia.org/wiki/1890_United_States_census"
+      "label": "gov.sg · the 1962 Water Agreement",
+      "url": "https://www.gov.sg/explainers/can-the-prices-in-the-1962-water-agreement-be-revised/"
+    },
+    {
+      "label": "PUB · 2060 targets (2017)",
+      "url": "https://www.nas.gov.sg/archivesonline/data/pdfdoc/20170220013/Press%20Statement%20on%20Water%20Price%20Revision_20Feb2017.pdf"
+    },
+    {
+      "label": "PUB · deep tunnels, Dec 2025",
+      "url": "https://www.pub.gov.sg/-/media/PUB/DTSS/PDF/DTSS2-Newsletter_Dec2025.pdf"
+    },
+    {
+      "label": "PUB · 2024 and 2025 price rise",
+      "url": "https://www.pub.gov.sg/Resources/News-Room/PressReleases/2023/09/Water-price-To-rise-from-April-2024-Government-to-provide-support"
+    },
+    {
+      "label": "SFA · drinking water quality",
+      "url": "https://sfa.gov.sg/food-retail/drinking-water-quality"
     }
   ],
   "nodes": [
     {
-      "id": "schedules",
-      "lane": "feeds",
-      "label": "Census schedules",
-      "detail": "Paper forms filled in door to door.",
-      "risks": [
-        {
-          "label": "The paper burned in 1921",
-          "detail": "A fire in the Commerce Department building destroyed or damaged most of the 1890 schedules.\nCongress let the rest be destroyed by 1935."
-        }
-      ]
-    },
-    {
-      "id": "office",
-      "lane": "feeds",
-      "label": "Census Office",
-      "detail": "Decides which totals to count."
-    },
-    {
-      "id": "stock",
-      "lane": "feeds",
-      "label": "Blank cards",
-      "detail": "Card stock cut to fit the punch and the reader."
-    },
-    {
-      "id": "system",
-      "lane": "system",
-      "label": "Hollerith tabulating system",
-      "detail": "Counts people by reading holes in cards with electricity."
-    },
-    {
-      "id": "punch",
-      "lane": "part",
-      "label": "Pantograph punch",
-      "detail": "A clerk turns one person's answers into holes in one card.\nAbout 500 cards a day.",
-      "risks": [
-        {
-          "label": "A wrong hole is a wrong answer",
-          "detail": "The reader counts whatever is punched.\nIt never sees the paper form."
-        }
-      ]
-    },
-    {
-      "id": "reader",
-      "lane": "part",
-      "label": "Card reader",
-      "detail": "Pins drop through the holes into cups of mercury.\nEach one closes a circuit."
-    },
-    {
-      "id": "dials",
-      "lane": "part",
-      "label": "Dial counters",
-      "detail": "Each closed circuit moves a dial forward by one."
-    },
-    {
-      "id": "sort",
-      "lane": "part",
-      "label": "Sorting box",
-      "detail": "A lid pops open.\nThe clerk drops the card in by hand.",
-      "status": "new",
-      "risks": [
-        {
-          "label": "Filed by hand",
-          "detail": "A clerk can drop a card under the wrong lid."
-        }
-      ]
-    },
-    {
-      "id": "clerks",
+      "id": "pub",
       "lane": "runs",
-      "label": "Tabulator clerks",
-      "detail": "Feed the cards in and copy down the dials.\nA practised clerk handled about 80 cards a minute."
+      "label": "PUB",
+      "detail": "The national water agency.\nIt plans, builds and runs every tap."
     },
     {
-      "id": "bell",
+      "id": "price",
+      "lane": "runs",
+      "label": "The water price",
+      "detail": "Up 20 cents a cubic metre in April 2024 and 30 more in April 2025, so each litre carries its real cost."
+    },
+    {
+      "id": "rain",
+      "lane": "feeds",
+      "label": "Rain on two-thirds of the island",
+      "detail": "About two-thirds of the land drains into reservoirs, through more than 8,000 km of drains and canals."
+    },
+    {
+      "id": "johor",
+      "lane": "feeds",
+      "label": "Johor River",
+      "detail": "The 1962 agreement lets Singapore draw up to 250 million gallons a day, at 3 sen per 1,000 gallons.",
+      "risks": [
+        {
+          "label": "The deal ends in 2061",
+          "detail": "After that, the island's own taps must carry the load."
+        }
+      ]
+    },
+    {
+      "id": "sea",
+      "lane": "feeds",
+      "label": "The sea",
+      "detail": "Never runs dry, but turning it into drinking water takes the most energy."
+    },
+    {
+      "id": "used",
+      "lane": "feeds",
+      "label": "Every drain in the country",
+      "detail": "Used water is collected, not thrown away.\nIt is the one source that grows with the city."
+    },
+    {
+      "id": "loop",
+      "lane": "system",
+      "label": "PUB's water loop",
+      "detail": "Collect, treat, use, reclaim, and use again."
+    },
+    {
+      "id": "tunnels",
+      "lane": "part",
+      "label": "Deep tunnels",
+      "status": "new",
+      "detail": "Carry used water by gravity to the reclamation plants.\nPhase 2 was about 80% complete at the end of November 2025."
+    },
+    {
+      "id": "newater",
+      "lane": "part",
+      "label": "NEWater factories",
+      "detail": "Four factories clean reclaimed water until it is ultra-pure.\nUp to 55% of needs by 2060."
+    },
+    {
+      "id": "desal",
+      "lane": "part",
+      "label": "Desalination plants",
+      "detail": "Five plants today, a sixth being studied.\nUp to 30% of needs by 2060."
+    },
+    {
+      "id": "reservoirs",
+      "lane": "part",
+      "label": "17 reservoirs and waterworks",
+      "detail": "Hold rain and imported water, then treat it to drinking standard."
+    },
+    {
+      "id": "homes",
+      "lane": "serves",
+      "label": "Homes",
+      "detail": "About 45% of today's demand.\n141 litres a person a day in 2023."
+    },
+    {
+      "id": "fabs",
+      "lane": "serves",
+      "label": "Wafer fabs and other industry",
+      "detail": "About 55% of demand today, more than 60% by 2065.\nFabs are NEWater's biggest users."
+    },
+    {
+      "id": "buyback",
+      "lane": "serves",
+      "label": "Johor, buying some back",
+      "detail": "Singapore usually sells back 16 million gallons of treated water a day, at 50 sen per 1,000 gallons."
+    },
+    {
+      "id": "tests",
       "lane": "checks",
-      "label": "Bell",
-      "detail": "Rings when a card's circuit closes.\nThen the clerk copies down what the dials show."
-    },
-    {
-      "id": "congress",
-      "lane": "serves",
-      "label": "House seats",
-      "detail": "Congress divides seats among the states by population."
-    },
-    {
-      "id": "reports",
-      "lane": "serves",
-      "label": "Census reports",
-      "detail": "Printed volumes of tables."
-    },
-    {
-      "id": "news",
-      "lane": "serves",
-      "label": "Newspapers",
-      "detail": "Print the totals for everyone else.",
-      "status": "unsure"
+      "label": "Drinking-water tests",
+      "detail": "Samples are tested against Singapore's drinking-water rules, which follow WHO guidelines."
     }
   ],
   "edges": [
     {
-      "from": "schedules",
-      "to": "punch",
-      "label": "Written answers",
-      "detail": "Each person's answers are copied onto one card."
+      "from": "pub",
+      "to": "loop",
+      "label": "Plans, builds, runs",
+      "detail": "One agency owns the whole loop, from drain to tap."
     },
     {
-      "from": "office",
-      "to": "system",
-      "label": "What to count",
-      "detail": "The office names the totals it needs."
+      "from": "price",
+      "to": "homes",
+      "label": "A cost on every litre",
+      "detail": "Higher prices pay for the new plants and nudge use down."
     },
     {
-      "from": "stock",
-      "to": "punch",
-      "label": "Blank cards",
-      "detail": "One card per person: about 63 million."
+      "from": "rain",
+      "to": "reservoirs",
+      "label": "Run-off after every storm",
+      "detail": "Drains and canals steer rain into reservoirs."
     },
     {
-      "from": "dials",
-      "to": "congress",
-      "label": "State totals",
-      "detail": "Population by state decides each state's seats."
+      "from": "johor",
+      "to": "reservoirs",
+      "label": "Up to 250 million gallons a day",
+      "detail": "Raw river water, under the 1962 agreement."
     },
     {
-      "from": "dials",
-      "to": "reports",
-      "label": "Finished tables",
-      "detail": "Clerks copy the dial readings into tables for print."
+      "from": "sea",
+      "to": "desal",
+      "label": "Seawater",
+      "detail": "Pumped in and pushed through membranes."
     },
     {
-      "from": "system",
-      "to": "news",
-      "label": "Released figures",
-      "detail": "Papers print the totals as they come out."
+      "from": "used",
+      "to": "tunnels",
+      "label": "Everything down a drain",
+      "detail": "Homes and factories alike."
     },
     {
-      "from": "punch",
-      "to": "reader",
-      "label": "Punched cards",
-      "detail": "Fed in by hand, one at a time."
+      "from": "tunnels",
+      "to": "newater",
+      "label": "Used water, by gravity",
+      "detail": "Cleaned first at the reclamation plants."
     },
     {
-      "from": "reader",
-      "to": "dials",
-      "label": "Electric pulses",
-      "detail": "One pulse for each hole read."
+      "from": "newater",
+      "to": "reservoirs",
+      "label": "Topped up in dry spells",
+      "detail": "NEWater is added to reservoirs when rain runs short."
     },
     {
-      "from": "reader",
-      "to": "sort",
-      "label": "Which lid",
-      "detail": "The circuit picks the lid that opens."
+      "from": "newater",
+      "to": "fabs",
+      "label": "Ultra-pure water",
+      "detail": "Cleaner than tap water, which chipmaking needs."
     },
     {
-      "from": "sort",
-      "to": "reader",
-      "label": "Second pass",
-      "detail": "Sorted piles go through again for finer counts."
+      "from": "reservoirs",
+      "to": "homes",
+      "label": "Tap water",
+      "detail": "Treated to drinking standard."
     },
     {
-      "from": "clerks",
-      "to": "system",
-      "label": "Cards, one at a time",
-      "detail": "Each card is laid on the reader and the press is closed by hand."
+      "from": "desal",
+      "to": "homes",
+      "label": "Drinking water",
+      "detail": "Joins the same pipes as reservoir water."
     },
     {
-      "from": "reader",
-      "to": "bell",
-      "label": "One ring per card",
-      "detail": "The circuit is complete."
-    }
-  ],
-  "plan": [
-    {
-      "label": "Punch the cards",
-      "detail": "Copy every person on the schedules onto a card.",
-      "boxes": [
-        "punch",
-        "schedules",
-        "stock"
-      ],
-      "phase": "Punch",
-      "owner": "Punch clerks"
+      "from": "loop",
+      "to": "buyback",
+      "label": "Treated water, sold back",
+      "detail": "Johor may buy up to 2% of what Singapore draws."
     },
     {
-      "label": "Count the holes",
-      "detail": "Feed the cards through. The dials add up.",
-      "boxes": [
-        "reader",
-        "dials"
-      ],
-      "phase": "Count",
-      "owner": "Machine clerks",
-      "needs": [
-        "Punch the cards"
-      ]
-    },
-    {
-      "label": "Sort and recount",
-      "detail": "Regroup the cards to count combinations, such as age by state.",
-      "boxes": [
-        "sort",
-        "reader"
-      ],
-      "phase": "Count",
-      "owner": "Machine clerks",
-      "needs": [
-        "Count the holes"
-      ]
-    },
-    {
-      "label": "Publish the totals",
-      "detail": "Copy the dial readings into tables and send them to print.",
-      "boxes": [
-        "reports",
-        "office",
-        "congress",
-        "news"
-      ],
-      "phase": "Publish",
-      "owner": "Census Office",
-      "needs": [
-        "Count the holes",
-        "Sort and recount"
-      ]
+      "from": "loop",
+      "to": "tests",
+      "label": "Samples from the network",
+      "detail": "Checked against standards based on WHO guidelines."
     }
   ],
   "phases": [
     {
-      "label": "Punch",
-      "detail": "One card per person."
+      "label": "Now",
+      "when": "2024–2026",
+      "detail": "Finish the tunnels, price water at its cost."
     },
     {
-      "label": "Count",
-      "detail": "Every card through the reader, more than once."
+      "label": "By 2060",
+      "detail": "Grow the taps that don't depend on rain or Johor."
     },
     {
-      "label": "Publish",
-      "detail": "Totals leave the building."
+      "label": "2061",
+      "detail": "The Johor agreement ends."
+    }
+  ],
+  "plan": [
+    {
+      "label": "Finish the deep tunnels",
+      "detail": "Phase 2 was about 80% complete at 30 November 2025.",
+      "boxes": [
+        "tunnels",
+        "used"
+      ],
+      "phase": "Now",
+      "owner": "PUB"
+    },
+    {
+      "label": "Open Tuas Water Reclamation Plant",
+      "detail": "Treats 650,000 cubic metres of used water from homes and 150,000 from industry a day.",
+      "boxes": [
+        "tunnels"
+      ],
+      "phase": "Now",
+      "owner": "PUB",
+      "needs": [
+        "Finish the deep tunnels"
+      ]
+    },
+    {
+      "label": "Price water at its cost",
+      "detail": "Up 20 cents a cubic metre in 2024 and 30 more in 2025.",
+      "boxes": [
+        "price",
+        "homes"
+      ],
+      "phase": "Now",
+      "owner": "Government"
+    },
+    {
+      "label": "Grow NEWater to 55%",
+      "detail": "More reclaimed water, mostly for industry.",
+      "boxes": [
+        "newater",
+        "fabs"
+      ],
+      "phase": "By 2060",
+      "owner": "PUB",
+      "needs": [
+        "Open Tuas Water Reclamation Plant"
+      ]
+    },
+    {
+      "label": "Grow desalination to 30%",
+      "detail": "A sixth plant is being studied.",
+      "boxes": [
+        "desal"
+      ],
+      "phase": "By 2060",
+      "owner": "PUB"
+    },
+    {
+      "label": "Be ready without Johor",
+      "detail": "When the 1962 agreement ends, the island's own taps carry the load.",
+      "boxes": [
+        "johor",
+        "reservoirs"
+      ],
+      "phase": "2061",
+      "owner": "Government",
+      "needs": [
+        "Grow NEWater to 55%",
+        "Grow desalination to 30%"
+      ]
     }
   ]
 }
@@ -731,7 +768,14 @@ boot('nodes',data=>{
     const cx=r=>r.left+r.width/2-o.left,cy=r=>r.top+r.height/2-o.top;
     if(a.right+8<b.left||b.right+8<a.left){
       const ax=(a.right<b.left?a.right:a.left)-o.left,bx=(a.right<b.left?b.left:b.right)-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=(ax+bx)/2;
-      return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
+      // Boxes in the way: pass above or below them, whichever is nearer the straight line.
+      const lx=Math.min(ax,bx),rx=Math.max(ax,bx),y0=Math.min(ay,by)-6,y1=Math.max(ay,by)+6;
+      const block=Object.values(boxes).filter(x=>x!==boxes[e.from]&&x!==boxes[e.to]).map(x=>x.getBoundingClientRect()).filter(q=>q.width&&q.right-o.left>lx&&q.left-o.left<rx&&q.bottom-o.top>y0&&q.top-o.top<y1);
+      if(!block.length)return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
+      const top=Math.min(...block.map(q=>q.top))-o.top-18,bot=Math.max(...block.map(q=>q.bottom))-o.top+18,mid=(ay+by)/2,wy=Math.abs(top-mid)<=Math.abs(bot-mid)?top:bot;
+      const dir=bx>ax?1:-1,x1=(dir>0?Math.min(...block.map(q=>q.left)):Math.max(...block.map(q=>q.right)))-o.left,x2=(dir>0?Math.max(...block.map(q=>q.right)):Math.min(...block.map(q=>q.left)))-o.left;
+      const k1=(x1-ax)/2,k2=(bx-x2)/2;
+      return{d:`M${ax} ${ay}C${ax+k1} ${ay} ${x1-k1} ${wy} ${x1} ${wy}L${x2} ${wy}C${x2+k2} ${wy} ${bx-k2} ${by} ${bx} ${by}`,x:(x1+x2)/2,y:wy};
     }
     const lo=Math.min(a.bottom,b.bottom),hi=Math.max(a.top,b.top),l=Math.max(a.left,b.left)-20,r=Math.min(a.right,b.right)+20;
     const clear=Object.values(boxes).every(x=>{const q=x.getBoundingClientRect();return x===boxes[e.from]||x===boxes[e.to]||!q.width||q.bottom<=lo||q.top>=hi||q.right<=l||q.left>=r});

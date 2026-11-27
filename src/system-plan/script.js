@@ -59,7 +59,14 @@ boot('nodes',data=>{
     const cx=r=>r.left+r.width/2-o.left,cy=r=>r.top+r.height/2-o.top;
     if(a.right+8<b.left||b.right+8<a.left){
       const ax=(a.right<b.left?a.right:a.left)-o.left,bx=(a.right<b.left?b.left:b.right)-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=(ax+bx)/2;
-      return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
+      // Boxes in the way: pass above or below them, whichever is nearer the straight line.
+      const lx=Math.min(ax,bx),rx=Math.max(ax,bx),y0=Math.min(ay,by)-6,y1=Math.max(ay,by)+6;
+      const block=Object.values(boxes).filter(x=>x!==boxes[e.from]&&x!==boxes[e.to]).map(x=>x.getBoundingClientRect()).filter(q=>q.width&&q.right-o.left>lx&&q.left-o.left<rx&&q.bottom-o.top>y0&&q.top-o.top<y1);
+      if(!block.length)return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
+      const top=Math.min(...block.map(q=>q.top))-o.top-18,bot=Math.max(...block.map(q=>q.bottom))-o.top+18,mid=(ay+by)/2,wy=Math.abs(top-mid)<=Math.abs(bot-mid)?top:bot;
+      const dir=bx>ax?1:-1,x1=(dir>0?Math.min(...block.map(q=>q.left)):Math.max(...block.map(q=>q.right)))-o.left,x2=(dir>0?Math.max(...block.map(q=>q.right)):Math.min(...block.map(q=>q.left)))-o.left;
+      const k1=(x1-ax)/2,k2=(bx-x2)/2;
+      return{d:`M${ax} ${ay}C${ax+k1} ${ay} ${x1-k1} ${wy} ${x1} ${wy}L${x2} ${wy}C${x2+k2} ${wy} ${bx-k2} ${by} ${bx} ${by}`,x:(x1+x2)/2,y:wy};
     }
     const lo=Math.min(a.bottom,b.bottom),hi=Math.max(a.top,b.top),l=Math.max(a.left,b.left)-20,r=Math.min(a.right,b.right)+20;
     const clear=Object.values(boxes).every(x=>{const q=x.getBoundingClientRect();return x===boxes[e.from]||x===boxes[e.to]||!q.width||q.bottom<=lo||q.top>=hi||q.right<=l||q.left>=r});
