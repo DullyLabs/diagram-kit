@@ -1,0 +1,146 @@
+{
+  "title": "A tower in fourteen months",
+  "eyebrow": "Empire State Building / New York / 1929–1931",
+  "summary": "From a cleared hotel site to a new skyline, the work moved upward in closely spaced stages.",
+  "today": "1930-09-19",
+  "footnote": "Historical milestones; links show selected prerequisites, not the original construction schedule. Today marks the topping-out date.",
+  "kinds": [
+    {
+      "label": "Site",
+      "detail": "Clearing the site and reaching bedrock."
+    },
+    {
+      "label": "Structure",
+      "detail": "Foundations and the steel frame."
+    },
+    {
+      "label": "Opening",
+      "detail": "Completion and public opening."
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Demolition begins",
+      "end": "1929-10-01",
+      "kind": "Site",
+      "gate": true,
+      "detail": "Work begins on the old Waldorf-Astoria hotel. The date follows ENR’s construction history.",
+      "done": true
+    },
+    {
+      "label": "Excavate the site",
+      "start": "1930-01-22",
+      "end": "1930-03-17",
+      "kind": "Site",
+      "detail": "Excavation begins on January 22; foundation work starts on March 17.",
+      "done": true,
+      "risks": [
+        {
+          "label": "Work overlaps",
+          "detail": "Excavation starts before the hotel is fully demolished, requiring careful coordination."
+        }
+      ]
+    },
+    {
+      "label": "Foundations begin",
+      "end": "1930-03-17",
+      "kind": "Structure",
+      "gate": true,
+      "needs": [
+        "Excavate the site"
+      ],
+      "detail": "Foundation work starts on March 17, the official construction start date.",
+      "done": true
+    },
+    {
+      "label": "First upright steel",
+      "end": "1930-04-07",
+      "kind": "Structure",
+      "gate": true,
+      "needs": [
+        "Foundations begin"
+      ],
+      "detail": "The first upright piece of steel is set on April 7.",
+      "done": true
+    },
+    {
+      "label": "Raise the steel frame",
+      "start": "1930-04-07",
+      "end": "1930-09-19",
+      "kind": "Structure",
+      "owner": "Steel crews",
+      "detail": "From the first upright to the topping out of the main steel frame.",
+      "needs": [
+        "First upright steel"
+      ],
+      "gate": true,
+      "done": true
+    },
+    {
+      "label": "Steel reaches floor 26",
+      "end": "1930-06-20",
+      "kind": "Structure",
+      "gate": true,
+      "needs": [
+        "First upright steel"
+      ],
+      "detail": "By June 20, the steel has reached the 26th floor.",
+      "done": true
+    },
+    {
+      "label": "Main frame tops out",
+      "end": "1930-09-19",
+      "kind": "Structure",
+      "gate": true,
+      "needs": [
+        "Raise the steel frame"
+      ],
+      "detail": "The main steel frame reaches 1,048 feet on September 19, twelve days ahead of schedule.",
+      "done": true
+    },
+    {
+      "label": "Finish the building",
+      "start": "1930-09-19",
+      "end": "1931-05-01",
+      "kind": "Opening",
+      "detail": "This interval runs from main-frame topping out to opening; it is not a dated record of individual finishing trades.",
+      "needs": [
+        "Main frame tops out"
+      ],
+      "risks": [
+        {
+          "label": "Weak rental demand",
+          "detail": "The building opens during the Great Depression, when finding tenants is difficult."
+        }
+      ]
+    },
+    {
+      "label": "Open to the public",
+      "end": "1931-05-01",
+      "kind": "Opening",
+      "gate": true,
+      "needs": [
+        "Finish the building"
+      ],
+      "detail": "The Empire State Building officially opens on May 1, 1931."
+    }
+  ],
+  "sources": [
+    {
+      "label": "ENR / construction dates",
+      "url": "https://www.enr.com/articles/60722-the-race-into-the-sky-that-built-the-empire-state-building"
+    },
+    {
+      "label": "Empire State Building / history",
+      "url": "https://www.esbnyc.com/about/history"
+    },
+    {
+      "label": "Architecture archive / excavation",
+      "url": "https://lacasadelaarquitectura.es/en/resource/empire-state-building/bd445212-d3b5-45d1-b1cb-1882246c2658"
+    },
+    {
+      "label": "TIME / rental demand",
+      "url": "https://time.com/5955419/empire-state-building-history/"
+    }
+  ]
+}
