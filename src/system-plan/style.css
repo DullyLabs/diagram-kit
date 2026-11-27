@@ -1,6 +1,7 @@
 main{max-width:1280px}
 /* fade, not slide: a moving board would carry its fixed wire labels with it */
-.board{animation-name:fade;position:relative;display:grid;grid-template-columns:1fr 2.2fr 1fr;grid-template-areas:". above ." "upstream system downstream" ". below .";gap:56px;align-items:start}
+.board{animation-name:fade;position:relative;display:grid;grid-template-columns:1fr 2.2fr 1fr;grid-template-areas:". above ." "upstream system downstream" ". below .";gap:0 56px;align-items:start}
+.lane.above{margin-bottom:56px}.lane.below{margin-top:56px} /* margins, not row gaps: unused bands leave no space */
 .lane,.shell,.column{display:grid;gap:20px;min-width:0;align-content:start}
 .lane.above{grid-area:above}.lane.upstream{grid-area:upstream}.lane.system{grid-area:system}.lane.downstream{grid-area:downstream}.lane.below{grid-area:below}
 .lane.above,.lane.below{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
@@ -19,4 +20,6 @@ main{max-width:1280px}
 .wire-label{position:fixed;z-index:8;padding:5px 8px;background:var(--paper);border:1px solid var(--e);border-radius:var(--radius);font:11px/1.4 var(--mono);color:var(--e);white-space:nowrap;animation:fade var(--fast)}
 .plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--gap);margin-top:40px}
 .plan h2{grid-column:1/-1;margin:0}
-@media(max-width:900px){.board{grid-template-columns:minmax(0,440px);grid-template-areas:"above" "upstream" "system" "downstream" "below";gap:28px;padding-left:20px}.parts{grid-template-columns:1fr}.wires>g path:not(.hot){opacity:0}}
+@media screen and (max-width:900px){.board{grid-template-columns:minmax(0,440px);grid-template-areas:"above" "upstream" "system" "downstream" "below";gap:0;padding-left:20px}.board>.lane+.lane{margin-top:28px}.lane.above{margin-bottom:0}.parts{grid-template-columns:1fr}
+.board.board .wires>g:first-of-type path:not(.hot){opacity:0}} /* one column: only the open box's wires */
+@media print{.wires,.wire-label{display:none}}

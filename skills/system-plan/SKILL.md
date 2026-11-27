@@ -27,7 +27,7 @@ Write for a reader who is new to this: every word must help them understand the 
 | `title` | The epic, in under 8 words |
 | `summary` | One sentence: what the epic changes and for whom |
 | `nodes` | `{id, lane, label, detail}`; `id` is one lowercase word; at most 4 per lane |
-| `nodes[].lane` | One of `upstream`, `system` (exactly one node), `internal` (parts of the system), `downstream`, `above` (people who run or use it), `below` (what watches it: alerts, checks) |
+| `nodes[].lane` | One of `upstream`, `system` (exactly one node), `internal` (parts of the system), `downstream`, `above` (people who run or use it), `below` (what checks that it works) |
 | `nodes[].status` | One of `new`, `changed`, `unsure`. Leave it out for existing systems |
 | `edges` | `{from, to, label, detail}` using node ids; `label` says what moves ("orders, every hour"). Link straight to a part when you know which part it touches |
 | `bands` | Optional names for the lanes, such as `{"above": "Who runs it", "below": "How we know it works"}` |

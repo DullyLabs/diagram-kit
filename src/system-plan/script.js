@@ -1,13 +1,14 @@
 const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream',
-  above:'above',top:'above',people:'above',users:'above',operators:'above',actors:'above',below:'below',bottom:'below',monitoring:'below',watchers:'below',alerts:'below',observers:'below'};
+  above:'above',top:'above',people:'above',users:'above',actors:'above',below:'below',bottom:'below',watchers:'below',observers:'below'};
 const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum',above:'amber',below:'amber'};
 const STATUS={new:'● New',changed:'◇ Changed',unsure:'? Guess'};
 const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
+popOpts={obstacles:'.box,.more,.chip,.wire-label,.lane>h2,h1'};
 boot('nodes',data=>{
   const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts'),boxes={},cols={system:shell,internal:parts};
   const nodes=list(data.nodes).map(item).map(n=>({...n,lane:pick(n.lane,LANE,'upstream'),id:slug(n.id||n.label)}));
-  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from),to:slug(e.to)}));
-  const named=k=>txt(Object(data.bands)[k]); // optional lane names: {"above":"Who runs it"}
+  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from??e.source),to:slug(e.to??e.target)}));
+  const names={};for(const k in Object(data.bands))names[pick(k,LANE,k)]=txt(data.bands[k]);const named=k=>names[k]; // optional lane names: {"above":"Who runs it"}
   [['above','People who use it'],['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream'],['below','Watching it']].forEach(([key,name])=>{
     if((key==='above'||key==='below')&&!nodes.some(n=>n.lane===key))return; // the top and bottom bands draw only when used
     const lane=role(el('div','lane '+key),LANE_ROLE[key]);
@@ -46,7 +47,7 @@ boot('nodes',data=>{
   const live=edges.filter(e=>boxes[e.from]&&boxes[e.to]&&e.from!==e.to);
   const pair=new Set(live.map(e=>e.from+'>'+e.to));
   let current=null,lit=[],labels=[];
-  // Where a wire leaves and enters: facing sides when apart sideways, top and bottom when stacked, else round the left.
+  // Where a wire leaves and enters: facing sides when apart sideways, top and bottom when stacked with nothing between, else round the left.
   function route(e,o){
     const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect(),twin=pair.has(e.to+'>'+e.from)?(e.from<e.to?-6:6):0; // a two-way pair runs side by side
     const cx=r=>r.left+r.width/2-o.left,cy=r=>r.top+r.height/2-o.top;
@@ -54,10 +55,13 @@ boot('nodes',data=>{
       const ax=(a.right<b.left?a.right:a.left)-o.left,bx=(a.right<b.left?b.left:b.right)-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=(ax+bx)/2;
       return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
     }
-    if(a.bottom+8<b.top||b.bottom+8<a.top){
+    const lo=Math.min(a.bottom,b.bottom),hi=Math.max(a.top,b.top),l=Math.max(a.left,b.left)-20,r=Math.min(a.right,b.right)+20;
+    const clear=Object.values(boxes).every(x=>{const q=x.getBoundingClientRect();return x===boxes[e.from]||x===boxes[e.to]||!q.width||q.bottom<=lo||q.top>=hi||q.right<=l||q.left>=r});
+    if(lo+8<hi&&clear){
       const down=a.bottom<b.top,ay=(down?a.bottom:a.top)-o.top,by=(down?b.top:b.bottom)-o.top,ax=cx(a)+twin,bx=cx(b)+twin,m=(ay+by)/2;
       return{d:`M${ax} ${ay}C${ax} ${m} ${bx} ${m} ${bx} ${by}`,x:(ax+bx)/2,y:m};
     }
+    // Anything in between: round the left side.
     const ax=a.left-o.left,bx=b.left-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=Math.min(ax,bx)-18;
     return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:(ax+bx)/8+m*.75,y:(ay+by)/2};
   }
@@ -74,7 +78,7 @@ boot('nodes',data=>{
       const hot=current&&(e.from===current||e.to===current),r=hot?LANE_ROLE[boxes[e.from===current?e.to:e.from].dataset.lane]:'slate',w=route(e,o);
       const path=document.createElementNS(NS,'path');
       path.setAttribute('d',w.d);path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
-      if(hot){path.setAttribute('class','hot');labels.push({e,r,x:w.x,y:w.y});g.append(path)}else g.prepend(path);
+      if(hot){path.setAttribute("class","hot");if(e.label)labels.push({e,r,x:w.x,y:w.y});g.append(path)}else g.prepend(path);
     });
     labels=labels.map(({e,r,x,y})=>{const label=role(tip(el('button','wire-label',e.label),e),r);boxes[current].after(label);return{el:label,r,x,y}});
     afterPlace();

@@ -120,7 +120,8 @@ footer a::after{content:' ' attr(href)}}
 /* system-plan only */
 main{max-width:1280px}
 /* fade, not slide: a moving board would carry its fixed wire labels with it */
-.board{animation-name:fade;position:relative;display:grid;grid-template-columns:1fr 2.2fr 1fr;grid-template-areas:". above ." "upstream system downstream" ". below .";gap:56px;align-items:start}
+.board{animation-name:fade;position:relative;display:grid;grid-template-columns:1fr 2.2fr 1fr;grid-template-areas:". above ." "upstream system downstream" ". below .";gap:0 56px;align-items:start}
+.lane.above{margin-bottom:56px}.lane.below{margin-top:56px} /* margins, not row gaps: unused bands leave no space */
 .lane,.shell,.column{display:grid;gap:20px;min-width:0;align-content:start}
 .lane.above{grid-area:above}.lane.upstream{grid-area:upstream}.lane.system{grid-area:system}.lane.downstream{grid-area:downstream}.lane.below{grid-area:below}
 .lane.above,.lane.below{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
@@ -139,7 +140,9 @@ main{max-width:1280px}
 .wire-label{position:fixed;z-index:8;padding:5px 8px;background:var(--paper);border:1px solid var(--e);border-radius:var(--radius);font:11px/1.4 var(--mono);color:var(--e);white-space:nowrap;animation:fade var(--fast)}
 .plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--gap);margin-top:40px}
 .plan h2{grid-column:1/-1;margin:0}
-@media(max-width:900px){.board{grid-template-columns:minmax(0,440px);grid-template-areas:"above" "upstream" "system" "downstream" "below";gap:28px;padding-left:20px}.parts{grid-template-columns:1fr}.wires>g path:not(.hot){opacity:0}}
+@media screen and (max-width:900px){.board{grid-template-columns:minmax(0,440px);grid-template-areas:"above" "upstream" "system" "downstream" "below";gap:0;padding-left:20px}.board>.lane+.lane{margin-top:28px}.lane.above{margin-bottom:0}.parts{grid-template-columns:1fr}
+.board.board .wires>g:first-of-type path:not(.hot){opacity:0}} /* one column: only the open box's wires */
+@media print{.wires,.wire-label{display:none}}
 </style>
 </head>
 <body>
@@ -171,7 +174,7 @@ pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-l
 let active=null,pinned=false,timer,quiet=false;
 // Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
 function nestle(el,target,opts={}){ // target: an element, or any object with getBoundingClientRect()
-  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.more,.chip,.wire-label,table,h1,h2,.tools,.callout,.caption,.legend,[data-obstacle]'}=opts;
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,h2,.tools,.callout,.caption,.legend,[data-obstacle]'}=opts;
   const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
   const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
   const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
@@ -194,18 +197,18 @@ function nestle(el,target,opts={}){ // target: an element, or any object with ge
 // Each label takes the nearest free spot on a spiral out from its anchor, the most crowded first. Returns resting centres, for leaders back to the anchor.
 function settle(items,opts={}){
   const {pad=4,margin=8,reach=360,obstacles='.box,.more,.chip,.lane>h2,h1,.tools,.detail:not([hidden])'}=opts;
-  const rects=[...document.querySelectorAll(obstacles)].map(o=>o.getBoundingClientRect()).filter(r=>r.width),taken=[];
-  const cover=(x,y,w,h)=>[...rects,...taken].reduce((s,r)=>s+Math.max(0,Math.min(x+w/2+pad,r.right)-Math.max(x-w/2-pad,r.left))*Math.max(0,Math.min(y+h/2+pad,r.bottom)-Math.max(y-h/2-pad,r.top)),0);
+  const rects=[...document.querySelectorAll(obstacles)].map(o=>o.getBoundingClientRect()).filter(r=>r.width); // labels join it as they land
+  const cover=(x,y,w,h)=>rects.reduce((s,r)=>s+Math.max(0,Math.min(x+w/2+pad,r.right)-Math.max(x-w/2-pad,r.left))*Math.max(0,Math.min(y+h/2+pad,r.bottom)-Math.max(y-h/2-pad,r.top)),0);
   const inside=(x,y,w,h)=>x-w/2>=margin&&x+w/2<=innerWidth-margin&&y-h/2>=margin&&y+h/2<=innerHeight-margin;
   const ls=items.map(({el,anchor})=>({el,anchor,w:el.offsetWidth,h:el.offsetHeight}));
   ls.map(l=>[l,cover(l.anchor.x,l.anchor.y,l.w,l.h)]).sort((p,q)=>q[1]-p[1]).forEach(([l])=>{
-    const {x:ax,y:ay}=l.anchor,last=l.el._settle;let best,low=Infinity;
+    const {x:ax,y:ay}=l.anchor,off=l.el._settle;let best,low=Infinity;
     const tryAt=(x,y)=>{if(!inside(x,y,l.w,l.h))return;const c=cover(x,y,l.w,l.h)*100+Math.hypot(x-ax,y-ay);if(c<low){low=c;best={x,y}}};
-    if(last&&Math.hypot(last.x-ax,last.y-ay)<reach&&!cover(last.x,last.y,l.w,l.h))tryAt(last.x,last.y); // still free: stay put, no hopping on scroll
+    if(off&&!cover(ax+off.x,ay+off.y,l.w,l.h))tryAt(ax+off.x,ay+off.y); // same spot beside its wire still free: stay, no hopping on scroll
     for(let r=0;r<=reach&&low>=r;r+=6)for(let k=0,n=Math.max(1,Math.round(r/4));k<n;k++){const t=2*Math.PI*k/n;tryAt(ax+r*Math.cos(t)*1.6,ay+r*Math.sin(t))} // wider than tall, like the labels
     best??={x:Math.max(margin+l.w/2,Math.min(ax,innerWidth-margin-l.w/2)),y:Math.max(margin+l.h/2,Math.min(ay,innerHeight-margin-l.h/2))};
-    l.el._settle=best;l.at=best;l.el.style.left=best.x-l.w/2+'px';l.el.style.top=best.y-l.h/2+'px';
-    taken.push({left:best.x-l.w/2,right:best.x+l.w/2,top:best.y-l.h/2,bottom:best.y+l.h/2});
+    l.el._settle={x:best.x-ax,y:best.y-ay};l.at=best;l.el.style.left=best.x-l.w/2+'px';l.el.style.top=best.y-l.h/2+'px';
+    rects.push({left:best.x-l.w/2,right:best.x+l.w/2,top:best.y-l.h/2,bottom:best.y+l.h/2});
   });
   return ls.map(l=>l.at);
 }
@@ -341,7 +344,8 @@ document.addEventListener('keydown',e=>{
   if(next){e.preventDefault();next.focus();if(pinned)next.click()}
 });
 document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[aria-expanded]'))hide()});
-addEventListener('resize',place);addEventListener('scroll',()=>active?place():afterPlace(),{passive:true});
+let frame;const soon=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(place)}; // at most once a frame
+addEventListener('resize',soon);addEventListener('scroll',soon,{passive:true});
 
 function fallback(text,done){const t=el('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();done()}
 function card(title,lines,snippet,r){
@@ -400,15 +404,16 @@ function boot(key,render){
 }
 
 const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream',
-  above:'above',top:'above',people:'above',users:'above',operators:'above',actors:'above',below:'below',bottom:'below',monitoring:'below',watchers:'below',alerts:'below',observers:'below'};
+  above:'above',top:'above',people:'above',users:'above',actors:'above',below:'below',bottom:'below',watchers:'below',observers:'below'};
 const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum',above:'amber',below:'amber'};
 const STATUS={new:'● New',changed:'◇ Changed',unsure:'? Guess'};
 const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
+popOpts={obstacles:'.box,.more,.chip,.wire-label,.lane>h2,h1'};
 boot('nodes',data=>{
   const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts'),boxes={},cols={system:shell,internal:parts};
   const nodes=list(data.nodes).map(item).map(n=>({...n,lane:pick(n.lane,LANE,'upstream'),id:slug(n.id||n.label)}));
-  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from),to:slug(e.to)}));
-  const named=k=>txt(Object(data.bands)[k]); // optional lane names: {"above":"Who runs it"}
+  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from??e.source),to:slug(e.to??e.target)}));
+  const names={};for(const k in Object(data.bands))names[pick(k,LANE,k)]=txt(data.bands[k]);const named=k=>names[k]; // optional lane names: {"above":"Who runs it"}
   [['above','People who use it'],['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream'],['below','Watching it']].forEach(([key,name])=>{
     if((key==='above'||key==='below')&&!nodes.some(n=>n.lane===key))return; // the top and bottom bands draw only when used
     const lane=role(el('div','lane '+key),LANE_ROLE[key]);
@@ -447,7 +452,7 @@ boot('nodes',data=>{
   const live=edges.filter(e=>boxes[e.from]&&boxes[e.to]&&e.from!==e.to);
   const pair=new Set(live.map(e=>e.from+'>'+e.to));
   let current=null,lit=[],labels=[];
-  // Where a wire leaves and enters: facing sides when apart sideways, top and bottom when stacked, else round the left.
+  // Where a wire leaves and enters: facing sides when apart sideways, top and bottom when stacked with nothing between, else round the left.
   function route(e,o){
     const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect(),twin=pair.has(e.to+'>'+e.from)?(e.from<e.to?-6:6):0; // a two-way pair runs side by side
     const cx=r=>r.left+r.width/2-o.left,cy=r=>r.top+r.height/2-o.top;
@@ -455,10 +460,13 @@ boot('nodes',data=>{
       const ax=(a.right<b.left?a.right:a.left)-o.left,bx=(a.right<b.left?b.left:b.right)-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=(ax+bx)/2;
       return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
     }
-    if(a.bottom+8<b.top||b.bottom+8<a.top){
+    const lo=Math.min(a.bottom,b.bottom),hi=Math.max(a.top,b.top),l=Math.max(a.left,b.left)-20,r=Math.min(a.right,b.right)+20;
+    const clear=Object.values(boxes).every(x=>{const q=x.getBoundingClientRect();return x===boxes[e.from]||x===boxes[e.to]||!q.width||q.bottom<=lo||q.top>=hi||q.right<=l||q.left>=r});
+    if(lo+8<hi&&clear){
       const down=a.bottom<b.top,ay=(down?a.bottom:a.top)-o.top,by=(down?b.top:b.bottom)-o.top,ax=cx(a)+twin,bx=cx(b)+twin,m=(ay+by)/2;
       return{d:`M${ax} ${ay}C${ax} ${m} ${bx} ${m} ${bx} ${by}`,x:(ax+bx)/2,y:m};
     }
+    // Anything in between: round the left side.
     const ax=a.left-o.left,bx=b.left-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=Math.min(ax,bx)-18;
     return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:(ax+bx)/8+m*.75,y:(ay+by)/2};
   }
@@ -475,7 +483,7 @@ boot('nodes',data=>{
       const hot=current&&(e.from===current||e.to===current),r=hot?LANE_ROLE[boxes[e.from===current?e.to:e.from].dataset.lane]:'slate',w=route(e,o);
       const path=document.createElementNS(NS,'path');
       path.setAttribute('d',w.d);path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
-      if(hot){path.setAttribute('class','hot');labels.push({e,r,x:w.x,y:w.y});g.append(path)}else g.prepend(path);
+      if(hot){path.setAttribute("class","hot");if(e.label)labels.push({e,r,x:w.x,y:w.y});g.append(path)}else g.prepend(path);
     });
     labels=labels.map(({e,r,x,y})=>{const label=role(tip(el('button','wire-label',e.label),e),r);boxes[current].after(label);return{el:label,r,x,y}});
     afterPlace();
