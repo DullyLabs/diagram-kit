@@ -59,7 +59,7 @@ Plain words, not jargon:
 <!-- example -->
 ```json
 {
-  "title": "A skyscraper, twelve days early",
+  "title": "Empire State Building: build schedule",
   "eyebrow": "Empire State Building · 1929–1931",
   "summary": "The world's tallest building went from first steel to open doors in thirteen months, and finished ahead of plan.",
   "today": "1930-07-27",
@@ -178,7 +178,7 @@ Plain words, not jargon:
       ]
     }
   ],
-  "footnote": "Under budget, too. Please do not show this page to your project manager.",
+  "caption": "Demolition to opening day, as it stood on 27 July 1930.",
   "sources": [
     {
       "label": "Wikipedia · Empire State Building",
