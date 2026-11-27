@@ -12,6 +12,7 @@ Each skill copies one self-contained HTML template and fills only its JSON block
 | [`system-plan`](skills/system-plan) | What feeds a system, what's inside, who it serves, plus the plan | Singapore's four water taps |
 | [`join-explainer`](skills/join-explainer) | Why a join gained, lost or repeated rows | PostgreSQL tutorial: where did Hayward go? |
 | [`grain-map`](skills/grain-map) | What one row means, and whether combining tables doubles counts | PostgreSQL tutorial: a city is not an observation |
+| [`gantt-chart`](skills/gantt-chart) | Tasks on a calendar: what runs when, and what waits on what | Empire State Building, 1930 |
 
 ## Install
 
@@ -35,6 +36,7 @@ Then ask: "explain this PR as a diagram". Each skill's folder has a screenshot a
 ![System plan](skills/system-plan/screenshot.png)
 ![Join explainer](skills/join-explainer/screenshot.png)
 ![Grain map](skills/grain-map/screenshot.png)
+![Gantt chart](skills/gantt-chart/screenshot.png)
 
 To change a template, edit `src/` and run `python3 src/build.py`; checks are in `test/`.
 

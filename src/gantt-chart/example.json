@@ -1,146 +1,97 @@
 {
-  "title": "A tower in fourteen months",
-  "eyebrow": "Empire State Building / New York / 1929–1931",
-  "summary": "From a cleared hotel site to a new skyline, the work moved upward in closely spaced stages.",
-  "today": "1930-09-19",
-  "footnote": "Historical milestones; links show selected prerequisites, not the original construction schedule. Today marks the topping-out date.",
+  "title": "A skyscraper, twelve days early",
+  "eyebrow": "Empire State Building · 1929–1931",
+  "summary": "The world's tallest building went from first steel to open doors in thirteen months, and finished ahead of plan.",
+  "today": "1930-07-27",
   "kinds": [
-    {
-      "label": "Site",
-      "detail": "Clearing the site and reaching bedrock."
-    },
-    {
-      "label": "Structure",
-      "detail": "Foundations and the steel frame."
-    },
-    {
-      "label": "Opening",
-      "detail": "Completion and public opening."
-    }
+    {"label": "Ground", "detail": "Clearing the site and digging down to rock."},
+    {"label": "Paper", "detail": "Contracts that had to be signed before anything could rise."},
+    {"label": "Steel", "detail": "The frame, at four and a half floors a week."},
+    {"label": "Finishing", "detail": "Everything after the frame: mast, interiors, opening day."}
   ],
   "tasks": [
     {
-      "label": "Demolition begins",
+      "label": "Start tearing down the hotel",
       "end": "1929-10-01",
-      "kind": "Site",
-      "gate": true,
-      "detail": "Work begins on the old Waldorf-Astoria hotel. The date follows ENR’s construction history.",
-      "done": true
+      "kind": "Ground",
+      "owner": "Starrett Brothers and Eken",
+      "done": true,
+      "detail": "The old Waldorf-Astoria stood on the site.\nIt closed in May 1929."
     },
     {
-      "label": "Excavate the site",
+      "label": "Award the steel contract",
+      "end": "1930-01-12",
+      "kind": "Paper",
+      "owner": "Empire State Inc.",
+      "done": true,
+      "detail": "57,480 tons of it."
+    },
+    {
+      "label": "Dig the foundations",
       "start": "1930-01-22",
       "end": "1930-03-17",
-      "kind": "Site",
-      "detail": "Excavation begins on January 22; foundation work starts on March 17.",
+      "kind": "Ground",
+      "owner": "Starrett Brothers and Eken",
       "done": true,
+      "needs": ["Start tearing down the hotel"],
+      "detail": "Two shifts of 300 men dig 55 feet down, around the clock.",
       "risks": [
-        {
-          "label": "Work overlaps",
-          "detail": "Excavation starts before the hotel is fully demolished, requiring careful coordination."
-        }
+        {"label": "The hotel is still coming down", "detail": "Digging began before the old hotel had been completely demolished."}
       ]
     },
     {
-      "label": "Foundations begin",
-      "end": "1930-03-17",
-      "kind": "Structure",
-      "gate": true,
-      "needs": [
-        "Excavate the site"
-      ],
-      "detail": "Foundation work starts on March 17, the official construction start date.",
-      "done": true
-    },
-    {
-      "label": "First upright steel",
-      "end": "1930-04-07",
-      "kind": "Structure",
-      "gate": true,
-      "needs": [
-        "Foundations begin"
-      ],
-      "detail": "The first upright piece of steel is set on April 7.",
-      "done": true
-    },
-    {
       "label": "Raise the steel frame",
-      "start": "1930-04-07",
+      "start": "1930-04-01",
       "end": "1930-09-19",
-      "kind": "Structure",
-      "owner": "Steel crews",
-      "detail": "From the first upright to the topping out of the main steel frame.",
-      "needs": [
-        "First upright steel"
-      ],
+      "kind": "Steel",
+      "owner": "Starrett Brothers and Eken",
       "gate": true,
-      "done": true
+      "done": 50,
+      "needs": ["Award the steel contract", "Dig the foundations"],
+      "detail": "Half the frame is up by 27 July.\nIt tops out twelve days ahead of schedule.",
+      "risks": [
+        {"label": "Five workers died", "detail": "The official count for the whole build. Newspapers of the day reported more."}
+      ]
     },
     {
       "label": "Steel reaches floor 26",
       "end": "1930-06-20",
-      "kind": "Structure",
-      "gate": true,
-      "needs": [
-        "First upright steel"
-      ],
-      "detail": "By June 20, the steel has reached the 26th floor.",
-      "done": true
+      "kind": "Steel",
+      "done": true,
+      "detail": "Eleven weeks after the first column went in."
     },
     {
-      "label": "Main frame tops out",
-      "end": "1930-09-19",
-      "kind": "Structure",
+      "label": "Top out the mooring mast",
+      "start": "1930-09-19",
+      "end": "1930-11-21",
+      "kind": "Finishing",
       "gate": true,
-      "needs": [
-        "Raise the steel frame"
-      ],
-      "detail": "The main steel frame reaches 1,048 feet on September 19, twelve days ahead of schedule.",
-      "done": true
+      "needs": ["Raise the steel frame"],
+      "detail": "Work on the mast starts once the steel tops out."
     },
     {
       "label": "Finish the building",
       "start": "1930-09-19",
-      "end": "1931-05-01",
-      "kind": "Opening",
-      "detail": "This interval runs from main-frame topping out to opening; it is not a dated record of individual finishing trades.",
-      "needs": [
-        "Main frame tops out"
-      ],
-      "risks": [
-        {
-          "label": "Weak rental demand",
-          "detail": "The building opens during the Great Depression, when finding tenants is difficult."
-        }
-      ]
+      "end": "1931-04-11",
+      "kind": "Finishing",
+      "gate": true,
+      "needs": ["Raise the steel frame"],
+      "detail": "Complete twelve days ahead of schedule, 410 days after construction began."
     },
     {
-      "label": "Open to the public",
+      "label": "Open the doors",
       "end": "1931-05-01",
-      "kind": "Opening",
-      "gate": true,
-      "needs": [
-        "Finish the building"
-      ],
-      "detail": "The Empire State Building officially opens on May 1, 1931."
+      "kind": "Finishing",
+      "owner": "Empire State Inc.",
+      "needs": ["Finish the building"],
+      "detail": "Forty-five days ahead of the planned opening.",
+      "risks": [
+        {"label": "Nobody to rent it", "detail": "Only 23 percent of the space was let in the first year.\nNew Yorkers called it the Empty State Building."}
+      ]
     }
   ],
+  "footnote": "Under budget, too. Please do not show this page to your project manager.",
   "sources": [
-    {
-      "label": "ENR / construction dates",
-      "url": "https://www.enr.com/articles/60722-the-race-into-the-sky-that-built-the-empire-state-building"
-    },
-    {
-      "label": "Empire State Building / history",
-      "url": "https://www.esbnyc.com/about/history"
-    },
-    {
-      "label": "Architecture archive / excavation",
-      "url": "https://lacasadelaarquitectura.es/en/resource/empire-state-building/bd445212-d3b5-45d1-b1cb-1882246c2658"
-    },
-    {
-      "label": "TIME / rental demand",
-      "url": "https://time.com/5955419/empire-state-building-history/"
-    }
+    {"label": "Wikipedia · Empire State Building", "url": "https://en.wikipedia.org/wiki/Empire_State_Building"}
   ]
 }

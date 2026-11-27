@@ -20,6 +20,7 @@ description: Use first in this repo. Says which skill to read, by what you are h
 | Systems that feed yours and systems yours feeds, plus the order of work | [system-plan](skills/system-plan/SKILL.md) |
 | Two tables joined, and rows that were gained, lost or repeated | [join-explainer](skills/join-explainer/SKILL.md) |
 | Tables where one row means different things | [grain-map](skills/grain-map/SKILL.md) |
+| Tasks with start and end dates | [gantt-chart](skills/gantt-chart/SKILL.md) |
 
 Every skill takes the same optional depth: an item can open into `parts` and `risks`, and jobs by phase draw a plan with lines between jobs that wait on each other.
 

@@ -9,6 +9,7 @@ minimal = {
   "system-plan": {"title": "T", "nodes": [{"id": "a", "lane": "mine", "label": "Mine"}]},
   "join-explainer": {"title": "T", "groups": [{"label": "x", "left": "2"}]},
   "grain-map": {"title": "T", "tables": ["orders"]},
+  "gantt-chart": {"title": "T", "tasks": [{"label": "No dates"}, {"label": "Backwards", "start": "2026-03-09", "end": "2026-03-02", "needs": "No dates, ghost"}, "Just text", {"label": "Bad date", "start": "soon", "days": "3"}]},
 }
 for t in minimal:
   src = (root / f"{t}.html").read_text()
@@ -21,7 +22,7 @@ for t in minimal:
   put("minimal", json.dumps(minimal[t]))
   put("empty", "{}")
   long = json.loads(json.dumps(good))
-  for k in ("steps", "themes", "flow", "nodes", "plan", "groups", "tables"):
+  for k in ("steps", "themes", "flow", "nodes", "plan", "groups", "tables", "tasks"):
     for item in long.get(k, []):
       for f in ("label", "name"):
         if f in item: item[f] = LONG

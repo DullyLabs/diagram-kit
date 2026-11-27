@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>gantt-chart</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%275%27%20fill%3D%27%237a4a7e%27/%3E%3Cpath%20d%3D%27M5%207h22M5%2014h7m3%200h10M5%2021h13m3%200h6M11%205v4M17%2012v4M23%2019v4%27%20fill%3D%27none%27%20stroke%3D%27%23f5f2ea%27%20stroke-width%3D%272.5%27/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light dark;--paper:#f5f2ea;--card:#fdfbf5;--ink:#272b26;--muted:#656a60;--line:#cecfc3;--accent:#2f6452;--wash:#e6ede4;--shadow:#272b2622;--serif:Georgia,serif;--sans:system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--gap:16px;--pad:20px;--radius:2px;--fast:.18s;--slow:.5s;
+--green-e:#2f6452;--green-t:#e6ede4;--blue-e:#2b5f8a;--blue-t:#e3ecf3;--plum-e:#7a4a7e;--plum-t:#efe5ef;--amber-e:#7d5200;--amber-t:#f6ead0;--clay-e:#a63d2a;--clay-t:#f7e3dc;--slate-e:#656a60;--slate-t:#ecebe4}
+@media(prefers-color-scheme:dark){:root{--paper:#191d1a;--card:#212722;--ink:#eeebe0;--muted:#abb2a5;--line:#444d44;--accent:#9bcab0;--wash:#2c3b31;--shadow:#0006;
+--green-e:#9bcab0;--green-t:#2c3b31;--blue-e:#8fbde0;--blue-t:#23323f;--plum-e:#cfa6d3;--plum-t:#382c3a;--amber-e:#e0b867;--amber-t:#3b3220;--clay-e:#eb9d8a;--clay-t:#402924;--slate-e:#abb2a5;--slate-t:#2b302b}}
+/* Roles: edge for borders, icons and tags; tint for fills. Body text stays --ink. */
+[data-role=green]{--e:var(--green-e);--t:var(--green-t)}
+[data-role=blue]{--e:var(--blue-e);--t:var(--blue-t)}
+[data-role=plum]{--e:var(--plum-e);--t:var(--plum-t)}
+[data-role=amber]{--e:var(--amber-e);--t:var(--amber-t)}
+[data-role=clay]{--e:var(--clay-e);--t:var(--clay-t)}
+[data-role=slate]{--e:var(--slate-e);--t:var(--slate-t)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);overflow-wrap:anywhere}
+main{max-width:1080px;margin:auto;padding:48px 32px 32px}
+main>*{animation:arrive var(--slow) backwards} /* backwards: no transform left behind, so fixed labels stay on the page */
+.box,.arrow{animation:arrive .6s ease-out backwards;animation-delay:calc(100ms + var(--i,0)*60ms)}
+header{border-top:3px solid var(--ink);padding-top:var(--gap);margin-bottom:32px}
+.bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px var(--gap)}
+.eyebrow,.caption,.tag,.arrow,.chip,.legend,footer{font:11px/1.5 var(--mono);letter-spacing:.05em;color:var(--muted);margin:0}
+.eyebrow,.tag{text-transform:uppercase}
+.eyebrow{color:var(--accent)}
+.tag{display:block;margin-bottom:4px}
+h1{width:fit-content;font:normal clamp(32px,6vw,56px)/1.08 var(--serif);letter-spacing:-.03em;margin:20px 0 10px;text-wrap:balance}
+h1.long{font-size:clamp(26px,4vw,40px)}
+h2.tag{margin-bottom:10px}
+.caption+.callout{margin-top:16px}
+.callout{margin:0 0 12px;max-width:64ch;padding:10px 14px;border-left:3px solid var(--e,var(--accent));background:var(--t,var(--wash))}
+.callout .tag{color:var(--e)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 10px}
+.glyph{color:var(--e)}
+.chip{display:inline-block;padding:1px 8px;border:1px solid var(--e,var(--line));background:var(--t,var(--card));border-radius:99px;color:var(--ink)}
+.chip[data-role=slate]{border-style:dashed}
+button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.toggle{min-width:28px;height:28px;padding:0 6px;border:1px solid var(--line);background:none;border-radius:var(--radius);font:14px/26px var(--mono);color:var(--muted);text-align:center}
+.tools{display:flex;align-items:center;gap:8px}
+.toggle[aria-pressed=true]{color:var(--accent);border-color:var(--accent)}
+.box:not([data-role]){--e:var(--line);--t:var(--card)}
+.box{display:block;width:100%;padding:14px var(--pad);background:var(--t);border:1px solid var(--e);border-radius:var(--radius);font:18px/1.25 var(--serif);transition:border-color var(--fast),background var(--fast),box-shadow var(--fast)}
+.box .label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.box[data-role] .tag{color:var(--e)}
+.box[data-role=slate]{border-style:dashed}
+.box:not([data-role]):hover,.box:not([data-role])[aria-expanded=true]{--e:var(--accent);--t:var(--wash)}
+.box[data-role]:hover,.box[data-role][aria-expanded=true]{box-shadow:inset 0 0 0 1px var(--e)}
+.arrow{display:flex;flex-wrap:wrap;align-items:center;gap:0 10px;width:100%;min-height:44px;padding:4px var(--pad);border:0;background:none;transition:color var(--fast)}
+.arrow::before{content:'↓';font-size:16px;color:var(--e,var(--accent))}
+.arrow:hover,.arrow[aria-expanded=true]{color:var(--e,var(--accent))}
+.note{display:none;margin-top:6px;font:14px/1.45 var(--sans);color:var(--ink);white-space:pre-line;text-transform:none;letter-spacing:0;flex-basis:100%}
+.all .note{display:block}
+.all .detail:not(.pinned){display:none}
+.all .box .label{-webkit-line-clamp:none}
+.notes{display:none;margin-top:32px}
+.notes li{margin-bottom:6px;white-space:pre-line}
+.all .notes{display:block}
+.more{flex:none;padding:1px 8px;border:1px solid var(--line);border-radius:99px;background:none;font:11px/1.5 var(--mono);letter-spacing:.05em;color:var(--muted)}
+.more::before{content:'+ '}
+.more[aria-expanded=true]::before{content:'− '}
+.more:hover,.more[aria-expanded=true]{color:var(--accent);border-color:var(--accent)}
+.step{display:grid;grid-template-rows:1fr;min-width:0}
+.step>.more{justify-self:end;margin-top:4px}
+.step>.box.part{width:auto;margin-left:28px}
+.part{display:none;margin-top:8px}
+.open>.part,.all .part{display:block}
+.open>.risks,.all .risks{display:flex;flex-wrap:wrap;align-items:center;gap:8px;grid-column:1/-1}
+.risks .chip{border-radius:12px}
+.all .risks .chip{padding:6px 10px;border-radius:var(--radius)}
+.box.part{padding:8px var(--pad);font-size:15px;animation:arrive var(--fast)}
+.jobs{margin-top:48px}
+.scroll{overflow-x:auto;padding-bottom:4px}
+.lanes{position:relative;display:grid;grid-template-columns:136px repeat(var(--n),minmax(150px,1fr));min-width:calc(136px + var(--n)*150px)}
+.lanes>:not(svg){min-width:0;padding:12px 14px;border-top:1px solid var(--line)}
+.lanes>h3{padding-left:0}
+.lanes>span,.phase{border:0}
+.phase{background:none;font:18px/1.25 var(--serif)}
+.phase:hover,.phase[aria-expanded=true]{color:var(--accent)}
+.cell{display:grid;gap:10px;align-content:start}
+.job{padding:8px 12px;font-size:15px}
+.job.on{--e:var(--accent)}
+.dim .job:not(.on){opacity:.4;transition:opacity var(--fast)}
+.links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--muted)}
+.links .hot,#hot{color:var(--accent)}
+.links path{fill:none;stroke:currentColor;stroke-width:1;opacity:.55}
+.links .hot{stroke-width:1.8;opacity:1}
+.dim .links path:not(.hot){opacity:.15}
+.links marker path{fill:currentColor;stroke:none;opacity:1}
+footer{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:32px;padding-top:var(--gap);border-top:1px solid var(--line)}
+footer a{color:inherit;text-underline-offset:3px}
+.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:fade var(--fast)} /* fade, not slide: floating labels measure where it really is */
+.detail[hidden]{display:none}
+.detail h2{font:normal 20px/1.2 var(--serif);margin:0 28px 6px 0}
+.detail p{margin:0;font-size:14px;white-space:pre-line}
+.close{display:none;position:absolute;top:0;right:0;width:44px;height:44px;border:0;background:none;font-size:20px;text-align:center}
+.pinned{pointer-events:auto}
+.pinned .close{display:block}
+.card{max-width:640px;margin:48px auto;padding:24px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--e,var(--ink));font:15px/1.5 var(--sans)}
+.card h1{font-size:28px;margin:0 0 8px}
+.card pre{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--paper);padding:10px;margin:12px 0 0}
+@keyframes arrive{from{opacity:0;translate:0 12px}}
+@keyframes fade{from{opacity:0}}
+@media(max-width:600px){main{padding:24px 16px}.detail{width:calc(100vw - 24px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+:root{color-scheme:light}
+*{animation:none!important}
+.toggle,.detail,.tools{display:none!important}
+.note,.notes,.part{display:block}
+.links{display:none}
+.box .label{-webkit-line-clamp:none}
+.box,.arrow,tr{break-inside:avoid}
+main{padding:0}
+footer a::after{content:' ' attr(href)}}
+
+/* gantt-chart only */
+main{max-width:1280px}
+.legend{align-items:center;margin-bottom:14px}
+.g-key{display:inline-flex;align-items:center;gap:7px;padding:2px 0;border:0;background:none}
+.g-key:hover,.g-key[aria-expanded=true]{color:var(--e)}
+.g-key .g-fill{position:relative;inset:auto;width:24px;height:10px;border-radius:3px;animation:none}
+.g-done::before{content:'';display:inline-block;width:24px;height:10px;margin-right:7px;border:1px solid var(--muted);border-radius:3px;background:linear-gradient(90deg,var(--muted) 60%,transparent 0)}
+.g-scroll{overflow-x:auto;border-top:1px solid var(--ink);border-bottom:1px solid var(--line)}
+.g-board{--names:216px;position:relative;isolation:isolate;display:grid;grid-template-columns:var(--names) minmax(560px,1fr);padding-bottom:26px}
+.g-row{display:contents}
+.g-name{position:sticky;left:0;z-index:4;display:flex;align-items:center;gap:2px;min-height:46px;padding:8px 12px 8px 0;background:var(--paper);border-top:1px solid var(--line);font:16px/1.2 var(--serif);transition:color var(--fast)}
+.g-label{flex:1;min-width:0}
+.g-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.all .g-text{-webkit-line-clamp:none}
+.g-who{display:block;margin-top:2px;font:10px/1.4 var(--mono);letter-spacing:.05em;color:var(--muted)}
+.g-corner{align-items:end;border:0;font:10px/1.5 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.g-risk{flex:none;padding:6px 4px;border:0;background:none;font-size:10px;color:var(--e)}
+.g-axis{position:relative;height:58px}
+.g-era,.g-tick{position:absolute;padding-left:6px;font:10px/1.5 var(--mono);letter-spacing:.05em;white-space:nowrap;color:var(--muted)}
+.g-era{top:10px;text-transform:uppercase;color:var(--ink)}
+.g-tick{bottom:7px}
+.g-lane{position:relative;border-top:1px solid var(--line);transition:background var(--fast)}
+.g-row:hover .g-lane{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.g-back{position:absolute;left:var(--names);right:0;top:32px;bottom:0;pointer-events:none}
+.g-back>*{position:absolute;top:0;bottom:0}
+.g-grid{border-left:1px solid var(--line);opacity:.55}
+.g-major{top:-22px;opacity:1}
+.g-rest{top:26px;background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line) 4px 5px);opacity:.5}
+.g-fold{top:26px;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--paper) 0 3px,var(--line) 3px 4px);border-inline:1px dashed var(--muted)}
+.g-fold span{writing-mode:vertical-rl;padding:8px 0;background:var(--paper);font:10px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;color:var(--muted)}
+.g-today{top:26px;border-left:2px solid var(--clay-e);transform-origin:top;animation:g-drop .6s .3s cubic-bezier(.2,.7,.2,1) backwards}
+.g-today span{position:absolute;bottom:5px;left:6px;font:10px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;color:var(--clay-e)}
+.g-today.g-flip span{left:auto;right:8px}
+.g-bar{position:absolute;top:50%;height:22px;margin-top:-11px;padding:0;border:0;background:none;z-index:3;transition:opacity var(--fast)}
+.g-fill{position:absolute;inset:0;overflow:hidden;border:1px solid var(--e);border-radius:6px;background:var(--t);transition:box-shadow var(--fast);animation:g-grow .7s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(150ms + var(--i,0)*55ms)}
+.g-fill::before{content:'';position:absolute;inset:0 auto 0 0;width:var(--done,0%);background:color-mix(in srgb,var(--e) 45%,var(--t))}
+.g-fill::after{content:'';position:absolute;inset:0;opacity:.45}
+[data-cue="1"] .g-fill::after{background:repeating-linear-gradient(135deg,var(--e) 0 1px,transparent 1px 6px)}
+[data-cue="2"] .g-fill::after{background:radial-gradient(var(--e) 1px,transparent 1.4px) 1px 1px/6px 6px}
+[data-cue="3"] .g-fill::after{background:repeating-linear-gradient(90deg,var(--e) 0 1px,transparent 1px 5px)}
+[data-cue="4"] .g-fill::after{background:repeating-linear-gradient(45deg,var(--e) 0 1px,transparent 1px 6px)}
+[data-cue="5"] .g-fill{border-style:dashed}
+.g-bar:hover .g-fill,.g-bar[aria-expanded=true] .g-fill,.g-dim .g-on .g-fill{box-shadow:0 0 0 1px var(--e),0 4px 14px var(--shadow)}
+.g-gate{position:absolute;right:-7px;top:4px;width:14px;height:14px;rotate:45deg;border-radius:2px;background:var(--e);box-shadow:0 0 0 2px var(--paper);animation:g-pop .35s backwards;animation-delay:calc(650ms + var(--i,0)*55ms)}
+.g-point{width:14px;margin-left:-7px}
+.g-point .g-fill{display:none}
+.g-point .g-gate{right:0;animation-delay:calc(150ms + var(--i,0)*55ms)}
+.g-cap{position:absolute;left:calc(100% + 14px);top:3px;font:10px/16px var(--mono);letter-spacing:.05em;white-space:nowrap;color:var(--muted);animation:fade .4s backwards;animation-delay:calc(650ms + var(--i,0)*55ms)}
+.g-flip .g-cap{left:auto;right:calc(100% + 14px)}
+.g-in .g-cap{left:auto;right:14px;padding:0 5px;border-radius:3px;background:var(--t);color:var(--ink)}
+.g-loose{left:1.5%;width:112px}
+.g-loose .g-fill{border-style:dashed;background:none}
+.g-loose .g-cap{right:8px;background:none;color:var(--muted)}
+.g-bar .note,.g-risk .note{display:none!important}
+.g-wires{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;color:var(--muted)}
+.g-wires g path{fill:none;stroke:currentColor;stroke-width:1;opacity:.5;transition:opacity var(--fast)}
+.g-wires .g-hot,#g-hot{color:var(--accent)}
+.g-wires g .g-hot{stroke-width:1.8;opacity:1}
+.g-wires marker path{fill:currentColor}
+.g-dim .g-row:not(.g-on) .g-bar{opacity:.22}
+.g-dim .g-row:not(.g-on) .g-name{color:var(--muted)}
+.g-dim .g-wires g path:not(.g-hot){opacity:.12}
+.g-list{display:none;margin:32px 0 0;padding-left:18px;max-width:72ch}
+.g-list li{margin-bottom:12px;white-space:pre-line;font-size:14px}
+.g-list b{font:normal 18px/1.3 var(--serif)}
+.all .g-list{display:block}
+@keyframes g-grow{from{clip-path:inset(0 100% 0 0)}}
+@keyframes g-pop{from{scale:0}}
+@keyframes g-drop{from{scale:1 0}}
+@media(max-width:600px){.g-board{--names:128px}.g-name:not(.g-corner){font-size:14px}.g-who{display:none}}
+@media print{.g-text{-webkit-line-clamp:none}.g-scroll{overflow:visible}.g-board{grid-template-columns:150px minmax(0,1fr);--names:150px}.g-name{position:static}.g-wires,.g-risk{display:none}.g-list{display:block}.g-fill,.g-gate,.g-fill::before,.g-fill::after{print-color-adjust:exact;-webkit-print-color-adjust:exact}.g-row{break-inside:avoid}}
+</style>
+</head>
+<body>
+<!-- Replace the JSON below with your own, in the format SKILL.md shows. Change nothing else in this file. -->
+<script id="diagram-data" type="application/json">
+{"title":"REPLACE_ME"}
+</script>
+<script>
+(()=>{
+'use strict';
+const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
+// Forgive sloppy JSON: anything outside the outer { } (code fences, prose), trailing commas, HTML, markdown, wrong types.
+const txt=v=>v==null||v===false?'':Array.isArray(v)?v.map(txt).filter(Boolean).join('\n'):typeof v==='object'?txt(v.label??v.text??v.name??v.title):String(v).replace(/<\/?(?:a|b|i|u|em|strong|code|pre|p|br|div|span|ul|ol|li|h[1-6]|img|script|style|table|tr|td|th|font|small|sup|sub)\b[^>]*>/gi,'').replace(/(^|[^\w])(\*\*|__)(\S(?:.*?\S)?)\2(?!\w)/g,'$1$3').replace(/`/g,'').trim();
+const list=v=>Array.isArray(v)?v.filter(x=>x!=null&&x!==''):v==null||v===''||v===false?[]:typeof v==='object'?Object.values(v):String(v).split(/\s*[;\n]\s*|,\s+/).filter(Boolean);
+const item=v=>{
+  if(v==null||typeof v!=='object'||Array.isArray(v))return{label:txt(v),detail:''};
+  const detail=txt(v.detail??v.details??v.description??v.desc??v.note);
+  return{...v,label:txt(v.label??v.name??v.title??v.text??v.id)||detail.slice(0,40),detail};
+};
+const pick=(v,map,dflt)=>{const k=txt(v).toLowerCase();return Object.hasOwn(map,k)?map[k]:dflt};
+const slug=s=>txt(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-'); // ids: case, spaces and punctuation don't matter
+const yes=v=>v===true||/^(true|yes|y|1)$/i.test(txt(v));
+
+let onShow=()=>{},onHide=()=>{},keepOpen=()=>false,popOpts;
+const main=el('main'),header=el('header'),footer=el('footer');
+// One popover for boxes and arrows: hover or focus shows, click or Enter pins, Esc or × closes.
+const pop=el('aside','detail'),popTitle=el('h2'),popBody=el('p'),closer=el('button','close','×');
+pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-label','Close');pop.append(popTitle,popBody,closer);
+let active=null,pinned=false,timer,quiet=false;
+// Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
+function nestle(el,target,opts={}){ // target: an element, or any object with getBoundingClientRect()
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,h2,.tools,.callout,.caption,.legend,[data-obstacle]'}=opts;
+  const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
+  const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
+  const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
+  const rects=[...document.querySelectorAll(obstacles)].filter(o=>!(target instanceof Node&&(o.contains(target)||target.contains(o)))&&!el.contains(o)&&o!==el).map(o=>o.getBoundingClientRect());
+  // Candidates per axis: beside the target, aligned with it, centred on it, or against a viewport edge. Order breaks ties: below, right, left, above.
+  // Also try just past each nearby obstacle, which finds gaps like the space under a short column.
+  const near=rects.filter(r=>Math.abs(r.top-t.top)<2*h+t.height&&Math.abs(r.left-t.left)<2*w+t.width);
+  const xs=[t.left,t.right+gap,t.left-w-gap,t.right-w,t.left+(t.width-w)/2,0,innerWidth,...near.flatMap(r=>[r.left,r.right+gap])].map(v=>fit(v,w,innerWidth));
+  const ys=[t.bottom+gap,t.top,t.top-h-gap,t.bottom-h,t.top+(t.height-h)/2,0,innerHeight,...near.flatMap(r=>[r.top,r.bottom+gap])].map(v=>fit(v,h,innerHeight));
+  let best,low=Infinity;
+  ys.forEach((y,j)=>xs.forEach((x,i)=>{
+    const k=x+','+y,away=Math.hypot(Math.max(t.left-x-w,x-t.right,0),Math.max(t.top-y-h,y-t.bottom,0));
+    const score=rects.reduce((s,r)=>s+cover(x,y,r),4*cover(x,y,t))+pull*away-(last.target===target&&last.k===k?stick:0); // stick: no side-hopping on scroll
+    if(score<low){low=score;best={x,y,k}}
+  }));
+  el._nestle={target,k:best.k};
+  el.style.left=best.x+'px';el.style.top=best.y+'px';
+}
+// Settle many position:fixed labels: gravity keeps each as close to its anchor {x,y} as it can be; boxes, other labels and the viewport edge repel it.
+// Each label takes the nearest free spot on a spiral out from its anchor, the most crowded first. Returns resting centres, for leaders back to the anchor.
+function settle(items,opts={}){
+  const {pad=4,margin=8,reach=360,obstacles='.box,.more,.chip,.lane>h2,h1,.tools,.detail:not([hidden])'}=opts;
+  const rects=[...document.querySelectorAll(obstacles)].map(o=>o.getBoundingClientRect()).filter(r=>r.width); // labels join it as they land
+  const cover=(x,y,w,h)=>rects.reduce((s,r)=>s+Math.max(0,Math.min(x+w/2+pad,r.right)-Math.max(x-w/2-pad,r.left))*Math.max(0,Math.min(y+h/2+pad,r.bottom)-Math.max(y-h/2-pad,r.top)),0);
+  const inside=(x,y,w,h)=>x-w/2>=margin&&x+w/2<=innerWidth-margin&&y-h/2>=margin&&y+h/2<=innerHeight-margin;
+  const ls=items.map(({el,anchor})=>({el,anchor,w:el.offsetWidth,h:el.offsetHeight}));
+  ls.map(l=>[l,cover(l.anchor.x,l.anchor.y,l.w,l.h)]).sort((p,q)=>q[1]-p[1]).forEach(([l])=>{
+    const {x:ax,y:ay}=l.anchor,off=l.el._settle;let best,low=Infinity;
+    const tryAt=(x,y)=>{if(!inside(x,y,l.w,l.h))return;const c=cover(x,y,l.w,l.h)*100+Math.hypot(x-ax,y-ay);if(c<low){low=c;best={x,y}}};
+    if(off&&!cover(ax+off.x,ay+off.y,l.w,l.h))tryAt(ax+off.x,ay+off.y); // same spot beside its wire still free: stay, no hopping on scroll
+    for(let r=0;r<=reach&&low>=r;r+=6)for(let k=0,n=Math.max(1,Math.round(r/4));k<n;k++){const t=2*Math.PI*k/n;tryAt(ax+r*Math.cos(t)*1.6,ay+r*Math.sin(t))} // wider than tall, like the labels
+    best??={x:Math.max(margin+l.w/2,Math.min(ax,innerWidth-margin-l.w/2)),y:Math.max(margin+l.h/2,Math.min(ay,innerHeight-margin-l.h/2))};
+    l.el._settle={x:best.x-ax,y:best.y-ay};l.at=best;l.el.style.left=best.x-l.w/2+'px';l.el.style.top=best.y-l.h/2+'px';
+    rects.push({left:best.x-l.w/2,right:best.x+l.w/2,top:best.y-l.h/2,bottom:best.y+l.h/2});
+  });
+  return ls.map(l=>l.at);
+}
+let afterPlace=()=>{};
+function place(){
+  if(!active)return;
+  if(innerWidth>=600)nestle(pop,active,popOpts);
+  else{const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
+    pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px'}
+  afterPlace();
+}
+function release(btn){btn.setAttribute('aria-expanded','false');btn.removeAttribute('aria-describedby')}
+function hide(refocus){
+  clearTimeout(timer);
+  const old=active;
+  if(!old)return;
+  release(old);active=null;pinned=false;pop.hidden=true;onHide();
+  if(refocus){quiet=true;old.focus();quiet=false}
+}
+function show(btn,it,pin){
+  if(quiet||(pinned&&!pin))return;
+  clearTimeout(timer);
+  if(active)release(active);
+  active=btn;pinned=pin;
+  btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-describedby','detail');
+  popTitle.textContent=it.label;popBody.textContent=it.detail;popBody.hidden=!it.detail;
+  pop.classList.toggle('pinned',pin);pop.hidden=false;onShow(btn);place(); // after onShow, so the popover also avoids anything onShow drew
+  if(pin&&btn.dataset.n)history.replaceState(null,'','#item-'+btn.dataset.n); // a pinned item becomes a link
+}
+function later(){clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&!keepOpen())hide()},200)}
+const tips=[];
+function tip(btn,it){
+  if(!btn.classList.contains('wire-label')){tips.push({btn,it});btn.dataset.n=tips.length} // no id, so the browser's own #jump never hides the title
+  btn.type='button';btn.setAttribute('aria-expanded','false');btn.dataset.tip='';
+  if(it.detail)btn.append(el('span','note',it.detail));
+  btn.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show(btn,it,false)});
+  btn.addEventListener('pointerleave',later);
+  btn.addEventListener('focus',()=>show(btn,it,false));
+  btn.addEventListener('blur',later);
+  btn.addEventListener('click',()=>active===btn&&pinned?hide():show(btn,it,true));
+  return btn;
+}
+const role=(n,r)=>{if(r)n.dataset.role=r;return n};
+function box(it,tag,r,cls){
+  const b=role(el('button','box'+(cls?' '+cls:'')),r);
+  if(tag)b.append(el('span','tag',tag));
+  b.append(el('span','label',it.label));
+  return tip(b,it);
+}
+const arrow=(it,r)=>tip(role(el('button','arrow',it.label),r),it);
+const legend=rows=>{const l=el('p','legend');rows.forEach(([r,glyph,text])=>{const s=role(el('span'),r);s.append(el('span','glyph',glyph),' '+text);l.append(s)});return l};
+const callout=(tag,text,r)=>{const c=role(el('p','callout'),r||'green');c.append(el('span','tag',tag),text);return c};
+// Depth, the same in every template: an item opens into its parts and risks, and its jobs join the plan below the diagram.
+const lanes=[],count=(a,word)=>a.length?a.length+' '+word+(a.length>1?'s':''):'';
+function depth(host,head,it,name,part,word='part'){ // part(p) draws one part into host; leave it out where parts don't fit
+  const parts=part?list(it.parts).map(item):[],risks=list(it.risks).map(item),work=list(it.work??it.jobs).map(item);
+  if(work.length)lanes.push({name,work});
+  if(!parts.length&&!risks.length)return;
+  const more=el('button','more',[count(parts,word),count(risks,'risk')].filter(Boolean).join(' · ')),chip=head.querySelector('.chip');
+  more.type='button';more.setAttribute('aria-expanded','false');
+  more.addEventListener('click',()=>more.setAttribute('aria-expanded',host.classList.toggle('open')));
+  chip?chip.before(more):head.append(more);
+  host.classList.add('deep');
+  parts.forEach(p=>part(p));
+  if(risks.length){
+    const r=el('div','risks part');r.append(el('span','tag','Risks'));
+    risks.forEach(x=>r.append(tip(role(el('button','chip','▲ '+x.label),'clay'),x)));host.append(r);
+  }
+}
+// A box that can open: the box, then its parts and risks.
+function step(b,it,name,word){
+  const s=el('div','step');s.append(b);
+  depth(s,s,it,name,p=>s.append(box(p,'',b.dataset.role,'part')),word);
+  return s;
+}
+// The plan: one row per item that has jobs, one column per phase. A job names what it needs; lines join them.
+function jobs(data){
+  if(!lanes.length)return;
+  const phases=list(data.phases).map(item),all=lanes.flatMap(l=>l.work),byId={};
+  all.forEach(w=>{
+    const k=slug(w.phase??w.when);
+    w.id=slug(w.id||w.label);byId[w.id]=w;
+    w.col=phases.findIndex(p=>slug(p.label)===k);
+    if(w.col<0)w.col=+k>0&&+k<=phases.length?k-1:k||!phases.length?phases.push(item(k?w.phase??w.when:'Plan'))-1:0;
+  });
+  all.forEach(w=>{w.needs=list(w.needs??w.after).map(slug).filter(id=>byId[id]&&id!==w.id)});
+  all.forEach(w=>{
+    const names=ws=>ws.map(o=>o.label).join(', ');
+    w.unlocks=all.filter(o=>o.needs.includes(w.id));
+    w.detail=[w.detail,w.needs.length&&'Needs: '+names(w.needs.map(id=>byId[id])),w.unlocks.length&&'Unlocks: '+names(w.unlocks)].filter(Boolean).join('\n');
+  });
+  const plan=el('section','jobs'),scroll=el('div','scroll'),grid=el('div','lanes'),NS='http://www.w3.org/2000/svg',wires=document.createElementNS(NS,'svg');
+  grid.style.setProperty('--n',phases.length);grid.append(el('span'));
+  phases.forEach(p=>{const b=el('button','phase');b.append(el('span','label',p.label),el('span','tag',txt(p.when)));grid.append(tip(b,p))});
+  lanes.forEach(l=>{
+    const cells=phases.map(()=>el('div','cell'));
+    l.work.forEach(w=>{w.b=box(w,txt(w.owner??w.who??w.team),'','job');w.b.dataset.job=w.id;w.b.lit=list(w.boxes).map(slug);cells[w.col].append(w.b)});
+    grid.append(el('h3','tag',l.name),...cells);
+  });
+  wires.setAttribute('class','links');wires.setAttribute('aria-hidden','true');
+  wires.innerHTML='<marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z"/></marker><marker id="hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z"/></marker><g/>';
+  grid.append(wires);
+  let current;
+  function draw(){
+    const o=grid.getBoundingClientRect(),on=byId[current];
+    wires.lastChild.replaceChildren();
+    grid.classList.toggle('dim',!!on); // a job is open: fade everything it doesn't touch
+    all.forEach(w=>w.b.classList.toggle('on',!!on&&(w===on||on.needs.includes(w.id)||on.unlocks.includes(w))));
+    all.forEach(w=>w.needs.forEach(id=>{
+      const a=byId[id].b.getBoundingClientRect(),b=w.b.getBoundingClientRect(),hot=on&&(w===on||id===on.id);
+      const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,across=a.right<b.left||b.right<a.left;
+      // Different phases: curve across the gap. Same phase: curve down the left side.
+      const ax=(across&&a.right<b.left?a.right:a.left)-o.left,bx=(across&&b.right<a.left?b.right:b.left)-o.left,bend=across?(ax+bx)/2:Math.min(ax,bx)-12;
+      const path=document.createElementNS(NS,'path');
+      path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
+      path.setAttribute('marker-end',hot?'url(#hot)':'url(#head)');if(hot)path.setAttribute('class','hot');
+      wires.lastChild[hot?'append':'prepend'](path);
+    }));
+  }
+  const show0=onShow,hide0=onHide; // keep the template's own hover behaviour
+  onShow=btn=>{show0(btn);current=btn.dataset.job;draw()};
+  onHide=()=>{hide0();current=null;draw()};
+  new ResizeObserver(draw).observe(grid);
+  scroll.append(grid);plan.append(el('h2','tag','The plan'),scroll);main.append(plan);
+}
+closer.addEventListener('click',()=>hide(true));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')return hide(true);
+  // Arrow keys step through the boxes and arrows in reading order.
+  const step={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key],here=document.activeElement;
+  if(!step||!here?.matches('[data-tip]:not(.wire-label)'))return;
+  const all=[...main.querySelectorAll('[data-tip]:not(.wire-label)')].filter(n=>n.offsetParent),next=all[all.indexOf(here)+step];
+  if(next){e.preventDefault();next.focus();if(pinned)next.click()}
+});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[aria-expanded]'))hide()});
+let frame;const soon=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(place)}; // at most once a frame
+addEventListener('resize',soon);addEventListener('scroll',soon,{passive:true});
+
+function fallback(text,done){const t=el('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();done()}
+function card(title,lines,snippet,r){
+  const c=role(el('section','card'),r||'clay');
+  c.append(el('h1','',title));lines.forEach(l=>c.append(el('p','',l)));
+  if(snippet)c.append(el('pre','',snippet));
+  document.title=title;document.body.replaceChildren(c);
+}
+function parse(src){
+  const a=src.indexOf('{'),b=src.lastIndexOf('}');
+  const s=a<0||b<a?src.trim():src.slice(a,b+1).replace(/,(\s*[}\]])/g,'$1');
+  try{return JSON.parse(s)}catch(e){
+    const m=/position (\d+)/.exec(e.message),at=m?+m[1]:-1;
+    e.snippet=at<0?s.slice(0,240):s.slice(Math.max(0,at-80),at)+' ⟵ HERE ⟶ '+s.slice(at,at+60);
+    throw e;
+  }
+}
+// key: the list that must have items; render(data) adds the template's sections to main.
+function boot(key,render){
+  let data;
+  try{data=parse(document.getElementById('diagram-data').textContent)}
+  catch(e){return card('This diagram could not load',['The JSON block in this file is broken. Fix the JSON block; change nothing else.','Problem: '+e.message],e.snippet)}
+  if(Array.isArray(data))data={[key]:data};
+  if(!data||typeof data!=='object')data={};
+  for(const k in Object(data.style))if(k.startsWith('--'))document.documentElement.style.setProperty(k,txt(data.style[k])); // look tweaks: any variable from the top of the stylesheet
+  const title=txt(data.title)||'Untitled';
+  if(title==='REPLACE_ME')return card('No diagram yet',['Replace {"title":"REPLACE_ME"} in this file with your JSON, in the format SKILL.md shows. Change nothing else.'],'',  'amber');
+  if(!list(data[key]).length)return card(title,['This diagram is empty. Add items to "'+key+'" in the JSON block, as SKILL.md shows.'],'','amber');
+  try{
+    document.title=title;
+    const bar=el('div','bar'),h1=el('h1',title.length>40?'long':'',title),all=el('button','toggle','≡');all.title=all.ariaLabel='Show all details';
+    all.type='button';all.setAttribute('aria-pressed','false');
+    all.addEventListener('click',()=>all.setAttribute('aria-pressed',document.body.classList.toggle('all')));
+    const copy=el('button','toggle','⧉');copy.type='button';copy.title=copy.ariaLabel='Copy as Markdown';
+    copy.addEventListener('click',()=>{
+      const one=s=>s.replace(/\s*\n+\s*/g,' ').trim(),tag=b=>b.querySelector('.tag')?.textContent;
+      const md=['# '+title,...[...header.querySelectorAll('.callout')].map(c=>'> '+one(c.lastChild.textContent)),
+        tips.map(({btn,it},i)=>(i+1)+'. **'+(tag(btn)?tag(btn)+': ':'')+it.label+'**'+(it.detail?' — '+one(it.detail):'')).join('\n'),
+        ...[...main.querySelectorAll('.checks li,.same .chip,.notes li')].map(n=>'- '+one(n.textContent))].join('\n\n')+'\n'; // tags, summary, checks and connections keep their context
+      const done=()=>{copy.textContent='✓';setTimeout(()=>copy.textContent='⧉',1500)};
+      navigator.clipboard?.writeText(md).then(done,()=>fallback(md,done))??fallback(md,done);
+    });
+    const tools=el('div','tools');tools.append(all,copy);
+    bar.append(el('p','eyebrow',txt(data.eyebrow)),tools);
+    header.append(bar,h1);
+    if(txt(data.caption))header.append(el('p','caption',txt(data.caption)));
+    if(txt(data.footnote))footer.append(el('span','',txt(data.footnote)));
+    list(data.sources).map(item).forEach(s=>{const url=txt(s.url??s.href??s.link);if(/^https:\/\//.test(url)){const a=el('a','',s.label||url);a.href=url;footer.append(a)}});
+    main.append(header);render(data);jobs(data);main.append(footer);
+    document.body.append(main,pop);
+    main.querySelectorAll('.box,.arrow').forEach((n,i)=>n.style.setProperty('--i',Math.min(i,12))); // staggered entrance, ~0.8 s at most
+    const linked=tips[(/^#item-(\d+)$/.exec(location.hash)?.[1]||0)-1]?.btn; // deep link: open that item
+    linked?.closest('.deep:not(.open)')?.querySelector('.more')?.click(); // a linked part opens its item
+    if(linked)setTimeout(()=>{const r=linked.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)linked.scrollIntoView({block:'center'});linked.click()},700);
+  }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
+}
+
+const DAY=864e5,ROLES=['green','blue','plum','amber','clay','slate'],MON='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),WD='Sun Mon Tue Wed Thu Fri Sat'.split(' ');
+const SCALES=[['day',45,5],['week',210,28],['month',Infinity,90]]; // tick, the most drawn days it suits, the shortest empty stretch it folds away
+// Days since 1970, or null: 2026-11-23, 2026/11/23 and anything with a time after it.
+const day=v=>{const m=/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/.exec(txt(v));if(!m)return null;const n=Date.UTC(m[1],m[2]-1,m[3]);return new Date(n).getUTCDate()==m[3]?n/DAY:null};
+const utc=n=>new Date(n*DAY),year=n=>utc(n).getUTCFullYear(),fmt=(n,y)=>utc(n).getUTCDate()+' '+MON[utc(n).getUTCMonth()]+(y?' '+year(n):'');
+const span=(d,[days,weeks,months])=>d<14?d+days+(d>1&&days.length>2?'s':''):d<70?Math.round(d/7)+weeks:Math.round(d/30.4)+months;
+const SHORT=[' d',' wk',' mo'],LONG=[' day',' weeks',' months'];
+popOpts={obstacles:'.g-bar,.g-name,h1,.tools,.callout,.legend'};
+boot('tasks',data=>{
+  if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
+  const kinds=list(data.kinds??data.types).map(item),named=kinds.length>0,ids={};
+  const tasks=list(data.tasks).map(item).map((t,i)=>{
+    let a=day(t.start??t.from??t.begin),b=day(t.end??t.finish??t.to??t.due??t.date);
+    const days=parseInt(txt(t.days??t.duration)),point=a===null?b!==null:b===null&&!(days>0); // one date: a gate on that day
+    if(a===null)a=b;else if(b===null)b=days>0?a+days-1:a;
+    if(b<a)[a,b]=[b,a];
+    const kind=txt(t.kind??t.type??t.category??t.group)||'Work',done=t.done??t.progress??t.complete;
+    let k=kinds.findIndex(x=>slug(x.label)===slug(kind));
+    if(k<0)k=kinds.push(item(kind))-1;
+    return{...t,label:t.label||'Task '+(i+1),a,b,point,k,gate:point||yes(t.gate??t.milestone),owner:txt(t.owner??t.who??t.team),
+      pct:yes(done)?100:Math.max(0,Math.min(100,parseFloat(txt(done))||0)),needs:list(t.needs??t.after??t.dependsOn??t.depends_on).map(slug),risks:list(t.risks).map(item)};
+  });
+  tasks.forEach(t=>{ids[slug(t.id||t.label)]??=t;ids[slug(t.label)]??=t});
+  tasks.forEach(t=>{t.parents=[...new Set(t.needs.map(n=>ids[n]).filter(p=>p&&p!==t))]});
+  tasks.forEach(t=>{t.children=tasks.filter(c=>c.parents.includes(t))});
+
+  // Time: busy stretches are drawn to scale; long empty ones fold into a narrow band, so two bursts of work weeks apart share one screen.
+  const today=day(data.today??data.now),busy=[];
+  [...tasks.filter(t=>t.a!==null).map(t=>[t.a,t.b+1]),...(today===null?[]:[[today,today+1]])].sort((p,q)=>p[0]-q[0])
+    .forEach(s=>{const p=busy.at(-1);p&&s[0]<=p[1]?p[1]=Math.max(p[1],s[1]):busy.push(s)});
+  const lo=busy[0]?.[0]??0,hi=busy.at(-1)?.[1]??1;
+  let scale,folds,shown;
+  for(const [name,most,gap] of SCALES){
+    scale=name;folds=busy.slice(1).map((s,i)=>({a:busy[i][1],b:s[0]})).filter(f=>f.b-f.a>=gap);
+    shown=hi-lo-folds.reduce((s,f)=>s+f.b-f.a,0);
+    if(shown<=most)break;
+  }
+  const fw=shown*.06,total=shown+fw*folds.length; // every fold is drawn 6% of the busy time wide
+  const pos=n=>{let x=n-lo;folds.forEach(f=>{if(n>f.a)x-=(Math.min(n,f.b)-f.a)*(1-fw/(f.b-f.a))});return 1.5+97*x/total};
+  const at=(n,x,w)=>{n.style.left=x+'%';if(w!=null)n.style.width=w+'%';return n};
+
+  const scroll=el('div','g-scroll'),board=el('section','g-board'),axis=el('div','g-axis'),back=el('div','g-back');
+  board.append(el('div','g-name g-corner',busy.length?fmt(lo,year(lo)!==year(hi-1))+' – '+fmt(hi-1,1):''),axis,back);
+  let lastTick=-99,lastEra=-99,era;
+  for(let n=lo;n<hi&&busy.length;n++){
+    if(folds.some(f=>n>=f.a&&n<f.b))continue;
+    const d=utc(n),dom=d.getUTCDate(),wd=d.getUTCDay(),x=pos(n),start=n===lo||folds.some(f=>f.b===n);
+    if(scale==='day'&&(wd===0||wd===6))back.append(at(el('i','g-rest'),x,pos(n+1)-x));
+    const name=scale==='month'?''+d.getUTCFullYear():MON[d.getUTCMonth()]+' '+d.getUTCFullYear(),turn=name!==era;
+    if(turn){era=name;if(x-lastEra>5){axis.append(at(el('span','g-era',name),x));lastEra=x}}
+    if(!(start||turn||(scale==='day'||(scale==='week'?wd===1:dom===1))))continue;
+    back.append(at(el('i','g-grid'+(turn&&!start?' g-major':'')),x));
+    const wide=scale==='day'&&shown<=14,label=scale==='month'?MON[d.getUTCMonth()]:wide?WD[wd]+' '+dom:''+dom;
+    if(x-lastTick>=(wide?6.5:scale==='month'?4:3.2)&&(scale!=='day'||shown<=21||wd===1||start)){axis.append(at(el('span','g-tick',label),x));lastTick=x}
+  }
+  folds.forEach(f=>{const band=at(el('i','g-fold'),pos(f.a),pos(f.b)-pos(f.a));band.append(el('span','',span(f.b-f.a,LONG)));back.append(band)});
+  if(today!==null){const line=at(el('i','g-today'+(pos(today)>88?' g-flip':'')),pos(today+.5));line.append(el('span','','Today'));back.append(line)}
+
+  const full=el('ul','g-list');
+  tasks.forEach((t,i)=>{
+    const r=ROLES[t.k%6],row=el('div','g-row'),name=el('div','g-name'),lane=el('div','g-lane'),label=el('span','g-label');
+    const when=t.a===null?'No dates yet':t.point?fmt(t.b,1):fmt(t.a,year(t.a)!==year(t.b))+' – '+fmt(t.b,1)+' · '+span(t.b-t.a+1,LONG);
+    const names=ts=>ts.map(o=>o.label).join(', ');
+    t.detail=[t.detail,when,t.owner&&'Owner: '+t.owner,t.pct>0&&t.pct<100&&t.pct+'% done',t.pct===100&&'Done',
+      t.parents.length&&'Needs: '+names(t.parents),t.children.length&&'Unlocks: '+names(t.children)].filter(Boolean).join('\n');
+    label.append(el('span','g-text',t.label));
+    if(t.owner)label.append(el('span','g-who',t.owner));
+    name.append(label);
+    t.risks.forEach(x=>{const b=tip(role(el('button','g-risk','▲'),'clay'),x);b.setAttribute('aria-label','Risk: '+x.label);name.append(b)});
+    const bar=role(el('button','g-bar'+(t.point?' g-point':'')+(t.a===null?' g-loose g-in':'')),r),x=t.a===null?0:pos(t.point?t.b+.5:t.a),w=t.a===null||t.point?0:Math.max(.4,pos(t.b+1)-x);
+    bar.dataset.cue=t.k%6;bar.dataset.task=i;bar.style.setProperty('--i',Math.min(i,14));bar.style.setProperty('--done',t.pct+'%');
+    if(t.a!==null){at(bar,x,t.point?null:w);if(x+w>80)bar.classList.add(w>14?'g-in':'g-flip')}
+    bar.append(el('span','g-fill'));
+    if(t.gate)bar.append(el('span','g-gate'));
+    bar.append(el('span','g-cap',t.a===null?'No dates yet':t.gate?fmt(t.b):span(t.b-t.a+1,SHORT)));
+    tip(bar,t).setAttribute('aria-label',t.label+', '+when);
+    t.bar=bar;t.row=row;lane.append(bar);row.append(name,lane);board.append(row);
+    const li=el('li');li.append(el('b','',t.label),'\n'+[t.detail,...t.risks.map(x=>'▲ '+x.label+(x.detail?': '+x.detail:''))].join('\n'));full.append(li);
+  });
+
+  // Thin lines from each task to what it unlocks. Open a bar: its lines light up and the rest of the chart steps back. Open a kind: only its bars stay.
+  const NS='http://www.w3.org/2000/svg',wires=document.createElementNS(NS,'svg'),head=id=>`<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10z"/></marker>`;
+  wires.setAttribute('class','g-wires');wires.setAttribute('aria-hidden','true');wires.innerHTML=head('g-head')+head('g-hot')+'<g/>';
+  board.append(wires);
+  let current,kind;
+  function draw(){
+    const o=board.getBoundingClientRect(),on=tasks[current],near=new Set(on?[on,...on.parents,...on.children]:kind?tasks.filter(t=>t.k==kind-1):[]);
+    wires.lastChild.replaceChildren();
+    board.classList.toggle('g-dim',near.size>0);
+    tasks.forEach(t=>{
+      t.row.classList.toggle('g-on',near.has(t));
+      t.parents.forEach(p=>{
+        if(t.a===null||p.a===null)return;
+        const a=p.bar.getBoundingClientRect(),b=t.bar.getBoundingClientRect(),hot=on&&(t===on||p===on);
+        const ax=a.right-o.left+(p.gate&&!p.point?8:1),bx=b.left-o.left-2,ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,dx=Math.max(22,Math.abs(bx-ax)/2);
+        const path=document.createElementNS(NS,'path');
+        path.setAttribute('d',`M${ax} ${ay}C${ax+dx} ${ay} ${bx-dx} ${by} ${bx} ${by}`);
+        path.setAttribute('marker-end',hot?'url(#g-hot)':'url(#g-head)');if(hot)path.setAttribute('class','g-hot');
+        wires.lastChild[hot?'append':'prepend'](path);
+      });
+    });
+  }
+  onShow=b=>{current=b.dataset.task;kind=b.dataset.kind;draw()};
+  onHide=()=>{current=kind=null;draw()};
+  scroll.addEventListener('scroll',soon,{passive:true});
+  new ResizeObserver(draw).observe(board);
+
+  // Kinds: colour, plus a fill pattern so the chart still reads in greyscale.
+  if(named||kinds.length>1||tasks.some(t=>t.gate)){
+    const key=el('p','legend');
+    if(named||kinds.length>1)kinds.forEach((k,i)=>{const b=role(el('button','g-key'),ROLES[i%6]);b.dataset.cue=i%6;b.dataset.kind=i+1;b.append(el('span','g-fill'),k.label);key.append(tip(b,{...k,detail:k.detail||tasks.filter(t=>t.k===i).map(t=>t.label).join('\n')}))});
+    if(tasks.some(t=>t.gate))key.append(el('span','','◆ Gate'));
+    if(tasks.some(t=>t.pct>0))key.append(el('span','g-done','Done so far'));
+    main.append(key);
+  }
+  scroll.append(board);main.append(scroll,full);
+});
+
+})();
+</script>
+</body>
+</html>
