@@ -92,7 +92,7 @@ button{font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-hig
 .links marker path{fill:currentColor;stroke:none;opacity:1}
 footer{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:32px;padding-top:var(--gap);border-top:1px solid var(--line)}
 footer a{color:inherit;text-underline-offset:3px}
-.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:arrive var(--fast)}
+.detail{position:fixed;z-index:9;width:min(300px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;padding:var(--gap) var(--pad);background:var(--card);border:1px solid var(--accent);border-radius:var(--radius);box-shadow:0 8px 28px var(--shadow);pointer-events:none;animation:fade var(--fast)} /* fade, not slide: floating labels measure where it really is */
 .detail[hidden]{display:none}
 .detail h2{font:normal 20px/1.2 var(--serif);margin:0 28px 6px 0}
 .detail p{margin:0;font-size:14px;white-space:pre-line}
@@ -103,6 +103,7 @@ footer a{color:inherit;text-underline-offset:3px}
 .card h1{font-size:28px;margin:0 0 8px}
 .card pre{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--paper);padding:10px;margin:12px 0 0}
 @keyframes arrive{from{opacity:0;translate:0 12px}}
+@keyframes fade{from{opacity:0}}
 @media(max-width:600px){main{padding:24px 16px}.detail{width:calc(100vw - 24px)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{
@@ -117,20 +118,28 @@ main{padding:0}
 footer a::after{content:' ' attr(href)}}
 
 /* system-plan only */
-.board{position:relative;display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:72px;align-items:start}
-.lane,.shell,.parts{display:grid;gap:20px;min-width:0}
-.lane>h2{margin:0;padding-bottom:8px;border-bottom:2px solid var(--e);color:var(--e)}
+main{max-width:1280px}
+/* fade, not slide: a moving board would carry its fixed wire labels with it */
+.board{animation-name:fade;position:relative;display:grid;grid-template-columns:1fr 2.2fr 1fr;grid-template-areas:". above ." "upstream system downstream" ". below .";gap:56px;align-items:start}
+.lane,.shell,.column{display:grid;gap:20px;min-width:0;align-content:start}
+.lane.above{grid-area:above}.lane.upstream{grid-area:upstream}.lane.system{grid-area:system}.lane.downstream{grid-area:downstream}.lane.below{grid-area:below}
+.lane.above,.lane.below{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.lane>h2{grid-column:1/-1;margin:0;padding-bottom:8px;border-bottom:2px solid var(--e);color:var(--e)}
 .shell{padding:12px;border:1px dashed var(--e);border-radius:var(--radius)}
-.parts{padding-left:20px}
+.parts{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:28px;padding:8px 4px 4px}
+.parts .box{padding:10px 14px;font-size:16px}
 .box.on{box-shadow:inset 0 0 0 2px var(--e)}
 .box.guess{border-style:dashed}
 .board.dim .box:not(.on){opacity:.45;transition:opacity var(--fast)}
 .wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.wires>g path{fill:none;stroke-width:1.6}
-.wire-label{position:fixed;z-index:8;padding:5px 8px;background:var(--paper);border:1px solid var(--e);border-radius:var(--radius);font:11px/1.4 var(--mono);color:var(--e);white-space:nowrap}
+.wires>g path{fill:none;stroke-width:1.2;opacity:.45;transition:opacity var(--fast)}
+.wires>g path.hot{stroke-width:2;opacity:1}
+.board.dim .wires>g:first-of-type path:not(.hot){opacity:.12}
+.wires .leaders path{stroke-width:1;stroke-dasharray:2 3;opacity:1}
+.wire-label{position:fixed;z-index:8;padding:5px 8px;background:var(--paper);border:1px solid var(--e);border-radius:var(--radius);font:11px/1.4 var(--mono);color:var(--e);white-space:nowrap;animation:fade var(--fast)}
 .plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--gap);margin-top:40px}
 .plan h2{grid-column:1/-1;margin:0}
-@media(max-width:760px){.board{grid-template-columns:1fr;gap:28px;padding-left:20px}}
+@media(max-width:900px){.board{grid-template-columns:minmax(0,440px);grid-template-areas:"above" "upstream" "system" "downstream" "below";gap:28px;padding-left:20px}.parts{grid-template-columns:1fr}.wires>g path:not(.hot){opacity:0}}
 </style>
 </head>
 <body>
@@ -176,7 +185,7 @@ footer a::after{content:' ' attr(href)}}
       "id": "punch",
       "lane": "internal",
       "label": "Pantograph punch",
-      "detail": "A clerk turns one person's answers into holes in one card.",
+      "detail": "A clerk turns one person's answers into holes in one card.\nAbout 500 cards a day.",
       "risks": [
         {
           "label": "A wrong hole is a wrong answer",
@@ -210,6 +219,18 @@ footer a::after{content:' ' attr(href)}}
       ]
     },
     {
+      "id": "clerks",
+      "lane": "above",
+      "label": "Tabulator clerks",
+      "detail": "Feed the cards in and copy down the dials.\nA practised clerk handled about 80 cards a minute."
+    },
+    {
+      "id": "bell",
+      "lane": "below",
+      "label": "Bell",
+      "detail": "Rings when a card's circuit closes.\nThen the clerk copies down what the dials show."
+    },
+    {
       "id": "congress",
       "lane": "downstream",
       "label": "House seats",
@@ -232,7 +253,7 @@ footer a::after{content:' ' attr(href)}}
   "edges": [
     {
       "from": "schedules",
-      "to": "system",
+      "to": "punch",
       "label": "Written answers",
       "detail": "Each person's answers are copied onto one card."
     },
@@ -244,18 +265,18 @@ footer a::after{content:' ' attr(href)}}
     },
     {
       "from": "stock",
-      "to": "system",
+      "to": "punch",
       "label": "Blank cards",
       "detail": "One card per person: about 63 million."
     },
     {
-      "from": "system",
+      "from": "dials",
       "to": "congress",
       "label": "State totals",
       "detail": "Population by state decides each state's seats."
     },
     {
-      "from": "system",
+      "from": "dials",
       "to": "reports",
       "label": "Finished tables",
       "detail": "Clerks copy the dial readings into tables for print."
@@ -289,6 +310,18 @@ footer a::after{content:' ' attr(href)}}
       "to": "reader",
       "label": "Second pass",
       "detail": "Sorted piles go through again for finer counts."
+    },
+    {
+      "from": "clerks",
+      "to": "system",
+      "label": "Cards, one at a time",
+      "detail": "Each card is laid on the reader and the press is closed by hand."
+    },
+    {
+      "from": "reader",
+      "to": "bell",
+      "label": "One ring per card",
+      "detail": "The circuit is complete."
     }
   ],
   "plan": [
@@ -359,7 +392,11 @@ footer a::after{content:' ' attr(href)}}
       "label": "Publish",
       "detail": "Totals leave the building."
     }
-  ]
+  ],
+  "bands": {
+    "above": "Who runs it",
+    "below": "How they know it worked"
+  }
 }
 </script>
 <script>
@@ -386,7 +423,7 @@ pop.id='detail';pop.hidden=true;closer.type='button';closer.setAttribute('aria-l
 let active=null,pinned=false,timer,quiet=false;
 // Put a position:fixed element in the emptiest spot near target: least overlap with obstacles, then nearest. Reusable for any floating label.
 function nestle(el,target,opts={}){ // target: an element, or any object with getBoundingClientRect()
-  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.wire-label,table,h1,h2,.tools,.callout,.caption,.legend,[data-obstacle]'}=opts;
+  const {gap=8,margin=12,pull=10,stick=2000,obstacles='.box,.arrow,.more,.chip,.wire-label,table,h1,h2,.tools,.callout,.caption,.legend,[data-obstacle]'}=opts;
   const t=target.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight,last=el._nestle||{};
   const fit=(v,size,max)=>Math.max(margin,Math.min(v,max-size-margin));
   const cover=(x,y,r)=>Math.max(0,Math.min(x+w,r.right)-Math.max(x,r.left))*Math.max(0,Math.min(y+h,r.bottom)-Math.max(y,r.top));
@@ -405,11 +442,32 @@ function nestle(el,target,opts={}){ // target: an element, or any object with ge
   el._nestle={target,k:best.k};
   el.style.left=best.x+'px';el.style.top=best.y+'px';
 }
+// Settle many position:fixed labels: gravity keeps each as close to its anchor {x,y} as it can be; boxes, other labels and the viewport edge repel it.
+// Each label takes the nearest free spot on a spiral out from its anchor, the most crowded first. Returns resting centres, for leaders back to the anchor.
+function settle(items,opts={}){
+  const {pad=4,margin=8,reach=360,obstacles='.box,.more,.chip,.lane>h2,h1,.tools,.detail:not([hidden])'}=opts;
+  const rects=[...document.querySelectorAll(obstacles)].map(o=>o.getBoundingClientRect()).filter(r=>r.width),taken=[];
+  const cover=(x,y,w,h)=>[...rects,...taken].reduce((s,r)=>s+Math.max(0,Math.min(x+w/2+pad,r.right)-Math.max(x-w/2-pad,r.left))*Math.max(0,Math.min(y+h/2+pad,r.bottom)-Math.max(y-h/2-pad,r.top)),0);
+  const inside=(x,y,w,h)=>x-w/2>=margin&&x+w/2<=innerWidth-margin&&y-h/2>=margin&&y+h/2<=innerHeight-margin;
+  const ls=items.map(({el,anchor})=>({el,anchor,w:el.offsetWidth,h:el.offsetHeight}));
+  ls.map(l=>[l,cover(l.anchor.x,l.anchor.y,l.w,l.h)]).sort((p,q)=>q[1]-p[1]).forEach(([l])=>{
+    const {x:ax,y:ay}=l.anchor,last=l.el._settle;let best,low=Infinity;
+    const tryAt=(x,y)=>{if(!inside(x,y,l.w,l.h))return;const c=cover(x,y,l.w,l.h)*100+Math.hypot(x-ax,y-ay);if(c<low){low=c;best={x,y}}};
+    if(last&&Math.hypot(last.x-ax,last.y-ay)<reach&&!cover(last.x,last.y,l.w,l.h))tryAt(last.x,last.y); // still free: stay put, no hopping on scroll
+    for(let r=0;r<=reach&&low>=r;r+=6)for(let k=0,n=Math.max(1,Math.round(r/4));k<n;k++){const t=2*Math.PI*k/n;tryAt(ax+r*Math.cos(t)*1.6,ay+r*Math.sin(t))} // wider than tall, like the labels
+    best??={x:Math.max(margin+l.w/2,Math.min(ax,innerWidth-margin-l.w/2)),y:Math.max(margin+l.h/2,Math.min(ay,innerHeight-margin-l.h/2))};
+    l.el._settle=best;l.at=best;l.el.style.left=best.x-l.w/2+'px';l.el.style.top=best.y-l.h/2+'px';
+    taken.push({left:best.x-l.w/2,right:best.x+l.w/2,top:best.y-l.h/2,bottom:best.y+l.h/2});
+  });
+  return ls.map(l=>l.at);
+}
+let afterPlace=()=>{};
 function place(){
   if(!active)return;
-  if(innerWidth>=600)return nestle(pop,active,popOpts);
-  const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
-  pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px';
+  if(innerWidth>=600)nestle(pop,active,popOpts);
+  else{const r=active.getBoundingClientRect(),h=pop.offsetHeight; // phone: dock away from the target
+    pop.style.left='12px';pop.style.top=(r.bottom>innerHeight-h-24?12:innerHeight-h-12)+'px'}
+  afterPlace();
 }
 function release(btn){btn.setAttribute('aria-expanded','false');btn.removeAttribute('aria-describedby')}
 function hide(refocus){
@@ -535,7 +593,7 @@ document.addEventListener('keydown',e=>{
   if(next){e.preventDefault();next.focus();if(pinned)next.click()}
 });
 document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.detail,[aria-expanded]'))hide()});
-addEventListener('resize',place);addEventListener('scroll',place,{passive:true});
+addEventListener('resize',place);addEventListener('scroll',()=>active?place():afterPlace(),{passive:true});
 
 function fallback(text,done){const t=el('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();done()}
 function card(title,lines,snippet,r){
@@ -593,25 +651,37 @@ function boot(key,render){
   }catch(e){card('This diagram could not be drawn',['Something in the JSON block has an unexpected shape. Fix the JSON block; change nothing else.','Problem: '+e.message])}
 }
 
-const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream'};
-const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum'};
+const LANE={upstream:'upstream',source:'upstream',sources:'upstream',input:'upstream',inputs:'upstream',external:'upstream',system:'system',main:'system',ours:'system',internal:'internal',component:'internal',part:'internal',parts:'internal',downstream:'downstream',consumer:'downstream',consumers:'downstream',output:'downstream',outputs:'downstream',sink:'downstream',
+  above:'above',top:'above',people:'above',users:'above',operators:'above',actors:'above',below:'below',bottom:'below',monitoring:'below',watchers:'below',alerts:'below',observers:'below'};
+const LANE_ROLE={upstream:'blue',system:'green',internal:'green',downstream:'plum',above:'amber',below:'amber'};
 const STATUS={new:'● New',changed:'◇ Changed',unsure:'? Guess'};
 const STATUSES={new:'new',added:'new',changed:'changed',modified:'changed',updated:'changed',unsure:'unsure',guess:'unsure',unknown:'unsure',maybe:'unsure'};
 boot('nodes',data=>{
-  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts stack'),boxes={},cols={system:shell,internal:parts};
-  [['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream']].forEach(([key,name])=>{
-    const lane=role(el('div','lane'),LANE_ROLE[key]);
-    lane.append(el('h2','tag',name));board.append(lane);
+  const board=el('section','board'),plan=el('section','plan'),shell=role(el('div','shell'),'green'),parts=el('div','parts'),boxes={},cols={system:shell,internal:parts};
+  const nodes=list(data.nodes).map(item).map(n=>({...n,lane:pick(n.lane,LANE,'upstream'),id:slug(n.id||n.label)}));
+  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from),to:slug(e.to)}));
+  const named=k=>txt(Object(data.bands)[k]); // optional lane names: {"above":"Who runs it"}
+  [['above','People who use it'],['upstream','↓ Upstream'],['system','● Our system'],['downstream','↗ Downstream'],['below','Watching it']].forEach(([key,name])=>{
+    if((key==='above'||key==='below')&&!nodes.some(n=>n.lane===key))return; // the top and bottom bands draw only when used
+    const lane=role(el('div','lane '+key),LANE_ROLE[key]);
+    lane.append(el('h2','tag',named(key)||name));board.append(lane);
     if(cols[key])lane.append(shell);else cols[key]=lane;
   });
-  const nodes=list(data.nodes).map(item);
   if(txt(data.summary))header.append(callout('In short',txt(data.summary)));
+  // Parts flow left to right: a part's column is the longest chain of parts that feed it (loops ignored), at most three.
+  const inner=new Set(nodes.filter(n=>n.lane==='internal').map(n=>n.id)),rank={},seen={},back=new Set();
+  const visit=id=>{seen[id]=1;edges.forEach(e=>{if(e.from!==id||!inner.has(e.to))return;if(seen[e.to]===1)back.add(e);else if(!seen[e.to])visit(e.to)});seen[id]=2};
+  inner.forEach(id=>rank[id]=0);inner.forEach(id=>seen[id]||visit(id));
+  for(let i=0;i<inner.size;i++)edges.forEach(e=>{if(!back.has(e)&&inner.has(e.from)&&inner.has(e.to))rank[e.to]=Math.max(rank[e.to],rank[e.from]+1)});
+  const width=Math.min(3,1+Math.max(0,...Object.values(rank))),columns=[...Array(width)].map(()=>el('div','column'));
+  parts.style.setProperty('--cols',width);parts.append(...columns);
   nodes.forEach(n=>{
-    const lane=pick(n.lane,LANE,'upstream'),k=pick(n.status,STATUSES,''),id=slug(n.id||n.label);
-    const b=box(n,STATUS[k],LANE_ROLE[lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
-    b.dataset.id=id;b.dataset.lane=lane;boxes[id]=b;cols[lane].append(step(b,{...n,parts:''},n.label)); // a node's parts are the internal lane
+    const k=pick(n.status,STATUSES,'');
+    const b=box(n,STATUS[k],LANE_ROLE[n.lane],k==='unsure'?'guess':''); // colour = lane; status = tag text, guesses dashed
+    b.dataset.id=n.id;b.dataset.lane=n.lane;boxes[n.id]=b;
+    (n.lane==='internal'?columns[Math.min(rank[n.id],width-1)]:cols[n.lane]).append(step(b,{...n,parts:''},n.label)); // a node's parts are the internal lane
   });
-  shell.append(parts); // system box first, its parts below
+  if(inner.size)shell.append(parts); // system box first, its parts below
   // The plan: a numbered list, or jobs by phase when steps name a phase, an owner or what they need. A job's row is the first box it touches.
   const steps=list(data.plan).map(item),phased=list(data.phases).length||steps.some(s=>s.phase??s.when??s.needs??s.after??s.owner??s.who);
   if(steps.length&&!phased)plan.append(el('h2','tag','The plan'));
@@ -620,49 +690,66 @@ boot('nodes',data=>{
     if(phased)return(lanes.find(l=>l.name===name)||lanes[lanes.push({name,work:[]})-1]).work.push(s);
     const b=box(s,String(i+1).padStart(2,'0'));b.lit=lit;plan.append(b);
   });
-  const edges=list(data.edges).map(item).map(e=>({...e,from:slug(e.from),to:slug(e.to)}));
 
-  // Connections: hidden at rest, drawn only for the box that is hovered, focused or pinned.
-  const wires=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  // Every connection is drawn faintly at rest. Hover, focus or pin a box: its wires light up in the far end's colour and say what moves.
+  const NS='http://www.w3.org/2000/svg',wires=document.createElementNS(NS,'svg');
   wires.setAttribute('class','wires');wires.setAttribute('aria-hidden','true');
-  wires.innerHTML=['blue','green','plum'].map(r=>`<marker id="head-${r}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" style="fill:var(--${r}-e)"/></marker>`).join('')+'<g/>';
+  wires.innerHTML=['blue','green','plum','amber','slate'].map(r=>`<marker id="head-${r}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" style="fill:var(--${r}-e)"/></marker>`).join('')+'<g/><g class="leaders"/>';
   board.append(wires);
-  let current=null,lit=[],placed=[];
-  const opts={gap:2,pull:60,obstacles:'.box,.wire-label,.lane>h2,h1,.detail'};
-  function draw(){
-    wires.lastChild.replaceChildren();
-    board.querySelectorAll('.wire-label').forEach(n=>n.remove());
-    for(const id in boxes)boxes[id].classList.toggle('on',id===current||lit.includes(id));
-    board.classList.toggle('dim',lit.length>0); // a plan step is lit: fade everything it doesn't touch
-    if(!current)return;
-    const o=board.getBoundingClientRect(),labels=[];
-    edges.filter(e=>(e.from===current||e.to===current)&&boxes[e.from]&&boxes[e.to]).forEach(e=>{
-      const far=boxes[e.from===current?e.to:e.from],r=LANE_ROLE[far.dataset.lane]; // wire takes the colour of the far end
-      const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect();
-      const ay=a.top+a.height/2-o.top,by=b.top+b.height/2-o.top,label=role(tip(el('button','wire-label',e.label),e),r);
-      let ax,bx,bend;
-      if(a.right<b.left||b.right<a.left){
-        // Side by side: curve across the gap.
-        ax=(a.right<b.left?a.right:a.left)-o.left;bx=(a.right<b.left?b.left:b.right)-o.left;bend=(ax+bx)/2;
-      }else{
-        // Stacked: curve down the left side.
-        ax=a.left-o.left;bx=b.left-o.left;bend=Math.min(ax,bx)-18;
-      }
-      const path=document.createElementNS(wires.namespaceURI,'path');
-      path.setAttribute('d','M'+ax+' '+ay+'C'+bend+' '+ay+' '+bend+' '+by+' '+bx+' '+by);
-      path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
-      // Anchor the label at the curve's midpoint (in page coordinates) so it sits on its own line.
-      const mx=(ax+bx)/2+(bend-(ax+bx)/2)*.75,my=(ay+by)/2,mid={getBoundingClientRect:()=>{const r=board.getBoundingClientRect();return new DOMRect(r.left+mx,r.top+my,0,0)}};
-      wires.lastChild.append(path);labels.push([label,mid]);
-    });
-    placed=labels;
-    labels.forEach(([label,mid])=>{boxes[current].after(label);nestle(label,mid,opts)}); // labels repel boxes, each other and the popover
+  const live=edges.filter(e=>boxes[e.from]&&boxes[e.to]&&e.from!==e.to);
+  const pair=new Set(live.map(e=>e.from+'>'+e.to));
+  let current=null,lit=[],labels=[];
+  // Where a wire leaves and enters: facing sides when apart sideways, top and bottom when stacked, else round the left.
+  function route(e,o){
+    const a=boxes[e.from].getBoundingClientRect(),b=boxes[e.to].getBoundingClientRect(),twin=pair.has(e.to+'>'+e.from)?(e.from<e.to?-6:6):0; // a two-way pair runs side by side
+    const cx=r=>r.left+r.width/2-o.left,cy=r=>r.top+r.height/2-o.top;
+    if(a.right+8<b.left||b.right+8<a.left){
+      const ax=(a.right<b.left?a.right:a.left)-o.left,bx=(a.right<b.left?b.left:b.right)-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=(ax+bx)/2;
+      return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:m,y:(ay+by)/2};
+    }
+    if(a.bottom+8<b.top||b.bottom+8<a.top){
+      const down=a.bottom<b.top,ay=(down?a.bottom:a.top)-o.top,by=(down?b.top:b.bottom)-o.top,ax=cx(a)+twin,bx=cx(b)+twin,m=(ay+by)/2;
+      return{d:`M${ax} ${ay}C${ax} ${m} ${bx} ${m} ${bx} ${by}`,x:(ax+bx)/2,y:m};
+    }
+    const ax=a.left-o.left,bx=b.left-o.left,ay=cy(a)+twin,by=cy(b)+twin,m=Math.min(ax,bx)-18;
+    return{d:`M${ax} ${ay}C${m} ${ay} ${m} ${by} ${bx} ${by}`,x:(ax+bx)/8+m*.75,y:(ay+by)/2};
   }
+  function draw(){
+    const [g,leaders]=wires.querySelectorAll('g');
+    g.replaceChildren();leaders.replaceChildren();
+    board.querySelectorAll('.wire-label').forEach(n=>n.remove());labels=[];
+    const near=new Set(live.filter(e=>e.from===current||e.to===current).flatMap(e=>[e.from,e.to]));
+    for(const id in boxes)boxes[id].classList.toggle('on',id===current||lit.includes(id)||near.has(id));
+    board.classList.toggle('dim',!!current||lit.length>0); // something is open: fade what it doesn't touch
+    const o=board.getBoundingClientRect();
+    live.forEach(e=>{
+      if(!boxes[e.from].offsetParent||!boxes[e.to].offsetParent)return;
+      const hot=current&&(e.from===current||e.to===current),r=hot?LANE_ROLE[boxes[e.from===current?e.to:e.from].dataset.lane]:'slate',w=route(e,o);
+      const path=document.createElementNS(NS,'path');
+      path.setAttribute('d',w.d);path.setAttribute('marker-end',`url(#head-${r})`);path.style.stroke=`var(--${r}-e)`;
+      if(hot){path.setAttribute('class','hot');labels.push({e,r,x:w.x,y:w.y});g.append(path)}else g.prepend(path);
+    });
+    labels=labels.map(({e,r,x,y})=>{const label=role(tip(el('button','wire-label',e.label),e),r);boxes[current].after(label);return{el:label,r,x,y}});
+    afterPlace();
+  }
+  // Labels sit on their wire if there's room; otherwise they drift to the nearest gap and a thin leader points back.
+  afterPlace=()=>{
+    if(!labels.length)return;
+    const o=board.getBoundingClientRect(),leaders=wires.querySelector('.leaders');
+    const spots=settle(labels.map(l=>({el:l.el,anchor:{x:o.left+l.x,y:o.top+l.y}})));
+    leaders.replaceChildren();
+    labels.forEach((l,i)=>{
+      const s=spots[i],w=l.el.offsetWidth/2,h=l.el.offsetHeight/2,ex=Math.max(s.x-w,Math.min(o.left+l.x,s.x+w))-o.left,ey=Math.max(s.y-h,Math.min(o.top+l.y,s.y+h))-o.top;
+      if(Math.hypot(ex-l.x,ey-l.y)<6)return;
+      const line=document.createElementNS(NS,'path');line.setAttribute('d',`M${l.x} ${l.y}L${ex} ${ey}`);line.style.stroke=`var(--${l.r}-e)`;
+      leaders.append(line);
+    });
+  };
   onShow=btn=>{if(btn.classList.contains('wire-label'))return;current=btn.dataset.id||null;lit=btn.lit||[];draw()};
   onHide=()=>{current=null;lit=[];draw()};
   keepOpen=()=>board.matches(':hover');
   board.addEventListener('pointerleave',later);
-  new ResizeObserver(draw).observe(board);addEventListener('scroll',()=>placed.forEach(([l,m])=>nestle(l,m,opts)),{passive:true}); // move labels, don't rebuild them
+  new ResizeObserver(draw).observe(board);
   // Connections in words, for show-all, print and copy.
   const notes=el('ul','notes'),name=id=>boxes[id]?.querySelector('.label').textContent||id;
   edges.forEach(e=>notes.append(el('li','',name(e.from)+' → '+name(e.to)+': '+e.label+(e.detail?' — '+e.detail:''))));

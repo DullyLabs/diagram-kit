@@ -38,7 +38,7 @@
       "id": "punch",
       "lane": "internal",
       "label": "Pantograph punch",
-      "detail": "A clerk turns one person's answers into holes in one card.",
+      "detail": "A clerk turns one person's answers into holes in one card.\nAbout 500 cards a day.",
       "risks": [
         {
           "label": "A wrong hole is a wrong answer",
@@ -72,6 +72,18 @@
       ]
     },
     {
+      "id": "clerks",
+      "lane": "above",
+      "label": "Tabulator clerks",
+      "detail": "Feed the cards in and copy down the dials.\nA practised clerk handled about 80 cards a minute."
+    },
+    {
+      "id": "bell",
+      "lane": "below",
+      "label": "Bell",
+      "detail": "Rings when a card's circuit closes.\nThen the clerk copies down what the dials show."
+    },
+    {
       "id": "congress",
       "lane": "downstream",
       "label": "House seats",
@@ -94,7 +106,7 @@
   "edges": [
     {
       "from": "schedules",
-      "to": "system",
+      "to": "punch",
       "label": "Written answers",
       "detail": "Each person's answers are copied onto one card."
     },
@@ -106,18 +118,18 @@
     },
     {
       "from": "stock",
-      "to": "system",
+      "to": "punch",
       "label": "Blank cards",
       "detail": "One card per person: about 63 million."
     },
     {
-      "from": "system",
+      "from": "dials",
       "to": "congress",
       "label": "State totals",
       "detail": "Population by state decides each state's seats."
     },
     {
-      "from": "system",
+      "from": "dials",
       "to": "reports",
       "label": "Finished tables",
       "detail": "Clerks copy the dial readings into tables for print."
@@ -151,6 +163,18 @@
       "to": "reader",
       "label": "Second pass",
       "detail": "Sorted piles go through again for finer counts."
+    },
+    {
+      "from": "clerks",
+      "to": "system",
+      "label": "Cards, one at a time",
+      "detail": "Each card is laid on the reader and the press is closed by hand."
+    },
+    {
+      "from": "reader",
+      "to": "bell",
+      "label": "One ring per card",
+      "detail": "The circuit is complete."
     }
   ],
   "plan": [
@@ -221,5 +245,9 @@
       "label": "Publish",
       "detail": "Totals leave the building."
     }
-  ]
+  ],
+  "bands": {
+    "above": "Who runs it",
+    "below": "How they know it worked"
+  }
 }

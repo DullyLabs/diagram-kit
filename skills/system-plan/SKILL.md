@@ -1,11 +1,11 @@
 ---
 name: system-plan
-description: Use when planning a large epic that reads from some systems, changes or builds one, and serves others, or when asked for a system context diagram. Fills an HTML diagram that shows connections only on hover, with a plain-language plan below.
+description: Use when planning a large epic that reads from some systems, changes or builds one, and serves others, or when asked for a system context diagram. Fills an HTML diagram whose connections are faint at rest and light up, labelled, on hover, with a plain-language plan below.
 ---
 
 # System plan
 
-1. List the systems that feed ours (upstream), the parts of ours, and who uses its output (downstream).
+1. List the systems that feed ours (upstream), the parts of ours, who uses its output (downstream), and, if any, the people who run it and what watches it.
 2. Copy the template with one shell command. Never retype or rewrite it:
    `cp ~/.config/opencode/skills/system-plan/template.html ./<epic>-plan.html`
    (If your skills live elsewhere, use that folder.)
@@ -27,9 +27,10 @@ Write for a reader who is new to this: every word must help them understand the 
 | `title` | The epic, in under 8 words |
 | `summary` | One sentence: what the epic changes and for whom |
 | `nodes` | `{id, lane, label, detail}`; `id` is one lowercase word; at most 4 per lane |
-| `nodes[].lane` | One of `upstream`, `system` (exactly one node), `internal` (parts of the system), `downstream` |
+| `nodes[].lane` | One of `upstream`, `system` (exactly one node), `internal` (parts of the system), `downstream`, `above` (people who run or use it), `below` (what watches it: alerts, checks) |
 | `nodes[].status` | One of `new`, `changed`, `unsure`. Leave it out for existing systems |
-| `edges` | `{from, to, label, detail}` using node ids; `label` says what moves ("orders, every hour") |
+| `edges` | `{from, to, label, detail}` using node ids; `label` says what moves ("orders, every hour"). Link straight to a part when you know which part it touches |
+| `bands` | Optional names for the lanes, such as `{"above": "Who runs it", "below": "How we know it works"}` |
 | `plan` | 3–5 steps in the order they must happen: `{label, detail, boxes}`; `boxes` lists the node ids the step touches |
 | `nodes[].risks` | Optional: what can go wrong at this box, `{label, detail}` |
 | `plan[].phase`, `owner`, `needs` | Optional, for a plan people will build from: `phase` is a name from `phases`, `owner` is who does it, `needs` lists the labels of steps that must finish first. Put the box the step mostly changes first in `boxes` |
@@ -94,7 +95,7 @@ Plain words, not jargon:
       "id": "punch",
       "lane": "internal",
       "label": "Pantograph punch",
-      "detail": "A clerk turns one person's answers into holes in one card.",
+      "detail": "A clerk turns one person's answers into holes in one card.\nAbout 500 cards a day.",
       "risks": [
         {
           "label": "A wrong hole is a wrong answer",
@@ -128,6 +129,18 @@ Plain words, not jargon:
       ]
     },
     {
+      "id": "clerks",
+      "lane": "above",
+      "label": "Tabulator clerks",
+      "detail": "Feed the cards in and copy down the dials.\nA practised clerk handled about 80 cards a minute."
+    },
+    {
+      "id": "bell",
+      "lane": "below",
+      "label": "Bell",
+      "detail": "Rings when a card's circuit closes.\nThen the clerk copies down what the dials show."
+    },
+    {
       "id": "congress",
       "lane": "downstream",
       "label": "House seats",
@@ -150,7 +163,7 @@ Plain words, not jargon:
   "edges": [
     {
       "from": "schedules",
-      "to": "system",
+      "to": "punch",
       "label": "Written answers",
       "detail": "Each person's answers are copied onto one card."
     },
@@ -162,18 +175,18 @@ Plain words, not jargon:
     },
     {
       "from": "stock",
-      "to": "system",
+      "to": "punch",
       "label": "Blank cards",
       "detail": "One card per person: about 63 million."
     },
     {
-      "from": "system",
+      "from": "dials",
       "to": "congress",
       "label": "State totals",
       "detail": "Population by state decides each state's seats."
     },
     {
-      "from": "system",
+      "from": "dials",
       "to": "reports",
       "label": "Finished tables",
       "detail": "Clerks copy the dial readings into tables for print."
@@ -207,6 +220,18 @@ Plain words, not jargon:
       "to": "reader",
       "label": "Second pass",
       "detail": "Sorted piles go through again for finer counts."
+    },
+    {
+      "from": "clerks",
+      "to": "system",
+      "label": "Cards, one at a time",
+      "detail": "Each card is laid on the reader and the press is closed by hand."
+    },
+    {
+      "from": "reader",
+      "to": "bell",
+      "label": "One ring per card",
+      "detail": "The circuit is complete."
     }
   ],
   "plan": [
@@ -277,7 +302,11 @@ Plain words, not jargon:
       "label": "Publish",
       "detail": "Totals leave the building."
     }
-  ]
+  ],
+  "bands": {
+    "above": "Who runs it",
+    "below": "How they know it worked"
+  }
 }
 ```
 <!-- /example -->
